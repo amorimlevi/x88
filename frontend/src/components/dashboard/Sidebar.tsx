@@ -19,7 +19,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarProps) => {
   const menuItems = [
     { id: 'dashboard', icon: Home, label: 'Dashboard' },
-    { id: 'funcionarios', icon: Users, label: 'Funcionários' },
+    { id: 'funcionarios', icon: Users, label: 'Colaboradores' },
     { id: 'pagamentos', icon: DollarSign, label: 'Pagamentos' },
     { id: 'adiantamentos', icon: CreditCard, label: 'Adiantamentos' },
     { id: 'relatorios', icon: BarChart3, label: 'Relatórios' },

@@ -3,7 +3,7 @@ import { DollarSign, Users, CreditCard, TrendingUp } from 'lucide-react'
 const StatsCards = () => {
   const stats = [
     {
-      title: 'Total de Funcionários',
+      title: 'Total de Colaboradores',
       value: '24',
       change: '+2 este mês',
       changeType: 'positive' as const,
@@ -12,24 +12,24 @@ const StatsCards = () => {
     },
     {
       title: 'Pagamentos Realizados',
-      value: 'R$ 48.300',
-      change: '+12% vs mês passado',
+      value: '€ 48.300',
+      change: '+12% vs mês anterior',
       changeType: 'positive' as const,
       icon: DollarSign,
       color: 'bg-primary-500'
     },
     {
       title: 'Adiantamentos Pendentes',
-      value: 'R$ 2.400',
+      value: '€ 2.400',
       change: '5 solicitações',
       changeType: 'positive' as const,
       icon: CreditCard,
       color: 'bg-orange-500'
     },
     {
-      title: 'Economia do Mês',
-      value: 'R$ 5.200',
-      change: '+8% vs planejado',
+      title: 'Poupança do Mês',
+      value: '€ 5.200',
+      change: '+8% vs planeado',
       changeType: 'positive' as const,
       icon: TrendingUp,
       color: 'bg-purple-500'

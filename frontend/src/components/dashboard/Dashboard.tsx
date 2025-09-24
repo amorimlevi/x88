@@ -64,7 +64,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-primary-500 font-semibold">R$ 500,00</p>
+                        <p className="text-primary-500 font-semibold">€ 500,00</p>
                         <p className="text-dark-600 text-xs">há 2 horas</p>
                       </div>
                     </div>
@@ -94,7 +94,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-white font-semibold">R$ 1.200,00</p>
+                        <p className="text-white font-semibold">€ 1.200,00</p>
                         <p className="text-dark-600 text-xs">Ontem</p>
                       </div>
                     </div>

@@ -34,7 +34,7 @@ const Login = ({ onLogin }: LoginProps) => {
             {/* User Type Selection */}
             <div>
               <label className="block text-sm font-medium text-dark-700 mb-3">
-                Tipo de usuário
+                Tipo de utilizador
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -62,7 +62,7 @@ const Login = ({ onLogin }: LoginProps) => {
                 >
                   <div className="text-center">
                     <Truck className="w-6 h-6 mx-auto mb-1" />
-                    <span className="text-sm font-medium">Funcionário</span>
+                    <span className="text-sm font-medium">Colaborador</span>
                   </div>
                 </button>
               </div>
@@ -87,7 +87,7 @@ const Login = ({ onLogin }: LoginProps) => {
             {/* Password Input */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-dark-700 mb-2">
-                Senha
+                Palavra-passe
               </label>
               <input
                 type="password"
@@ -111,12 +111,12 @@ const Login = ({ onLogin }: LoginProps) => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-dark-600">
-              Esqueceu sua senha?{' '}
-              <a href="#" className="text-primary-500 hover:text-primary-400 font-medium">
-                Recuperar
-              </a>
-            </p>
+          <p className="text-sm text-dark-600">
+          Esqueceu a sua palavra-passe?{' '}
+          <a href="#" className="text-primary-500 hover:text-primary-400 font-medium">
+          Recuperar
+          </a>
+          </p>
           </div>
         </div>
       </div>
