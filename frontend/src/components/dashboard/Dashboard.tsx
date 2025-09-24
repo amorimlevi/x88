@@ -4,6 +4,7 @@ import Header from './Header'
 import StatsCards from './StatsCards'
 import ColaboradoresList from '../colaboradores/ColaboradoresList'
 import PagamentosList from '../pagamentos/PagamentosList'
+import AdiantamentosList from '../adiantamentos/AdiantamentosList'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -121,10 +122,7 @@ const Dashboard = () => {
             )}
 
             {activeSection === 'adiantamentos' && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold text-white mb-4">Adiantamentos</h2>
-                <p className="text-dark-600">Secção em desenvolvimento...</p>
-              </div>
+              <AdiantamentosList />
             )}
 
             {activeSection === 'relatorios' && (
