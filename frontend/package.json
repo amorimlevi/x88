@@ -10,7 +10,6 @@
     "start": "vite"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.13",
     "@tanstack/react-query": "^4.29.7",
     "axios": "^1.4.0",
     "lucide-react": "^0.263.1",
