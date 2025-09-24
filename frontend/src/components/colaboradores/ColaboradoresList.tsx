@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Calendar, Euro } from 'lucide-react'
+import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Calendar, Euro, Eye } from 'lucide-react'
 import AddColaboradorModal from './AddColaboradorModal'
+import ColaboradorDetailsModal from './ColaboradorDetailsModal'
 import { formatEuro, formatDate } from '../../utils/formatters'
 
 interface Colaborador {
@@ -14,12 +15,38 @@ interface Colaborador {
   status: 'ativo' | 'inativo' | 'suspenso'
   avatar?: string
   origem: 'manual' | 'app_terceiro'
+  endereco?: {
+    rua: string
+    numero: string
+    bairro: string
+    cidade: string
+    codigoPostal: string
+  }
+  dadosBancarios?: {
+    banco: string
+    agencia: string
+    conta: string
+    tipoConta: 'corrente' | 'poupanca'
+    titular: string
+    iban?: string
+    swift?: string
+  }
+  documentos?: {
+    rg?: string
+    cpf?: string
+    cnh?: string
+    dataValidadeCnh?: string
+  }
+  observacoes?: string
+  dataUltimaAtualizacao?: string
 }
 
 const ColaboradoresList = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'todos' | 'ativo' | 'inativo' | 'suspenso'>('todos')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [selectedColaborador, setSelectedColaborador] = useState<Colaborador | null>(null)
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
 
   // Dados mock - em produção viriam da API
   const [colaboradores] = useState<Colaborador[]>([
@@ -32,7 +59,30 @@ const ColaboradoresList = () => {
       salario: 1200,
       dataContratacao: '2023-01-15',
       status: 'ativo',
-      origem: 'manual'
+      origem: 'manual',
+      endereco: {
+        rua: 'Rua das Flores',
+        numero: '123',
+        bairro: 'Centro',
+        cidade: 'Lisboa',
+        codigoPostal: '1000-001'
+      },
+      dadosBancarios: {
+        banco: 'Banco Santander Totta',
+        agencia: '0123',
+        conta: '12345678-9',
+        tipoConta: 'corrente',
+        titular: 'João Silva',
+        iban: 'PT50 0123 4567 8901 2345 6789 0'
+      },
+      documentos: {
+        rg: '12.345.678-9',
+        cpf: '123.456.789-00',
+        cnh: 'AB123456789',
+        dataValidadeCnh: '2025-12-31'
+      },
+      observacoes: 'Funcionário pontual e dedicado. Tem experiência em rotas urbanas.',
+      dataUltimaAtualizacao: '2024-01-20T10:30:00'
     },
     {
       id: '2',
@@ -43,7 +93,30 @@ const ColaboradoresList = () => {
       salario: 1800,
       dataContratacao: '2022-08-10',
       status: 'ativo',
-      origem: 'app_terceiro'
+      origem: 'app_terceiro',
+      endereco: {
+        rua: 'Avenida da Liberdade',
+        numero: '456',
+        bairro: 'Avenidas Novas',
+        cidade: 'Lisboa',
+        codigoPostal: '1250-096'
+      },
+      dadosBancarios: {
+        banco: 'Caixa Geral de Depósitos',
+        agencia: '0456',
+        conta: '98765432-1',
+        tipoConta: 'corrente',
+        titular: 'Maria Santos',
+        iban: 'PT50 0456 7890 1234 5678 9012 3'
+      },
+      documentos: {
+        rg: '98.765.432-1',
+        cpf: '987.654.321-00',
+        cnh: 'CD987654321',
+        dataValidadeCnh: '2026-06-15'
+      },
+      observacoes: 'Coordenadora experiente, excelente gestão de equipe. Responsável pelo treinamento de novos motoristas.',
+      dataUltimaAtualizacao: '2024-01-18T15:45:00'
     },
     {
       id: '3',
@@ -54,7 +127,30 @@ const ColaboradoresList = () => {
       salario: 1150,
       dataContratacao: '2023-03-20',
       status: 'suspenso',
-      origem: 'manual'
+      origem: 'manual',
+      endereco: {
+        rua: 'Rua do Comércio',
+        numero: '789',
+        bairro: 'Baixa',
+        cidade: 'Porto',
+        codigoPostal: '4000-001'
+      },
+      dadosBancarios: {
+        banco: 'Millennium BCP',
+        agencia: '0789',
+        conta: '11111111-1',
+        tipoConta: 'poupanca',
+        titular: 'Pedro Costa',
+        iban: 'PT50 0789 0123 4567 8901 2345 6'
+      },
+      documentos: {
+        rg: '11.111.111-1',
+        cpf: '111.111.111-11',
+        cnh: 'EF111111111',
+        dataValidadeCnh: '2024-03-30'
+      },
+      observacoes: 'Suspenso temporariamente por questões disciplinares. Aguardando revisão do caso.',
+      dataUltimaAtualizacao: '2024-01-10T08:20:00'
     }
   ])
 
@@ -81,6 +177,11 @@ const ColaboradoresList = () => {
     return origem === 'manual' 
       ? 'bg-blue-500/20 text-blue-400' 
       : 'bg-purple-500/20 text-purple-400'
+  }
+
+  const handleViewDetails = (colaborador: Colaborador) => {
+    setSelectedColaborador(colaborador)
+    setIsDetailsModalOpen(true)
   }
 
   return (
@@ -261,6 +362,13 @@ const ColaboradoresList = () => {
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2 justify-end">
+                      <button 
+                        onClick={() => handleViewDetails(colaborador)}
+                        className="p-2 text-dark-600 hover:text-primary-500 hover:bg-dark-200 rounded-lg transition-colors"
+                        title="Ver detalhes"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                       <button className="p-2 text-dark-600 hover:text-primary-500 hover:bg-dark-200 rounded-lg transition-colors">
                         <Edit className="w-4 h-4" />
                       </button>
@@ -290,6 +398,16 @@ const ColaboradoresList = () => {
           console.log('Novo colaborador:', data)
           setIsAddModalOpen(false)
         }}
+      />
+
+      {/* Colaborador Details Modal */}
+      <ColaboradorDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => {
+          setIsDetailsModalOpen(false)
+          setSelectedColaborador(null)
+        }}
+        colaborador={selectedColaborador}
       />
     </div>
   )
