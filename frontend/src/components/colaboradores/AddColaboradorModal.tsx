@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { X, User, Mail, Phone, Briefcase, Euro, Calendar } from 'lucide-react'
+import { X, User, Mail, Phone, Briefcase, Euro } from 'lucide-react'
+import DatePicker from '../ui/DatePicker'
 
 interface AddColaboradorModalProps {
   isOpen: boolean
@@ -194,17 +195,11 @@ const AddColaboradorModal = ({ isOpen, onClose, onSave }: AddColaboradorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-dark-700 mb-2">
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Data de Contratação *
-                </label>
-                <input
-                  type="date"
+                <DatePicker
+                  label="Data de Contratação *"
                   value={formData.dataContratacao}
-                  onChange={(e) => handleInputChange('dataContratacao', e.target.value)}
-                  className={`w-full px-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-white ${
-                    errors.dataContratacao ? 'border-red-500' : 'border-dark-300'
-                  }`}
+                  onChange={(value) => handleInputChange('dataContratacao', value)}
+                  className={errors.dataContratacao ? 'border-red-500' : ''}
                 />
                 {errors.dataContratacao && <p className="text-red-500 text-xs mt-1">{errors.dataContratacao}</p>}
               </div>

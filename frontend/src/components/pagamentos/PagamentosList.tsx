@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, User, Eye } from 'lucide-react'
+import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, X } from 'lucide-react'
 import { formatEuro, formatDateTime, formatDate } from '../../utils/formatters'
 import PagamentoDetailsModal from './PagamentoDetailsModal'
+import DatePicker from '../ui/DatePicker'
 
 interface Pagamento {
   id: string
@@ -27,6 +28,8 @@ const PagamentosList = () => {
   const [statusFilter, setStatusFilter] = useState<FilterStatus>('todos')
   const [selectedPagamento, setSelectedPagamento] = useState<Pagamento | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
+  const [startDate, setStartDate] = useState<string>('')
+  const [endDate, setEndDate] = useState<string>('')
 
   // Dados mock - em produção viriam da API
   const [pagamentos] = useState<Pagamento[]>([
@@ -109,24 +112,50 @@ const PagamentosList = () => {
     const now = new Date()
     let filteredByPeriod = pagamentos
 
-    if (periodFilter !== 'todos') {
-      const startDate = new Date()
+    // Filter by custom date range if both dates are provided
+    if (startDate && endDate) {
+      const start = new Date(startDate)
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999) // Include the entire end date
+      
+      filteredByPeriod = pagamentos.filter(pagamento => {
+        const pagamentoDate = new Date(pagamento.dataPagamento || pagamento.dataVencimento || '')
+        return pagamentoDate >= start && pagamentoDate <= end
+      })
+    } else if (startDate) {
+      // Filter by start date only
+      const start = new Date(startDate)
+      filteredByPeriod = pagamentos.filter(pagamento => {
+        const pagamentoDate = new Date(pagamento.dataPagamento || pagamento.dataVencimento || '')
+        return pagamentoDate >= start
+      })
+    } else if (endDate) {
+      // Filter by end date only
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      filteredByPeriod = pagamentos.filter(pagamento => {
+        const pagamentoDate = new Date(pagamento.dataPagamento || pagamento.dataVencimento || '')
+        return pagamentoDate <= end
+      })
+    } else if (periodFilter !== 'todos') {
+      // Use period filter only if no custom dates are set
+      const periodStartDate = new Date()
       
       switch (periodFilter) {
         case 'semanal':
-          startDate.setDate(now.getDate() - 7)
+          periodStartDate.setDate(now.getDate() - 7)
           break
         case 'mensal':
-          startDate.setMonth(now.getMonth() - 1)
+          periodStartDate.setMonth(now.getMonth() - 1)
           break
         case 'anual':
-          startDate.setFullYear(now.getFullYear() - 1)
+          periodStartDate.setFullYear(now.getFullYear() - 1)
           break
       }
 
       filteredByPeriod = pagamentos.filter(pagamento => {
         const pagamentoDate = new Date(pagamento.dataPagamento || pagamento.dataVencimento || '')
-        return pagamentoDate >= startDate
+        return pagamentoDate >= periodStartDate
       })
     }
 
@@ -191,6 +220,13 @@ const PagamentosList = () => {
     setSelectedPagamento(pagamento)
     setIsDetailsModalOpen(true)
   }
+
+  const clearDateFilters = () => {
+    setStartDate('')
+    setEndDate('')
+  }
+
+  const hasDateFilters = startDate || endDate
 
   return (
     <div className="space-y-6">
@@ -267,36 +303,68 @@ const PagamentosList = () => {
 
       {/* Filters */}
       <div className="card">
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Period Filter */}
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-dark-600" />
-            <select
-              value={periodFilter}
-              onChange={(e) => setPeriodFilter(e.target.value as FilterPeriod)}
-              className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="todos">Todos os períodos</option>
-              <option value="semanal">Última semana</option>
-              <option value="mensal">Último mês</option>
-              <option value="anual">Último ano</option>
-            </select>
+        <div className="space-y-4">
+          {/* Date Range Filters */}
+          <div className="flex flex-col lg:flex-row gap-4 items-end">
+            <DatePicker
+              label="Data Inicial"
+              value={startDate}
+              onChange={setStartDate}
+              placeholder="Selecionar data inicial"
+            />
+            
+            <DatePicker
+              label="Data Final"
+              value={endDate}
+              onChange={setEndDate}
+              placeholder="Selecionar data final"
+            />
+
+            {hasDateFilters && (
+              <button
+                onClick={clearDateFilters}
+                className="flex items-center gap-2 px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                title="Limpar filtros de data"
+              >
+                <X className="w-4 h-4" />
+                Limpar Datas
+              </button>
+            )}
           </div>
 
-          {/* Status Filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-dark-600" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-              className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="todos">Todos os estados</option>
-              <option value="pago">Pagos</option>
-              <option value="pendente">Pendentes</option>
-              <option value="agendado">Agendados</option>
-              <option value="rejeitado">Rejeitados</option>
-            </select>
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Period Filter - only show when no custom dates */}
+            {!hasDateFilters && (
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-dark-600" />
+                <select
+                  value={periodFilter}
+                  onChange={(e) => setPeriodFilter(e.target.value as FilterPeriod)}
+                  className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="todos">Todos os períodos</option>
+                  <option value="semanal">Última semana</option>
+                  <option value="mensal">Último mês</option>
+                  <option value="anual">Último ano</option>
+                </select>
+              </div>
+            )}
+
+            {/* Status Filter */}
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-dark-600" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
+                className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="todos">Todos os estados</option>
+                <option value="pago">Pagos</option>
+                <option value="pendente">Pendentes</option>
+                <option value="agendado">Agendados</option>
+                <option value="rejeitado">Rejeitados</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
