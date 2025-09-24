@@ -3,6 +3,7 @@ import { Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, FileText, AlertCi
 import { formatEuro, formatDateTime, formatDate } from '../../utils/formatters'
 import AdiantamentoDetailsModal from './AdiantamentoDetailsModal'
 import DatePicker from '../ui/DatePicker'
+import Select from '../ui/Select'
 
 interface Adiantamento {
   id: string
@@ -331,68 +332,76 @@ const AdiantamentosList = () => {
       </div>
 
       {/* Filters */}
-      <div className="card">
-        <div className="space-y-4">
+      <div className="card bg-gradient-to-br from-dark-100 to-dark-200 border border-dark-300/50 shadow-2xl">
+        <div className="space-y-6">
+          {/* Header dos Filtros */}
+          <div className="flex items-center gap-3 pb-4 border-b border-dark-300/30">
+            <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+              <AlertCircle className="w-4 h-4 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Filtros de Adiantamentos</h3>
+          </div>
+
           {/* Date Range Filters */}
-          <div className="flex flex-col lg:flex-row gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <DatePicker
-              label="Data Inicial"
+              label="📅 Data Inicial"
               value={startDate}
               onChange={setStartDate}
               placeholder="Selecionar data inicial"
             />
             
             <DatePicker
-              label="Data Final"
+              label="📅 Data Final"
               value={endDate}
               onChange={setEndDate}
               placeholder="Selecionar data final"
             />
 
             {hasDateFilters && (
-              <button
-                onClick={clearDateFilters}
-                className="flex items-center gap-2 px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
-                title="Limpar filtros de data"
-              >
-                <X className="w-4 h-4" />
-                Limpar Datas
-              </button>
+              <div className="flex items-end">
+                <button
+                  onClick={clearDateFilters}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+                  title="Limpar filtros de data"
+                >
+                  <X className="w-4 h-4" />
+                  Limpar Datas
+                </button>
+              </div>
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Status Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-dark-600" />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-                className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="todos">Todos os estados</option>
-                <option value="pendente">Pendentes</option>
-                <option value="aprovado">Aprovados</option>
-                <option value="pago">Pagos</option>
-                <option value="rejeitado">Rejeitados</option>
-              </select>
-            </div>
+            <Select
+              label="🔍 Estado"
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value as FilterStatus)}
+              options={[
+                { value: 'todos', label: 'Todos os estados' },
+                { value: 'pendente', label: 'Pendentes' },
+                { value: 'aprovado', label: 'Aprovados' },
+                { value: 'pago', label: 'Pagos' },
+                { value: 'rejeitado', label: 'Rejeitados' }
+              ]}
+              icon={<Filter className="w-5 h-5" />}
+            />
 
             {/* Urgencia Filter */}
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-dark-600" />
-              <select
-                value={urgenciaFilter}
-                onChange={(e) => setUrgenciaFilter(e.target.value as FilterUrgencia)}
-                className="px-3 py-2 bg-dark-200 border border-dark-300 rounded-lg text-white focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="todos">Todas as urgências</option>
-                <option value="critica">Crítica</option>
-                <option value="alta">Alta</option>
-                <option value="media">Média</option>
-                <option value="baixa">Baixa</option>
-              </select>
-            </div>
+            <Select
+              label="⚡ Urgência"
+              value={urgenciaFilter}
+              onChange={(value) => setUrgenciaFilter(value as FilterUrgencia)}
+              options={[
+                { value: 'todos', label: 'Todas as urgências' },
+                { value: 'critica', label: '🔴 Crítica' },
+                { value: 'alta', label: '🟠 Alta' },
+                { value: 'media', label: '🟡 Média' },
+                { value: 'baixa', label: '🟢 Baixa' }
+              ]}
+              icon={<AlertCircle className="w-5 h-5" />}
+            />
           </div>
         </div>
       </div>
