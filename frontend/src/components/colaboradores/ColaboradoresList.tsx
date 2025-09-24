@@ -30,6 +30,7 @@ interface Colaborador {
     titular: string
     iban?: string
     swift?: string
+    mbway?: string // Número de telefone para MBWay
   }
   documentos?: {
     rg?: string
@@ -73,7 +74,8 @@ const ColaboradoresList = () => {
         conta: '12345678-9',
         tipoConta: 'corrente',
         titular: 'João Silva',
-        iban: 'PT50 0123 4567 8901 2345 6789 0'
+        iban: 'PT50 0123 4567 8901 2345 6789 0',
+        mbway: '+351 21 999-0001'
       },
       documentos: {
         rg: '12.345.678-9',
@@ -107,7 +109,8 @@ const ColaboradoresList = () => {
         conta: '98765432-1',
         tipoConta: 'corrente',
         titular: 'Maria Santos',
-        iban: 'PT50 0456 7890 1234 5678 9012 3'
+        iban: 'PT50 0456 7890 1234 5678 9012 3',
+        mbway: '+351 21 999-0002'
       },
       documentos: {
         rg: '98.765.432-1',
@@ -141,7 +144,8 @@ const ColaboradoresList = () => {
         conta: '11111111-1',
         tipoConta: 'poupanca',
         titular: 'Pedro Costa',
-        iban: 'PT50 0789 0123 4567 8901 2345 6'
+        iban: 'PT50 0789 0123 4567 8901 2345 6',
+        mbway: '+351 21 999-0003'
       },
       documentos: {
         rg: '11.111.111-1',

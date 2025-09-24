@@ -1,4 +1,4 @@
-import { X, User, Mail, Phone, Briefcase, Euro, Calendar, MapPin, CreditCard, Building2, Hash, CheckCircle, AlertCircle } from 'lucide-react'
+import { X, User, Mail, Phone, Briefcase, Euro, Calendar, MapPin, CreditCard, Building2, Hash, CheckCircle, AlertCircle, Smartphone } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 
 interface Colaborador {
@@ -27,6 +27,7 @@ interface Colaborador {
     titular: string
     iban?: string
     swift?: string
+    mbway?: string // Número de telefone para MBWay
   }
   documentos?: {
     rg?: string
@@ -174,6 +175,20 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
             </div>
           )}
 
+          {/* MBWay - Destaque especial para método português */}
+          {colaborador.dadosBancarios?.mbway && (
+            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <Smartphone className="w-6 h-6 text-green-500" />
+                <div>
+                  <p className="text-green-400 font-medium text-lg">MBWay Disponível</p>
+                  <p className="text-white font-bold text-xl">{colaborador.dadosBancarios.mbway}</p>
+                  <p className="text-green-300 text-sm">Transferências instantâneas por telemóvel • Portugal</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Dados Bancários */}
           {colaborador.dadosBancarios && (
             <div className="card">
@@ -225,6 +240,16 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                     <div>
                       <p className="text-dark-600 text-sm">IBAN</p>
                       <p className="text-primary-500 font-medium">{colaborador.dadosBancarios.iban}</p>
+                    </div>
+                  </div>
+                )}
+                {colaborador.dadosBancarios.mbway && (
+                  <div className="flex items-center gap-3">
+                    <Smartphone className="w-5 h-5 text-green-500" />
+                    <div>
+                      <p className="text-dark-600 text-sm">MBWay</p>
+                      <p className="text-green-500 font-medium">{colaborador.dadosBancarios.mbway}</p>
+                      <p className="text-dark-600 text-xs">Transferências por telemóvel</p>
                     </div>
                   </div>
                 )}
