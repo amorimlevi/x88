@@ -29,6 +29,11 @@ interface AdiantamentoDetailsModalProps {
 const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: AdiantamentoDetailsModalProps) => {
   if (!isOpen || !adiantamento) return null
 
+  // Constantes e cálculos de retenção
+  const TAXA_RETENCAO = 0.10 // 10%
+  const valorLiquido = adiantamento.valor * (1 - TAXA_RETENCAO)
+  const valorRetido = adiantamento.valor * TAXA_RETENCAO
+
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'pendente':
@@ -135,6 +140,17 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
             </div>
           </div>
 
+          {/* Aviso de Retenção */}
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              <div>
+                <p className="text-amber-400 font-medium">Sistema de Retenção Ativo</p>
+                <p className="text-amber-300 text-sm">10% do valor solicitado será retido pela casa em todos os adiantamentos.</p>
+              </div>
+            </div>
+          </div>
+
           {/* Detalhes do Adiantamento */}
           <div className="card">
             <h3 className="text-lg font-semibold text-white mb-4">Detalhes da Solicitação</h3>
@@ -142,8 +158,26 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
               <div className="flex items-start gap-3">
                 <Euro className="w-5 h-5 text-dark-600 mt-0.5" />
                 <div>
-                  <p className="text-dark-600 text-sm">Valor Solicitado</p>
-                  <p className="text-primary-500 font-bold text-xl">{formatEuro(adiantamento.valor)}</p>
+                  <p className="text-dark-600 text-sm">Valor Solicitado (Bruto)</p>
+                  <p className="text-white font-bold text-xl">{formatEuro(adiantamento.valor)}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Euro className="w-5 h-5 text-primary-500 mt-0.5" />
+                <div>
+                  <p className="text-dark-600 text-sm">Valor Líquido (Motorista Recebe)</p>
+                  <p className="text-primary-500 font-bold text-xl">{formatEuro(valorLiquido)}</p>
+                  <p className="text-dark-600 text-xs">Após retenção de 10%</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Euro className="w-5 h-5 text-red-500 mt-0.5" />
+                <div>
+                  <p className="text-dark-600 text-sm">Valor Retido (Casa)</p>
+                  <p className="text-red-500 font-bold text-lg">{formatEuro(valorRetido)}</p>
+                  <p className="text-dark-600 text-xs">10% de retenção</p>
                 </div>
               </div>
               

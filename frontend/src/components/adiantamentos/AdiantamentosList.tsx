@@ -160,10 +160,34 @@ const AdiantamentosList = () => {
 
   const filteredAdiantamentos = getFilteredAdiantamentos()
 
+  // Constante para taxa de retenção
+  const TAXA_RETENCAO = 0.10 // 10%
+
+  // Funções de cálculo
+  const calcularValorLiquido = (valorBruto: number) => {
+    return valorBruto * (1 - TAXA_RETENCAO)
+  }
+
+  const calcularValorRetido = (valorBruto: number) => {
+    return valorBruto * TAXA_RETENCAO
+  }
+
   const getTotalPorStatus = (status: string) => {
     return adiantamentos
       .filter(a => a.status === status)
       .reduce((total, a) => total + a.valor, 0)
+  }
+
+  const getTotalLiquidoPorStatus = (status: string) => {
+    return adiantamentos
+      .filter(a => a.status === status)
+      .reduce((total, a) => total + calcularValorLiquido(a.valor), 0)
+  }
+
+  const getTotalRetidoPorStatus = (status: string) => {
+    return adiantamentos
+      .filter(a => a.status === status)
+      .reduce((total, a) => total + calcularValorRetido(a.valor), 0)
   }
 
   const getStatusColor = (status: string) => {
@@ -232,13 +256,14 @@ const AdiantamentosList = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Pendentes</p>
-              <p className="text-2xl font-bold text-yellow-400">{formatEuro(getTotalPorStatus('pendente'))}</p>
+              <p className="text-2xl font-bold text-yellow-400">{formatEuro(getTotalLiquidoPorStatus('pendente'))}</p>
               <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'pendente').length} solicitações</p>
+              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('pendente'))}</p>
             </div>
             <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
               <Clock className="w-5 h-5 text-white" />
@@ -250,8 +275,9 @@ const AdiantamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Aprovados</p>
-              <p className="text-2xl font-bold text-blue-400">{formatEuro(getTotalPorStatus('aprovado'))}</p>
+              <p className="text-2xl font-bold text-blue-400">{formatEuro(getTotalLiquidoPorStatus('aprovado'))}</p>
               <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'aprovado').length} solicitações</p>
+              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('aprovado'))}</p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-white" />
@@ -262,9 +288,10 @@ const AdiantamentosList = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-dark-600 text-sm">Pagos</p>
-              <p className="text-2xl font-bold text-green-400">{formatEuro(getTotalPorStatus('pago'))}</p>
+              <p className="text-dark-600 text-sm">Pagos (Líquido)</p>
+              <p className="text-2xl font-bold text-green-400">{formatEuro(getTotalLiquidoPorStatus('pago'))}</p>
               <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'pago').length} pagamentos</p>
+              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('pago'))}</p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
               <Euro className="w-5 h-5 text-white" />
@@ -275,12 +302,29 @@ const AdiantamentosList = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-dark-600 text-sm">Total Solicitações</p>
-              <p className="text-2xl font-bold text-white">{adiantamentos.length}</p>
-              <p className="text-dark-600 text-xs">{formatEuro(adiantamentos.reduce((total, a) => total + a.valor, 0))}</p>
+              <p className="text-dark-600 text-sm">Retido (Casa)</p>
+              <p className="text-2xl font-bold text-primary-500">
+                {formatEuro(getTotalRetidoPorStatus('pago') + getTotalRetidoPorStatus('aprovado'))}
+              </p>
+              <p className="text-dark-600 text-xs">10% de retenção</p>
+              <p className="text-dark-600 text-xs">Dos pagos + aprovados</p>
             </div>
             <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
               <FileText className="w-5 h-5 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-dark-600 text-sm">Total Geral</p>
+              <p className="text-2xl font-bold text-white">{adiantamentos.length}</p>
+              <p className="text-dark-600 text-xs">Bruto: {formatEuro(adiantamentos.reduce((total, a) => total + a.valor, 0))}</p>
+              <p className="text-dark-600 text-xs">Líquido: {formatEuro(adiantamentos.reduce((total, a) => total + calcularValorLiquido(a.valor), 0))}</p>
+            </div>
+            <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xs">{adiantamentos.length}</span>
             </div>
           </div>
         </div>
@@ -361,7 +405,8 @@ const AdiantamentosList = () => {
               <tr className="border-b border-dark-300">
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Motorista</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Motivo</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor</th>
+                <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor Solicitado</th>
+                <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor Líquido</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Urgência</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Data Solicitação</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Vencimento Desejado</th>
@@ -394,9 +439,19 @@ const AdiantamentosList = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-primary-500 font-semibold">
+                    <span className="text-white font-semibold">
                       {formatEuro(adiantamento.valor)}
                     </span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <div>
+                      <span className="text-primary-500 font-semibold">
+                        {formatEuro(calcularValorLiquido(adiantamento.valor))}
+                      </span>
+                      <p className="text-red-400 text-xs">
+                        -10% ({formatEuro(calcularValorRetido(adiantamento.valor))})
+                      </p>
+                    </div>
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2">
