@@ -63,6 +63,7 @@ const PagamentosList = () => {
       valor: 500,
       descricao: 'Adiantamento emergência médica',
       status: 'aprovado',
+      dataPagamento: '2024-01-30T16:00:00',
       dataVencimento: '2024-02-15T00:00:00',
       origem: 'manual'
     },
@@ -74,6 +75,7 @@ const PagamentosList = () => {
       valor: 200,
       descricao: 'Bónus por performance',
       status: 'pendente',
+      dataPagamento: '2024-02-01T12:00:00',
       dataVencimento: '2024-02-01T00:00:00',
       origem: 'manual'
     },
@@ -85,6 +87,7 @@ const PagamentosList = () => {
       valor: 1800,
       descricao: 'Salário Fevereiro 2024',
       status: 'agendado',
+      dataPagamento: '2024-02-25T10:00:00',
       dataVencimento: '2024-02-25T00:00:00',
       origem: 'manual'
     },
@@ -97,7 +100,7 @@ const PagamentosList = () => {
       descricao: 'Desconto por falta',
       status: 'pago',
       dataPagamento: '2024-01-15T09:00:00',
-      metodoPagamento: 'desconto_salario',
+      metodoPagamento: 'transferencia',
       origem: 'manual'
     }
   ])
