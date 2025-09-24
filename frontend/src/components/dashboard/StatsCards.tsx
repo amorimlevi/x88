@@ -22,7 +22,7 @@ const StatsCards = () => {
       title: 'Adiantamentos Pendentes',
       value: 'R$ 2.400',
       change: '5 solicitações',
-      changeType: 'neutral' as const,
+      changeType: 'positive' as const,
       icon: CreditCard,
       color: 'bg-orange-500'
     },
@@ -54,8 +54,6 @@ const StatsCards = () => {
                 <p className={`text-xs ${
                   stat.changeType === 'positive' 
                     ? 'text-primary-500' 
-                    : stat.changeType === 'negative'
-                    ? 'text-red-500'
                     : 'text-dark-600'
                 }`}>
                   {stat.change}

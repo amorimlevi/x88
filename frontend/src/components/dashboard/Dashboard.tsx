@@ -1,15 +1,4 @@
 import { useState } from 'react'
-import { 
-  Home, 
-  Users, 
-  DollarSign, 
-  CreditCard, 
-  BarChart3, 
-  Settings,
-  Menu,
-  X,
-  Bell
-} from 'lucide-react'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import StatsCards from './StatsCards'
