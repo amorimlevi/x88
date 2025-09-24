@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import StatsCards from './StatsCards'
+import ColaboradoresList from '../colaboradores/ColaboradoresList'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -24,22 +25,25 @@ const Dashboard = () => {
         {/* Header */}
         <Header onMenuClick={toggleSidebar} />
 
-        {/* Dashboard Content */}
+        {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Page Title */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-              <p className="text-dark-600 mt-2">
-                Visão geral da sua frota e pagamentos
-              </p>
-            </div>
+            {/* Conditional Content Based on Active Section */}
+            {activeSection === 'dashboard' && (
+              <>
+                {/* Page Title */}
+                <div className="mb-8">
+                  <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+                  <p className="text-dark-600 mt-2">
+                    Visão geral da sua frota e pagamentos
+                  </p>
+                </div>
 
-            {/* Stats Cards */}
-            <StatsCards />
+                {/* Stats Cards */}
+                <StatsCards />
 
-            {/* Recent Activity */}
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Recent Activity */}
+                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Solicitações Pendentes */}
               <div className="card">
                 <div className="flex items-center justify-between mb-6">
@@ -101,7 +105,43 @@ const Dashboard = () => {
                   ))}
                 </div>
               </div>
-            </div>
+                </div>
+              </>
+            )}
+
+            {/* Colaboradores Section */}
+            {activeSection === 'funcionarios' && (
+              <ColaboradoresList />
+            )}
+
+            {/* Other sections can be added here */}
+            {activeSection === 'pagamentos' && (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-bold text-white mb-4">Pagamentos</h2>
+                <p className="text-dark-600">Secção em desenvolvimento...</p>
+              </div>
+            )}
+
+            {activeSection === 'adiantamentos' && (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-bold text-white mb-4">Adiantamentos</h2>
+                <p className="text-dark-600">Secção em desenvolvimento...</p>
+              </div>
+            )}
+
+            {activeSection === 'relatorios' && (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-bold text-white mb-4">Relatórios</h2>
+                <p className="text-dark-600">Secção em desenvolvimento...</p>
+              </div>
+            )}
+
+            {activeSection === 'configuracoes' && (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-bold text-white mb-4">Configurações</h2>
+                <p className="text-dark-600">Secção em desenvolvimento...</p>
+              </div>
+            )}
           </div>
         </main>
       </div>
