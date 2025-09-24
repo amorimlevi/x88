@@ -33,7 +33,18 @@ export default defineConfig({
       }
     })
   ],
+  css: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
+    },
+  },
   server: {
     port: 3000
+  },
+  build: {
+    outDir: 'dist'
   }
 })
