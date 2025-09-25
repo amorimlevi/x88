@@ -70,8 +70,8 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
   const urgenciaInfo = getUrgenciaInfo(adiantamento.urgencia)
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-dark-100 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className="bg-dark-100 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-dark-300">
           <div className="flex items-center gap-3">
