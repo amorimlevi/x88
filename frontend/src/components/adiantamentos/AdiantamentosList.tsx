@@ -428,14 +428,16 @@ const AdiantamentosList = () => {
                 <tr key={adiantamento.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <span className="text-black dark:text-white font-medium">{adiantamento.funcionarioNome}</span>
-                        <p className="text-black dark:text-white text-xs">{adiantamento.cargo}</p>
-                      </div>
+                    <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                        {adiantamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                      </span>
                     </div>
+                    <div>
+                      <span className="text-black dark:text-white font-medium">{adiantamento.funcionarioNome}</span>
+                        <p className="text-black dark:text-white text-xs">{adiantamento.cargo}</p>
+                       </div>
+                     </div>
                   </td>
                   <td className="py-4 px-4">
                     <div>
