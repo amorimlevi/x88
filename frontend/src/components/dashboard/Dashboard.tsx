@@ -176,7 +176,8 @@ const Dashboard = () => {
                     onClick={() => handlePagamentoClick(pagamento)}
                     className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[45px]"
                   >
-                    <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0">
+                    <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white text-xs font-medium">{pagamento.iniciais}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-black dark:text-white font-medium text-sm leading-tight truncate">{pagamento.nome}</p>
