@@ -1,13 +1,13 @@
 import { 
-  Home, 
-  Users, 
-  DollarSign, 
-  CreditCard, 
-  BarChart3, 
-  Settings,
-  X,
-  Truck
-} from 'lucide-react'
+  DashboardIcon,
+  RequestsIcon, 
+  AdvanceIcon,
+  PaymentsIcon,
+  ReportsIcon,
+  UsersIcon, 
+  SettingsIcon,
+  XIcon
+} from '../ui/Icons'
 
 interface SidebarProps {
   isOpen: boolean
@@ -18,12 +18,13 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarProps) => {
   const menuItems = [
-    { id: 'dashboard', icon: Home, label: 'Dashboard' },
-    { id: 'funcionarios', icon: Users, label: 'Colaboradores' },
-    { id: 'pagamentos', icon: DollarSign, label: 'Pagamentos' },
-    { id: 'adiantamentos', icon: CreditCard, label: 'Adiantamentos' },
-    { id: 'relatorios', icon: BarChart3, label: 'Relatórios' },
-    { id: 'configuracoes', icon: Settings, label: 'Configurações' },
+    { id: 'dashboard', icon: DashboardIcon, label: 'Dashboard' },
+    { id: 'solicitacoes', icon: RequestsIcon, label: 'Solicitações' },
+    { id: 'adiantamentos', icon: AdvanceIcon, label: 'Adiantamentos' },
+    { id: 'pagamentos', icon: PaymentsIcon, label: 'Pagamentos' },
+    { id: 'relatorios', icon: ReportsIcon, label: 'Relatórios' },
+    { id: 'funcionarios', icon: UsersIcon, label: 'Colaboradores' },
+    { id: 'configuracoes', icon: SettingsIcon, label: 'Configurações' },
   ]
 
   return (
@@ -38,24 +39,33 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
 
       {/* Sidebar */}
       <aside className={`
-        fixed lg:static inset-y-0 left-0 z-50 w-64 bg-dark-100 border-r border-dark-300
+        fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar
         transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
         transition-transform duration-300 ease-in-out
       `}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-dark-300">
+          <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-dark-300">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                <Truck className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-lg flex items-center justify-center">
+                <svg 
+                  className="w-5 h-5 text-white" 
+                  viewBox="0 0 24 24" 
+                  fill="currentColor"
+                >
+                  <path d="M1 3h15l-1 9H2z" />
+                  <path d="M16 8h4l-2 9H6" />
+                  <circle cx="7" cy="19" r="2" />
+                  <circle cx="17" cy="19" r="2" />
+                </svg>
               </div>
-              <span className="text-xl font-bold text-white">X88</span>
+              <span className="text-xl font-bold text-black dark:text-white">X88</span>
             </div>
             <button
               onClick={onClose}
-              className="lg:hidden text-dark-600 hover:text-white"
+              className="lg:hidden text-neutral-600 dark:text-dark-600 hover:text-black dark:hover:text-white"
             >
-              <X className="w-5 h-5" />
+              <XIcon size="md" />
             </button>
           </div>
 
@@ -74,14 +84,14 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
                         onClose()
                       }}
                       className={`
-                        w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors
+                        w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200
                         ${isActive 
-                          ? 'bg-primary-500 text-white' 
-                          : 'text-dark-600 hover:bg-dark-200 hover:text-white'
+                          ? 'bg-black dark:bg-brand-500 text-white' 
+                          : 'nav-item'
                         }
                       `}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon size="md" />
                       <span className="font-medium">{item.label}</span>
                     </button>
                   </li>
@@ -91,14 +101,14 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-dark-300">
-            <div className="flex items-center gap-3 p-3 bg-dark-200 rounded-lg">
-              <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
+          <div className="p-4 border-t border-neutral-200 dark:border-dark-300">
+            <div className="flex items-center gap-3 p-3 bg-neutral-100 dark:bg-dark-200 rounded-lg">
+              <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">AD</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-white font-medium truncate">Admin User</p>
-                <p className="text-dark-600 text-sm truncate">Gestor da Frota</p>
+                <p className="text-black dark:text-white font-medium truncate">Admin User</p>
+                <p className="text-neutral-600 dark:text-dark-600 text-sm truncate">Gestor da Frota</p>
               </div>
             </div>
           </div>

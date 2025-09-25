@@ -6,6 +6,8 @@ import ColaboradoresList from '../colaboradores/ColaboradoresList'
 import PagamentosList from '../pagamentos/PagamentosList'
 import AdiantamentosList from '../adiantamentos/AdiantamentosList'
 import RelatoriosList from '../relatorios/RelatoriosList'
+import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
+import SolicitacoesList from '../solicitacoes/SolicitacoesList'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -14,7 +16,7 @@ const Dashboard = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
   return (
-    <div className="flex h-screen bg-black">
+    <div className="flex h-screen bg-white dark:bg-black">
       {/* Sidebar */}
       <Sidebar 
         isOpen={sidebarOpen}
@@ -29,81 +31,83 @@ const Dashboard = () => {
         <Header onMenuClick={toggleSidebar} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto">
             {/* Conditional Content Based on Active Section */}
             {activeSection === 'dashboard' && (
               <>
                 {/* Page Title */}
                 <div className="mb-8">
-                  <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                  <p className="text-dark-600 mt-2">
+                  <h1 className="heading-1">Dashboard</h1>
+                  <p className="text-body mt-2">
                     Visão geral da sua frota e pagamentos
                   </p>
                 </div>
 
                 {/* Stats Cards */}
-                <StatsCards />
+                <StatsCards onSectionChange={setActiveSection} />
 
                 {/* Recent Activity */}
                 <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Solicitações Pendentes */}
               <div className="card">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="heading-3">
                     Solicitações Pendentes
                   </h3>
-                  <span className="text-xs bg-primary-500 text-white px-2 py-1 rounded-full">
-                    5 novas
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs bg-brand-600 dark:bg-brand-500 text-white px-2 py-1 rounded-full">
+                      5 novas
+                    </span>
+                    <button 
+                      onClick={() => setActiveSection('solicitacoes')}
+                      className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
+                    >
+                      Ver todas
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="space-y-4">
-                  {[1, 2, 3].map((item) => (
-                    <div key={item} className="flex items-center justify-between p-4 bg-dark-200 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm font-medium">JD</span>
-                        </div>
-                        <div>
-                          <p className="text-white font-medium">João da Silva</p>
-                          <p className="text-dark-600 text-sm">Adiantamento - Viagem SP</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-primary-500 font-semibold">€ 500,00</p>
-                        <p className="text-dark-600 text-xs">há 2 horas</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="grid grid-cols-2 gap-2">
+                {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center text-center w-full">
+                <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
+                <span className="text-white text-sm font-medium">JD</span>
+                </div>
+                <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">João da Silva</p>
+                <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">Viagem SP</p>
+                <p className="text-brand-600 dark:text-brand-400 font-semibold text-xs leading-tight mb-1">€ 500</p>
+                <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">2h</p>
+                </div>
+                </div>
+                ))}
                 </div>
               </div>
 
               {/* Últimos Pagamentos */}
               <div className="card">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="heading-3">
                     Últimos Pagamentos
                   </h3>
-                  <button className="text-primary-500 text-sm font-medium hover:text-primary-400">
+                  <button className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors">
                     Ver todos
                   </button>
                 </div>
                 
-                <div className="space-y-4">
-                  {[1, 2, 3].map((item) => (
-                    <div key={item} className="flex items-center justify-between p-4 bg-dark-200 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-primary-500 rounded-full"></div>
-                        <div>
-                          <p className="text-white font-medium">Maria Santos</p>
-                          <p className="text-dark-600 text-sm">Pagamento viagem RJ</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white font-semibold">€ 1.200,00</p>
-                        <p className="text-dark-600 text-xs">Ontem</p>
-                      </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[1, 2, 3, 4].map((item) => (
+                  <div key={item} className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden">
+                    <div className="flex flex-col items-center justify-center text-center w-full">
+                    <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
+                      <span className="text-white text-sm font-medium">MS</span>
+                     </div>
+                     <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">Maria Santos</p>
+                    <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">Viagem RJ</p>
+                    <p className="text-black dark:text-white font-semibold text-xs leading-tight mb-1">€ 1.200</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">1d</p>
+                    </div>
                     </div>
                   ))}
                 </div>
@@ -131,10 +135,11 @@ const Dashboard = () => {
             )}
 
             {activeSection === 'configuracoes' && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold text-white mb-4">Configurações</h2>
-                <p className="text-dark-600">Secção em desenvolvimento...</p>
-              </div>
+              <ConfiguracoesList />
+            )}
+
+            {activeSection === 'solicitacoes' && (
+              <SolicitacoesList />
             )}
           </div>
         </main>

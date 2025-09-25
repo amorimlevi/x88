@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,23 +6,296 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-black text-white;
+    @apply bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary transition-colors;
+  }
+
+  * {
+    @apply border-light-border dark:border-dark-border;
+    list-style: none !important;
+  }
+
+  ul, ol, li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  *::before,
+  *::after {
+    list-style: none !important;
+    content: none !important;
+  }
+
+  *::marker {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* Remover bullets globalmente */
+  div, p, span, section, article, aside, main, header, footer, nav {
+    list-style: none !important;
+    list-style-type: none !important;
+    list-style-image: none !important;
+    list-style-position: outside !important;
   }
 }
 
 @layer components {
+  /* Professional Button Components */
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium transition-colors;
+    @apply bg-black dark:bg-brand-600 hover:bg-neutral-800 dark:hover:bg-brand-700 active:bg-neutral-900 dark:active:bg-brand-800 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-card hover:shadow-card-hover focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-bg;
   }
   
   .btn-secondary {
-    @apply bg-dark-200 hover:bg-dark-300 text-white px-6 py-3 rounded-lg font-medium transition-colors;
+    @apply bg-white dark:bg-dark-surface hover:bg-neutral-50 dark:hover:bg-neutral-800 text-black dark:text-dark-text-primary px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-card hover:shadow-card-hover border border-neutral-200 dark:border-dark-border focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-bg;
   }
-  
+
+  .btn-outline {
+    @apply border-2 border-black dark:border-brand-600 text-black dark:text-brand-400 hover:bg-black dark:hover:bg-brand-600 hover:text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-bg;
+  }
+
+  .btn-ghost {
+    @apply text-light-text-secondary dark:text-dark-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-light-text-primary dark:hover:text-dark-text-primary px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+
+  /* Professional Card Components */
   .card {
-    @apply bg-dark-100 border border-dark-300 rounded-xl p-6;
+    @apply bg-white rounded-2xl p-6 shadow-card transition-all duration-200;
+    background-color: white;
+    border: 1px solid rgba(34, 197, 94, 0.2);
   }
+
+  .dark .card {
+    background-color: #1C1C1E;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .card:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .card:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* List Item Components */
+  .list-item {
+    @apply bg-white rounded-lg;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  .list-item::before,
+  .list-item::after {
+    display: none !important;
+  }
+
+  .list-item * {
+    list-style: none !important;
+    list-style-type: none !important;
+    list-style-image: none !important;
+    list-style-position: outside !important;
+  }
+
+  .list-item ul,
+  .list-item ol,
+  .list-item li {
+    list-style: none !important;
+    list-style-type: none !important;
+    list-style-image: none !important;
+    list-style-position: outside !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remove qualquer ponto, marcador ou bullet que possa aparecer */
+  .list-item *::marker {
+    content: none !important;
+    display: none !important;
+  }
+
+  .list-item div::before,
+  .list-item div::after,
+  .list-item p::before,
+  .list-item p::after,
+  .list-item span::before,
+  .list-item span::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .dark .list-item {
+    background-color: #2C2C2E;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .list-item:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.1);
+  }
+
+  .dark .list-item:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2);
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover hover:-translate-y-1;
+  }
+
+  .card-hover:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .card-hover:hover {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .card-compact {
+    @apply card p-4;
+  }
+
+  /* Professional Input Components */
+  .input {
+    @apply bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-600 text-black dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-brand-500 focus:border-black dark:focus:border-brand-500 transition-all duration-200;
+  }
+
+  .input-error {
+    @apply input border-red-500 focus:ring-red-500 focus:border-red-500;
+  }
+
+  /* Professional Typography */
+  .heading-1 {
+    @apply text-3xl md:text-4xl font-bold text-black dark:text-white;
+  }
+
+  .heading-2 {
+    @apply text-2xl md:text-3xl font-bold text-black dark:text-white;
+  }
+
+  .heading-3 {
+    @apply text-xl md:text-2xl font-semibold text-black dark:text-white;
+  }
+
+  .text-body {
+    @apply text-neutral-600 dark:text-dark-text-secondary;
+  }
+
+  .text-muted {
+    @apply text-neutral-500 dark:text-dark-text-muted;
+  }
+
+  /* Professional Layout */
+  .container-app {
+    @apply min-h-screen bg-white dark:bg-dark-bg transition-colors;
+  }
+
+  .sidebar {
+    @apply bg-white dark:bg-dark-surface border-r border-neutral-200 dark:border-dark-border;
+  }
+
+  .nav-item {
+    @apply flex items-center px-4 py-3 text-neutral-600 dark:text-dark-text-secondary hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-black dark:hover:text-dark-text-primary rounded-xl transition-all duration-200;
+  }
+
+  .nav-item-active {
+    @apply nav-item bg-neutral-100 dark:bg-brand-950 text-black dark:text-brand-400 border-r-2 border-black dark:border-brand-600;
+  }
+
+  /* Status indicators */
+  .status-success {
+    @apply text-brand-600 bg-brand-50 dark:bg-brand-950 px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .status-warning {
+    @apply text-yellow-600 bg-yellow-50 dark:bg-yellow-950 px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .status-error {
+    @apply text-red-600 bg-red-50 dark:bg-red-950 px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  /* Scrollbars */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.neutral.300') transparent;
+  }
+
+  .dark .scrollbar-thin {
+    scrollbar-color: theme('colors.neutral.700') transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: theme('colors.neutral.300');
+    border-radius: 3px;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: theme('colors.neutral.700');
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.neutral.400');
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.neutral.600');
+  }
+}
+
+/* Regra global para remover qualquer tipo de ponto ou marcador visual */
+* {
+  list-style: none !important;
+  list-style-type: none !important;
+  list-style-image: none !important;
+}
+
+*::before,
+*::after {
+  content: none !important;
+  display: none !important;
+}
+
+*::marker {
+  content: none !important;
+  display: none !important;
+}
+
+/* Especificamente para elementos que podem ter pontos */
+.card *, 
+.list-item *,
+div[class*="grid"] *,
+div[class*="flex"] * {
+  list-style: none !important;
+  list-style-type: none !important;
+  list-style-image: none !important;
+  list-style-position: outside !important;
+}
+
+/* Remover qualquer pseudo-elemento que possa criar pontos */
+.card *::before,
+.card *::after,
+.list-item *::before,
+.list-item *::after {
+  content: none !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }

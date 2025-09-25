@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, X } from 'lucide-react'
+import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, X, CreditCard, DollarSign } from 'lucide-react'
 import { formatEuro, formatDateTime, formatDate } from '../../utils/formatters'
 import PagamentoDetailsModal from './PagamentoDetailsModal'
+import ContasAReceber from './ContasAReceber'
 import DatePicker from '../ui/DatePicker'
 import Select from '../ui/Select'
 
@@ -25,12 +26,18 @@ type FilterPeriod = 'semanal' | 'mensal' | 'anual' | 'todos'
 type FilterStatus = 'todos' | 'pago' | 'pendente' | 'agendado' | 'rejeitado'
 
 const PagamentosList = () => {
+  const [activeTab, setActiveTab] = useState('pagamentos')
   const [periodFilter, setPeriodFilter] = useState<FilterPeriod>('mensal')
   const [statusFilter, setStatusFilter] = useState<FilterStatus>('todos')
   const [selectedPagamento, setSelectedPagamento] = useState<Pagamento | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
+
+  const tabs = [
+    { id: 'pagamentos', name: 'Pagamentos Realizados', icon: CreditCard },
+    { id: 'contas-receber', name: 'Contas a Receber', icon: DollarSign }
+  ]
 
   // Dados mock - em produção viriam da API
   const [pagamentos] = useState<Pagamento[]>([
@@ -234,12 +241,41 @@ const PagamentosList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Pagamentos</h1>
+          <h1 className="text-3xl font-bold text-white">Gestão Financeira</h1>
           <p className="text-dark-600 mt-2">
-            Histórico e gestão de pagamentos da frota
+            Pagamentos realizados e contas a receber dos adiantamentos
           </p>
         </div>
       </div>
+
+      {/* Tabs Navigation */}
+      <div className="border-b border-dark-700">
+        <nav className="flex space-x-8">
+          {tabs.map((tab) => {
+            const IconComponent = tab.icon
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-primary-500 text-primary-500'
+                    : 'border-transparent text-dark-600 hover:text-white hover:border-dark-500'
+                }`}
+              >
+                <IconComponent className="h-5 w-5" />
+                {tab.name}
+              </button>
+            )
+          })}
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'contas-receber' ? (
+        <ContasAReceber />
+      ) : (
+        <div className="space-y-6">
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -496,15 +532,17 @@ const PagamentosList = () => {
         </div>
       </div>
 
-      {/* Details Modal */}
-      <PagamentoDetailsModal
-        isOpen={isDetailsModalOpen}
-        onClose={() => {
-          setIsDetailsModalOpen(false)
-          setSelectedPagamento(null)
-        }}
-        pagamento={selectedPagamento}
-      />
+        {/* Details Modal */}
+        <PagamentoDetailsModal
+          isOpen={isDetailsModalOpen}
+          onClose={() => {
+            setIsDetailsModalOpen(false)
+            setSelectedPagamento(null)
+          }}
+          pagamento={selectedPagamento}
+        />
+        </div>
+      )}
     </div>
   )
 }
