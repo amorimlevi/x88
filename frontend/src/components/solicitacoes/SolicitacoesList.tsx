@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Clock, User, Check, X, Eye, AlertCircle, Calendar, Euro, FileText } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 
@@ -18,7 +18,11 @@ interface Solicitacao {
   observacoes?: string
 }
 
-const SolicitacoesList = () => {
+interface Props {
+  selectedSolicitacao?: any
+}
+
+const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Props) => {
   const [statusFilter, setStatusFilter] = useState<'todos' | 'pendente' | 'aprovada' | 'negada' | 'em_analise'>('pendente')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<Solicitacao | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -102,6 +106,20 @@ const SolicitacoesList = () => {
       observacoes: 'Período muito próximo, não é possível reorganizar a escala.'
     }
   ])
+
+  // Efeito para mostrar detalhes quando uma solicitação é selecionada no dashboard
+  useEffect(() => {
+    if (propSelectedSolicitacao) {
+      // Encontrar a solicitação correspondente pelos dados
+      const solicitacaoEncontrada = solicitacoes.find(s => 
+        s.funcionarioNome === propSelectedSolicitacao.nome
+      )
+      if (solicitacaoEncontrada) {
+        setSelectedSolicitacao(solicitacaoEncontrada)
+        setIsModalOpen(true)
+      }
+    }
+  }, [propSelectedSolicitacao])
 
   const getFilteredSolicitacoes = () => {
     if (statusFilter === 'todos') {

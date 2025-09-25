@@ -12,8 +12,34 @@ import SolicitacoesList from '../solicitacoes/SolicitacoesList'
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
+  const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+
+  // Mock data para solicitações
+  const solicitacoesMock = [
+    { id: 1, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 2, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 3, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 4, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' }
+  ]
+
+  // Mock data para pagamentos
+  const pagamentosMock = [
+    { id: 1, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
+    { id: 2, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
+    { id: 3, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
+    { id: 4, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' }
+  ]
+
+  const handleSolicitacaoClick = (solicitacao: any) => {
+    setSelectedSolicitacao(solicitacao)
+    setActiveSection('solicitacoes')
+  }
+
+  const handlePagamentoClick = (pagamento: any) => {
+    setActiveSection('pagamentos')
+  }
 
   return (
     <div className="flex h-screen bg-white dark:bg-black">
@@ -69,16 +95,20 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2">
-                {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden">
+                {solicitacoesMock.map((solicitacao) => (
+                <div 
+                  key={solicitacao.id} 
+                  onClick={() => handleSolicitacaoClick(solicitacao)}
+                  className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                >
                 <div className="flex flex-col items-center justify-center text-center w-full">
                 <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                <span className="text-white text-sm font-medium">JD</span>
+                <span className="text-white text-sm font-medium">{solicitacao.iniciais}</span>
                 </div>
-                <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">João da Silva</p>
-                <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">Viagem SP</p>
-                <p className="text-brand-600 dark:text-brand-400 font-semibold text-xs leading-tight mb-1">€ 500</p>
-                <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">2h</p>
+                <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{solicitacao.nome}</p>
+                <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{solicitacao.viagem}</p>
+                <p className="text-brand-600 dark:text-brand-400 font-semibold text-xs leading-tight mb-1">€ {solicitacao.valor}</p>
+                <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">{solicitacao.tempo}</p>
                 </div>
                 </div>
                 ))}
@@ -91,22 +121,29 @@ const Dashboard = () => {
                   <h3 className="heading-3">
                     Últimos Pagamentos
                   </h3>
-                  <button className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors">
+                  <button 
+                    onClick={() => setActiveSection('pagamentos')}
+                    className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
+                  >
                     Ver todos
                   </button>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2">
-                  {[1, 2, 3, 4].map((item) => (
-                  <div key={item} className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden">
+                  {pagamentosMock.map((pagamento) => (
+                  <div 
+                    key={pagamento.id} 
+                    onClick={() => handlePagamentoClick(pagamento)}
+                    className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                  >
                     <div className="flex flex-col items-center justify-center text-center w-full">
                     <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-white text-sm font-medium">MS</span>
+                      <span className="text-white text-sm font-medium">{pagamento.iniciais}</span>
                      </div>
-                     <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">Maria Santos</p>
-                    <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">Viagem RJ</p>
-                    <p className="text-black dark:text-white font-semibold text-xs leading-tight mb-1">€ 1.200</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">1d</p>
+                     <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{pagamento.nome}</p>
+                    <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{pagamento.viagem}</p>
+                    <p className="text-black dark:text-white font-semibold text-xs leading-tight mb-1">€ {pagamento.valor}</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">{pagamento.tempo}</p>
                     </div>
                     </div>
                   ))}
@@ -139,7 +176,7 @@ const Dashboard = () => {
             )}
 
             {activeSection === 'solicitacoes' && (
-              <SolicitacoesList />
+              <SolicitacoesList selectedSolicitacao={selectedSolicitacao} />
             )}
           </div>
         </main>
