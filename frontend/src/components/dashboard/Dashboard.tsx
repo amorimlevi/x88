@@ -144,13 +144,13 @@ const Dashboard = () => {
                       <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                         <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                       </div>
-                      <p className="text-black dark:text-white font-medium text-base">{solicitacao.nome}</p>
+                      <p className="text-black dark:text-white font-medium text-base leading-none">{solicitacao.nome}</p>
                     </div>
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base">€ {solicitacao.valor},00</p>
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-none">€ {solicitacao.valor},00</p>
                   </div>
-                  <div className="flex justify-between">
-                    <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-tight">Adiantamento - {solicitacao.viagem}</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
+                  <div className="flex justify-between -mt-1">
+                    <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-none">Adiantamento - {solicitacao.viagem}</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
                   </div>
                 </div>
                 ))}
