@@ -118,6 +118,10 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
         setSelectedSolicitacao(solicitacaoEncontrada)
         setIsModalOpen(true)
       }
+    } else {
+      // Se não há solicitação selecionada, fechar modal
+      setSelectedSolicitacao(null)
+      setIsModalOpen(false)
     }
   }, [propSelectedSolicitacao])
 

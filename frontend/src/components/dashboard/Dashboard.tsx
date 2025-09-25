@@ -37,6 +37,11 @@ const Dashboard = () => {
     setActiveSection('solicitacoes')
   }
 
+  const handleVerTodasSolicitacoes = () => {
+    setSelectedSolicitacao(null) // Limpar solicitação selecionada
+    setActiveSection('solicitacoes')
+  }
+
   const handlePagamentoClick = (pagamento: any) => {
     setActiveSection('pagamentos')
   }
@@ -86,7 +91,7 @@ const Dashboard = () => {
                       5 novas
                     </span>
                     <button 
-                      onClick={() => setActiveSection('solicitacoes')}
+                      onClick={handleVerTodasSolicitacoes}
                       className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                     >
                       Ver todas
