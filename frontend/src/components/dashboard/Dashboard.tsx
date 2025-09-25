@@ -137,16 +137,16 @@ const Dashboard = () => {
                 <div 
                   key={solicitacao.id} 
                   onClick={() => handleSolicitacaoClick(solicitacao)}
-                  className="py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  className="py-2 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start">
                       <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                         <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                       </div>
-                      <p className="text-black dark:text-white font-medium text-base leading-none">{solicitacao.nome}</p>
+                      <p className="text-black dark:text-white font-medium text-base leading-none mt-1">{solicitacao.nome}</p>
                     </div>
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-none">€ {solicitacao.valor},00</p>
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-none mt-1">€ {solicitacao.valor},00</p>
                   </div>
                   <div className="flex justify-between -mt-1">
                     <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-none">Adiantamento - {solicitacao.viagem}</p>
