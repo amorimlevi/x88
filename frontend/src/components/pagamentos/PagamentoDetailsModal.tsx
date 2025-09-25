@@ -110,9 +110,9 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                 Colaborador
               </label>
               <div className="flex items-center gap-3 p-3 bg-dark-200 rounded-lg">
-                <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                  <span className="text-black dark:text-white text-sm font-medium">
-                    {pagamento.funcionarioNome.charAt(0).toUpperCase()}
+                <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {pagamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
                   </span>
                 </div>
                 <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>

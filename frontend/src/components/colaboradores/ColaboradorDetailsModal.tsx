@@ -69,9 +69,9 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-dark-300">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center">
-              <span className="text-black dark:text-white text-xl font-bold">
-                {colaborador.nome.charAt(0).toUpperCase()}
+            <div className="w-16 h-16 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-xl font-bold">
+                {colaborador.nome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
               </span>
             </div>
             <div>
