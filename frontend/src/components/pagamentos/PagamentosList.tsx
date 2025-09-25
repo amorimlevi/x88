@@ -434,11 +434,13 @@ const PagamentosList = () => {
                 <tr key={pagamento.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                        {pagamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                      </span>
                       </div>
-                      <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
-                    </div>
+                       <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
+                     </div>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTipoColor(pagamento.tipo)}`}>
@@ -513,8 +515,10 @@ const PagamentosList = () => {
             .map((pagamento) => (
               <div key={pagamento.id} className="flex items-center justify-between p-3 bg-dark-200 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {pagamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                    </span>
                   </div>
                   <div>
                     <p className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</p>
