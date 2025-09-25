@@ -137,20 +137,20 @@ const Dashboard = () => {
                 <div 
                   key={solicitacao.id} 
                   onClick={() => handleSolicitacaoClick(solicitacao)}
-                  className="flex items-center justify-between py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  className="flex items-center justify-between py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[60px]"
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center flex-1">
                     <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                       <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                     </div>
-                    <div>
-                      <p className="text-black dark:text-white font-medium text-base">{solicitacao.nome}</p>
-                      <p className="text-neutral-600 dark:text-gray-300 text-sm">Adiantamento - {solicitacao.viagem}</p>
+                    <div className="flex-1">
+                      <p className="text-black dark:text-white font-medium text-base leading-snug">{solicitacao.nome}</p>
+                      <p className="text-neutral-600 dark:text-gray-300 text-sm leading-tight">Adiantamento - {solicitacao.viagem}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base mb-1">€ {solicitacao.valor},00</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-sm">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
+                  <div className="text-right flex-shrink-0 self-center">
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-snug">€ {solicitacao.valor},00</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
                   </div>
                 </div>
                 ))}
@@ -176,19 +176,19 @@ const Dashboard = () => {
                   <div 
                     key={pagamento.id} 
                     onClick={() => handlePagamentoClick(pagamento)}
-                    className="flex items-center justify-between py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center justify-between py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[55px]"
                   >
-                    <div className="flex items-center">
+                    <div className="flex items-center flex-1">
                       <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0">
                       </div>
-                      <div>
-                        <p className="text-black dark:text-white font-medium text-sm">{pagamento.nome}</p>
-                        <p className="text-neutral-600 dark:text-gray-300 text-xs">Pagamento viagem {pagamento.viagem}</p>
+                      <div className="flex-1">
+                        <p className="text-black dark:text-white font-medium text-base leading-snug">{pagamento.nome}</p>
+                        <p className="text-neutral-600 dark:text-gray-300 text-sm leading-tight">Pagamento viagem {pagamento.viagem}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-black dark:text-white font-semibold text-sm">€ {pagamento.valor},00</p>
-                      <p className="text-neutral-500 dark:text-gray-400 text-xs">Ontem</p>
+                    <div className="text-right flex-shrink-0 self-center">
+                      <p className="text-black dark:text-white font-semibold text-base leading-snug">€ {pagamento.valor},00</p>
+                      <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">Ontem</p>
                     </div>
                   </div>
                   ))}
