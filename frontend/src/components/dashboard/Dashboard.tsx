@@ -8,13 +8,46 @@ import AdiantamentosList from '../adiantamentos/AdiantamentosList'
 import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
+import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
+import Notification from '../ui/Notification'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
+  const [isNewPagamentoModalOpen, setIsNewPagamentoModalOpen] = useState(false)
+  const [pagamentos, setPagamentos] = useState<any[]>([])
+  const [notification, setNotification] = useState<{
+    isVisible: boolean
+    type: 'success' | 'error' | 'info' | 'warning'
+    title: string
+    message?: string
+  }>({
+    isVisible: false,
+    type: 'success',
+    title: '',
+    message: ''
+  })
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+  
+  const handleOpenNewPagamento = () => {
+    setIsNewPagamentoModalOpen(true)
+  }
+  
+  const showNotification = (type: 'success' | 'error' | 'info' | 'warning', title: string, message?: string) => {
+    setNotification({
+      isVisible: true,
+      type,
+      title,
+      message
+    })
+  }
+  
+  const handleSavePagamento = (novoPagamento: any) => {
+    setPagamentos(prev => [...prev, novoPagamento])
+    showNotification('success', 'Pagamento Criado!', `Pagamento de €${novoPagamento.valor} para ${novoPagamento.funcionarioNome} foi criado com sucesso.`)
+  }
 
   // Mock data para solicitações
   const solicitacoesMock = [
@@ -59,7 +92,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <Header onMenuClick={toggleSidebar} />
+        <Header onMenuClick={toggleSidebar} onNewPagamento={handleOpenNewPagamento} />
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-black">
@@ -186,6 +219,22 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+
+      {/* Modal de Novo Pagamento */}
+      <AddPagamentoModal
+        isOpen={isNewPagamentoModalOpen}
+        onClose={() => setIsNewPagamentoModalOpen(false)}
+        onSave={handleSavePagamento}
+      />
+
+      {/* Notificação */}
+      <Notification
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        isVisible={notification.isVisible}
+        onClose={() => setNotification(prev => ({ ...prev, isVisible: false }))}
+      />
     </div>
   )
 }

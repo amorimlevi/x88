@@ -3,9 +3,10 @@ import { ThemeToggle } from '../ui/ThemeToggle'
 
 interface HeaderProps {
   onMenuClick: () => void
+  onNewPagamento?: () => void
 }
 
-const Header = ({ onMenuClick }: HeaderProps) => {
+const Header = ({ onMenuClick, onNewPagamento }: HeaderProps) => {
   return (
     <header className="bg-white dark:bg-black border-b border-neutral-200 dark:border-gray-800 p-4">
       <div className="flex items-center justify-between">
@@ -46,7 +47,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
           {/* Quick Actions */}
           <div className="hidden sm:flex items-center gap-2">
-            <button className="btn-primary">
+            <button 
+              onClick={onNewPagamento}
+              className="btn-primary"
+            >
               Novo Pagamento
             </button>
           </div>
