@@ -186,7 +186,7 @@ const Dashboard = () => {
                       </div>
                       <p className="text-black dark:text-white font-semibold text-base leading-none mt-1">€ {pagamento.valor},00</p>
                     </div>
-                    <div className="flex justify-between -mt-4">
+                    <div className="flex justify-between -mt-2">
                       <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[20px] leading-none">Pagamento viagem {pagamento.viagem}</p>
                       <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">Ontem</p>
                     </div>
