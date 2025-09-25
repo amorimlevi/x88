@@ -149,7 +149,7 @@ const Dashboard = () => {
                     <p className="text-brand-600 dark:text-brand-400 font-semibold text-base">€ {solicitacao.valor},00</p>
                   </div>
                   <div className="flex justify-between mt-1">
-                    <p className="text-neutral-600 dark:text-gray-300 text-sm ml-13">Adiantamento - {solicitacao.viagem}</p>
+                    <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px]">Adiantamento - {solicitacao.viagem}</p>
                     <p className="text-neutral-500 dark:text-gray-400 text-sm">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
                   </div>
                 </div>
