@@ -378,8 +378,8 @@ const ContasAReceber = () => {
                   .map(conta => (
                     <div key={conta.id} className="flex items-center justify-between bg-red-800/20 p-3 rounded-lg">
                       <div>
-                        <p className="text-red-300 font-medium">{conta.funcionarioNome}</p>
-                        <p className="text-red-400 text-sm">{conta.descricao}</p>
+                        <p className="text-white font-medium">{conta.funcionarioNome}</p>
+                        <p className="text-white text-sm">{conta.descricao}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-red-400 font-semibold">{formatEuro(conta.valorPendente)}</p>

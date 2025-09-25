@@ -340,7 +340,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                   <td className="py-4 px-4">
                     <div>
                       <p className="text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
-                      <p className="text-dark-600 text-xs">{formatDateTime(solicitacao.datasolicitacao).split(' ')[1]}</p>
+                      <p className="text-white text-xs">{formatDateTime(solicitacao.datasolicitacao).split(' ')[1]}</p>
                     </div>
                   </td>
                   <td className="py-4 px-4">
