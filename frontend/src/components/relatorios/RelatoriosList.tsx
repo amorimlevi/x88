@@ -247,7 +247,7 @@ const RelatoriosList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Relatórios</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">Relatórios</h1>
           <p className="text-dark-600 mt-2">
             Análise completa de pagamentos, faturamento e métricas financeiras
           </p>
@@ -401,7 +401,7 @@ const RelatoriosList = () => {
                        status === 'pendente' ? 'Aguardando Pagamento' :
                        'Pagamentos Agendados'}
                     </p>
-                    <p className="text-white font-bold text-lg">{formatEuro(total)}</p>
+                    <p className="text-black dark:text-white font-bold text-lg">{formatEuro(total)}</p>
                     <p className="text-dark-600 text-xs">{count} transações</p>
                   </div>
                 </div>
@@ -439,7 +439,7 @@ const RelatoriosList = () => {
                 <tr key={pagamento.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
                     <div>
-                      <p className="text-white text-sm">
+                      <p className="text-black dark:text-white text-sm">
                         {formatDate(pagamento.dataPagamento || pagamento.dataVencimento || '')}
                       </p>
                       {pagamento.dataPagamento && (
@@ -450,7 +450,7 @@ const RelatoriosList = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white font-medium">{pagamento.funcionarioNome}</span>
+                    <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -464,7 +464,7 @@ const RelatoriosList = () => {
                     </span>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white">{pagamento.descricao}</span>
+                    <span className="text-black dark:text-white">{pagamento.descricao}</span>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`font-semibold ${
@@ -511,14 +511,14 @@ const RelatoriosList = () => {
         <h3 className="text-lg font-semibold text-white mb-4">Resumo do Relatório</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="text-white font-medium mb-2">Próximos Pagamentos</h4>
+            <h4 className="text-black dark:text-white font-medium mb-2">Próximos Pagamentos</h4>
             <div className="space-y-2">
               {filteredPagamentos
                 .filter(p => ['pendente', 'agendado', 'aprovado'].includes(p.status))
                 .slice(0, 3)
                 .map((pagamento) => (
                   <div key={pagamento.id} className="flex items-center justify-between p-2 bg-dark-200 rounded">
-                    <span className="text-white text-sm">{pagamento.funcionarioNome}</span>
+                    <span className="text-black dark:text-white text-sm">{pagamento.funcionarioNome}</span>
                     <span className="text-primary-500 font-medium">{formatEuro(pagamento.valor)}</span>
                   </div>
                 ))}
@@ -526,7 +526,7 @@ const RelatoriosList = () => {
           </div>
           
           <div>
-            <h4 className="text-white font-medium mb-2">Principais Categorias</h4>
+            <h4 className="text-black dark:text-white font-medium mb-2">Principais Categorias</h4>
             <div className="space-y-2">
               {['salario', 'adiantamento', 'viagem'].map((tipo) => {
                 const total = filteredPagamentos
@@ -534,7 +534,7 @@ const RelatoriosList = () => {
                   .reduce((sum, p) => sum + p.valor, 0)
                 return total > 0 && (
                   <div key={tipo} className="flex items-center justify-between p-2 bg-dark-200 rounded">
-                    <span className="text-white text-sm">
+                    <span className="text-black dark:text-white text-sm">
                       {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
                     </span>
                     <span className="text-primary-500 font-medium">{formatEuro(total)}</span>

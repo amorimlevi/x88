@@ -92,7 +92,7 @@ const ConfiguracoesPagamento = () => {
                   <div className="p-4 border border-dark-700 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-900/20 hover:border-dark-500 transition-colors">
                     <div className="flex items-center gap-2 mb-2">
                       <CreditCard className="h-5 w-5 text-primary-500" />
-                      <span className="text-white font-medium">{method.name}</span>
+                      <span className="text-black dark:text-white font-medium">{method.name}</span>
                     </div>
                     <p className="text-dark-600 text-sm">{method.desc}</p>
                   </div>
@@ -104,7 +104,7 @@ const ConfiguracoesPagamento = () => {
           {/* Pagamento Automático */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Pagamento Automático</label>
+              <label className="text-black dark:text-white font-medium">Pagamento Automático</label>
               <p className="text-dark-600 text-sm mt-1">
                 Processar pagamentos automaticamente nos dias programados
               </p>
@@ -148,7 +148,7 @@ const ConfiguracoesPagamento = () => {
           {/* Dupla Aprovação */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Exigir Dupla Aprovação</label>
+              <label className="text-black dark:text-white font-medium">Exigir Dupla Aprovação</label>
               <p className="text-dark-600 text-sm mt-1">
                 Pagamentos acima do limite precisam de duas aprovações
               </p>
@@ -264,7 +264,7 @@ const ConfiguracoesPagamento = () => {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Notificar Antes do Pagamento</label>
+              <label className="text-black dark:text-white font-medium">Notificar Antes do Pagamento</label>
               <p className="text-dark-600 text-sm mt-1">
                 Enviar notificação 24h antes de processar pagamentos
               </p>
@@ -282,7 +282,7 @@ const ConfiguracoesPagamento = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Confirmação de Pagamento Obrigatória</label>
+              <label className="text-black dark:text-white font-medium">Confirmação de Pagamento Obrigatória</label>
               <p className="text-dark-600 text-sm mt-1">
                 Exigir confirmação manual antes de processar cada pagamento
               </p>
@@ -300,7 +300,7 @@ const ConfiguracoesPagamento = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Permitir Pagamentos Parciais</label>
+              <label className="text-black dark:text-white font-medium">Permitir Pagamentos Parciais</label>
               <p className="text-dark-600 text-sm mt-1">
                 Colaboradores podem receber pagamentos em parcelas
               </p>

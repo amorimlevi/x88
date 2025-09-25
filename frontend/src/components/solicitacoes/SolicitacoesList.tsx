@@ -187,7 +187,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="h-8 w-8 text-primary-500" />
-            <h1 className="text-3xl font-bold text-white">Solicitações Pendentes</h1>
+            <h1 className="text-3xl font-bold text-black dark:text-white">Solicitações Pendentes</h1>
           </div>
           <p className="text-dark-600">
             Gerencie todas as solicitações dos colaboradores
@@ -306,7 +306,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                       <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
-                      <span className="text-white font-medium">{solicitacao.funcionarioNome}</span>
+                      <span className="text-black dark:text-white font-medium">{solicitacao.funcionarioNome}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4">
@@ -316,7 +316,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white">{solicitacao.descricao}</span>
+                    <span className="text-black dark:text-white">{solicitacao.descricao}</span>
                     {solicitacao.documentos && solicitacao.documentos.length > 0 && (
                       <p className="text-blue-400 text-xs mt-1">
                         📎 {solicitacao.documentos.length} documento(s)
@@ -339,7 +339,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                   </td>
                   <td className="py-4 px-4">
                     <div>
-                      <p className="text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
+                      <p className="text-black dark:text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
                       <p className="text-black dark:text-white text-xs">{formatDateTime(solicitacao.datasolicitacao).split(' ')[1]}</p>
                     </div>
                   </td>
@@ -450,7 +450,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-dark-600 text-sm">Colaborador</label>
-                    <p className="text-white font-medium">{selectedSolicitacao.funcionarioNome}</p>
+                    <p className="text-black dark:text-white font-medium">{selectedSolicitacao.funcionarioNome}</p>
                   </div>
                   <div>
                     <label className="text-dark-600 text-sm">Tipo</label>
@@ -476,18 +476,18 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                   )}
                   <div>
                     <label className="text-dark-600 text-sm">Data da Solicitação</label>
-                    <p className="text-white">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
+                    <p className="text-black dark:text-white">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
                   </div>
                 </div>
 
                 <div>
                   <label className="text-dark-600 text-sm">Descrição</label>
-                  <p className="text-white">{selectedSolicitacao.descricao}</p>
+                  <p className="text-black dark:text-white">{selectedSolicitacao.descricao}</p>
                 </div>
 
                 <div>
                   <label className="text-dark-600 text-sm">Justificativa</label>
-                  <p className="text-white bg-dark-200 p-3 rounded-lg">{selectedSolicitacao.justificativa}</p>
+                  <p className="text-black dark:text-white bg-dark-200 p-3 rounded-lg">{selectedSolicitacao.justificativa}</p>
                 </div>
 
                 {selectedSolicitacao.documentos && selectedSolicitacao.documentos.length > 0 && (

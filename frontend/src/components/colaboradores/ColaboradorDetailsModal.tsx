@@ -70,7 +70,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
         <div className="flex items-center justify-between p-6 border-b border-dark-300">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-xl font-bold">
+              <span className="text-black dark:text-white text-xl font-bold">
                 {colaborador.nome.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -106,14 +106,14 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                 <Mail className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Email</p>
-                  <p className="text-white font-medium">{colaborador.email}</p>
+                  <p className="text-black dark:text-white font-medium">{colaborador.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Telefone</p>
-                  <p className="text-white font-medium">{colaborador.telefone}</p>
+                  <p className="text-black dark:text-white font-medium">{colaborador.telefone}</p>
                 </div>
               </div>
             </div>
@@ -130,7 +130,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                 <Briefcase className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Cargo</p>
-                  <p className="text-white font-medium">{colaborador.cargo}</p>
+                  <p className="text-black dark:text-white font-medium">{colaborador.cargo}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -144,7 +144,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                 <Calendar className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Data de Contratação</p>
-                  <p className="text-white font-medium">{formatDateTime(colaborador.dataContratacao).split(' ')[0]}</p>
+                  <p className="text-black dark:text-white font-medium">{formatDateTime(colaborador.dataContratacao).split(' ')[0]}</p>
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                   <MapPin className="w-5 h-5 text-dark-600 mt-0.5" />
                   <div>
                     <p className="text-dark-600 text-sm">Endereço Completo</p>
-                    <p className="text-white font-medium">
+                    <p className="text-black dark:text-white font-medium">
                       {colaborador.endereco.rua}, {colaborador.endereco.numero}
                     </p>
                     <p className="text-dark-600 text-sm">
@@ -182,7 +182,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                 <Smartphone className="w-6 h-6 text-green-500" />
                 <div>
                   <p className="text-green-400 font-medium text-lg">MBWay Disponível</p>
-                  <p className="text-white font-bold text-xl">{colaborador.dadosBancarios.mbway}</p>
+                  <p className="text-black dark:text-white font-bold text-xl">{colaborador.dadosBancarios.mbway}</p>
                   <p className="text-green-300 text-sm">Transferências instantâneas por telemóvel • Portugal</p>
                 </div>
               </div>
@@ -201,28 +201,28 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                   <Building2 className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Banco</p>
-                    <p className="text-white font-medium">{colaborador.dadosBancarios.banco}</p>
+                    <p className="text-black dark:text-white font-medium">{colaborador.dadosBancarios.banco}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Hash className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Agência</p>
-                    <p className="text-white font-medium">{colaborador.dadosBancarios.agencia}</p>
+                    <p className="text-black dark:text-white font-medium">{colaborador.dadosBancarios.agencia}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Hash className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Conta</p>
-                    <p className="text-white font-medium">{colaborador.dadosBancarios.conta}</p>
+                    <p className="text-black dark:text-white font-medium">{colaborador.dadosBancarios.conta}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Tipo de Conta</p>
-                    <p className="text-white font-medium">
+                    <p className="text-black dark:text-white font-medium">
                       {colaborador.dadosBancarios.tipoConta === 'corrente' ? 'Conta Corrente' : 'Conta Poupança'}
                     </p>
                   </div>
@@ -231,7 +231,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                   <User className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Titular</p>
-                    <p className="text-white font-medium">{colaborador.dadosBancarios.titular}</p>
+                    <p className="text-black dark:text-white font-medium">{colaborador.dadosBancarios.titular}</p>
                   </div>
                 </div>
                 {colaborador.dadosBancarios.iban && (
@@ -270,7 +270,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                     <Hash className="w-5 h-5 text-dark-600" />
                     <div>
                       <p className="text-dark-600 text-sm">RG</p>
-                      <p className="text-white font-medium">{colaborador.documentos.rg}</p>
+                      <p className="text-black dark:text-white font-medium">{colaborador.documentos.rg}</p>
                     </div>
                   </div>
                 )}
@@ -279,7 +279,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                     <Hash className="w-5 h-5 text-dark-600" />
                     <div>
                       <p className="text-dark-600 text-sm">CPF</p>
-                      <p className="text-white font-medium">{colaborador.documentos.cpf}</p>
+                      <p className="text-black dark:text-white font-medium">{colaborador.documentos.cpf}</p>
                     </div>
                   </div>
                 )}
@@ -288,7 +288,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                     <Hash className="w-5 h-5 text-dark-600" />
                     <div>
                       <p className="text-dark-600 text-sm">CNH</p>
-                      <p className="text-white font-medium">{colaborador.documentos.cnh}</p>
+                      <p className="text-black dark:text-white font-medium">{colaborador.documentos.cnh}</p>
                       {colaborador.documentos.dataValidadeCnh && (
                         <p className="text-dark-600 text-xs">
                           Válida até: {formatDateTime(colaborador.documentos.dataValidadeCnh).split(' ')[0]}
@@ -306,7 +306,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
             <div className="card">
               <h3 className="text-lg font-semibold text-white mb-4">Observações</h3>
               <div className="bg-dark-200 rounded-lg p-4">
-                <p className="text-white">{colaborador.observacoes}</p>
+                <p className="text-black dark:text-white">{colaborador.observacoes}</p>
               </div>
             </div>
           )}
@@ -319,7 +319,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                 <div className={`w-3 h-3 rounded-full ${colaborador.origem === 'manual' ? 'bg-blue-500' : 'bg-purple-500'}`}></div>
                 <div>
                   <p className="text-dark-600 text-sm">Origem</p>
-                  <p className="text-white font-medium">
+                  <p className="text-black dark:text-white font-medium">
                     {colaborador.origem === 'manual' ? 'Criado Manualmente' : 'Aplicação Terceiro'}
                   </p>
                 </div>
@@ -329,7 +329,7 @@ const ColaboradorDetailsModal = ({ isOpen, onClose, colaborador }: ColaboradorDe
                   <Calendar className="w-5 h-5 text-dark-600" />
                   <div>
                     <p className="text-dark-600 text-sm">Última Atualização</p>
-                    <p className="text-white font-medium">{formatDateTime(colaborador.dataUltimaAtualizacao)}</p>
+                    <p className="text-black dark:text-white font-medium">{formatDateTime(colaborador.dataUltimaAtualizacao)}</p>
                   </div>
                 </div>
               )}

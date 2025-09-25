@@ -249,7 +249,7 @@ const AdiantamentosList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Adiantamentos</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">Adiantamentos</h1>
           <p className="text-dark-600 mt-2">
             Gestão de solicitações de adiantamento de pagamentos da frota
           </p>
@@ -325,7 +325,7 @@ const AdiantamentosList = () => {
               <p className="text-dark-600 text-xs">Líquido: {formatEuro(adiantamentos.reduce((total, a) => total + calcularValorLiquido(a.valor), 0))}</p>
             </div>
             <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xs">{adiantamentos.length}</span>
+              <span className="text-black dark:text-white font-bold text-xs">{adiantamentos.length}</span>
             </div>
           </div>
         </div>
@@ -432,14 +432,14 @@ const AdiantamentosList = () => {
                         <User className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <span className="text-white font-medium">{adiantamento.funcionarioNome}</span>
+                        <span className="text-black dark:text-white font-medium">{adiantamento.funcionarioNome}</span>
                         <p className="text-black dark:text-white text-xs">{adiantamento.cargo}</p>
                       </div>
                     </div>
                   </td>
                   <td className="py-4 px-4">
                     <div>
-                      <span className="text-white font-medium">{adiantamento.motivo}</span>
+                      <span className="text-black dark:text-white font-medium">{adiantamento.motivo}</span>
                       {adiantamento.descricao && (
                         <p className="text-black dark:text-white text-sm truncate max-w-xs" title={adiantamento.descricao}>
                           {adiantamento.descricao}
@@ -448,7 +448,7 @@ const AdiantamentosList = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white font-semibold">
+                    <span className="text-black dark:text-white font-semibold">
                       {formatEuro(adiantamento.valor)}
                     </span>
                   </td>
@@ -472,7 +472,7 @@ const AdiantamentosList = () => {
                   </td>
                   <td className="py-4 px-4">
                     <div>
-                      <p className="text-white text-sm">{formatDate(adiantamento.dataSolicitacao)}</p>
+                      <p className="text-black dark:text-white text-sm">{formatDate(adiantamento.dataSolicitacao)}</p>
                       <p className="text-black dark:text-white text-xs">{formatDateTime(adiantamento.dataSolicitacao).split(' ')[1]}</p>
                     </div>
                   </td>

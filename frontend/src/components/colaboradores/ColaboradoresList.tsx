@@ -193,7 +193,7 @@ const ColaboradoresList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Colaboradores</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">Colaboradores</h1>
           <p className="text-dark-600 mt-2">
             Gerir colaboradores da frota
           </p>
@@ -216,7 +216,7 @@ const ColaboradoresList = () => {
               <p className="text-2xl font-bold text-white">{colaboradores.length}</p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">{colaboradores.length}</span>
+              <span className="text-black dark:text-white font-bold">{colaboradores.length}</span>
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ const ColaboradoresList = () => {
               </p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">
+              <span className="text-black dark:text-white font-bold">
                 {colaboradores.filter(c => c.status === 'ativo').length}
               </span>
             </div>
@@ -246,7 +246,7 @@ const ColaboradoresList = () => {
               </p>
             </div>
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">
+              <span className="text-black dark:text-white font-bold">
                 {colaboradores.filter(c => c.status === 'suspenso').length}
               </span>
             </div>
@@ -321,12 +321,12 @@ const ColaboradoresList = () => {
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">
+                        <span className="text-black dark:text-white text-sm font-medium">
                           {colaborador.nome.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <p className="text-white font-medium">{colaborador.nome}</p>
+                        <p className="text-black dark:text-white font-medium">{colaborador.nome}</p>
                         <p className="text-black dark:text-white text-sm flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(colaborador.dataContratacao)}
@@ -335,11 +335,11 @@ const ColaboradoresList = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white">{colaborador.cargo}</span>
+                    <span className="text-black dark:text-white">{colaborador.cargo}</span>
                   </td>
                   <td className="py-4 px-4">
                     <div className="space-y-1">
-                      <p className="text-white text-sm flex items-center gap-1">
+                      <p className="text-black dark:text-white text-sm flex items-center gap-1">
                         <Mail className="w-3 h-3" />
                         {colaborador.email}
                       </p>

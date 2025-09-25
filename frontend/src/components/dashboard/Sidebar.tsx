@@ -104,7 +104,7 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
           <div className="p-4 border-t border-neutral-200 dark:border-dark-300">
             <div className="flex items-center gap-3 p-3 bg-neutral-100 dark:bg-dark-200 rounded-lg">
               <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">AD</span>
+                <span className="text-black dark:text-white text-sm font-medium">AD</span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-black dark:text-white font-medium truncate">Admin User</p>

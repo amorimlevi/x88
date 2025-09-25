@@ -269,14 +269,14 @@ const ContasAReceber = () => {
                         <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
                           <User className="w-4 h-4 text-white" />
                         </div>
-                        <span className="text-white font-medium">{conta.funcionarioNome}</span>
+                        <span className="text-black dark:text-white font-medium">{conta.funcionarioNome}</span>
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <span className="text-primary-400 font-mono text-sm">{conta.adiantamentoId}</span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="text-white">{conta.descricao}</span>
+                      <span className="text-black dark:text-white">{conta.descricao}</span>
                       {conta.observacoes && (
                         <p className="text-dark-600 text-xs mt-1">{conta.observacoes}</p>
                       )}
@@ -410,7 +410,7 @@ const ContasAReceber = () => {
                     <Calendar className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <p className="text-white font-medium">{conta.funcionarioNome}</p>
+                    <p className="text-black dark:text-white font-medium">{conta.funcionarioNome}</p>
                     <p className="text-dark-600 text-sm">{conta.descricao}</p>
                   </div>
                 </div>

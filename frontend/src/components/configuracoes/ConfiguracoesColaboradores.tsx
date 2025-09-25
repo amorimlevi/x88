@@ -41,7 +41,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Aprovação Automática */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Aprovação Automática de Despesas</label>
+              <label className="text-black dark:text-white font-medium">Aprovação Automática de Despesas</label>
               <p className="text-dark-600 text-sm mt-1">
                 Aprovar automaticamente despesas dentro do limite estabelecido
               </p>
@@ -77,7 +77,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Comprovantes Obrigatórios */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Foto de Comprovante Obrigatória</label>
+              <label className="text-black dark:text-white font-medium">Foto de Comprovante Obrigatória</label>
               <p className="text-dark-600 text-sm mt-1">
                 Exigir foto do recibo/nota fiscal para todas as despesas
               </p>
@@ -96,7 +96,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Despesas de Final de Semana */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Permitir Despesas em Fins de Semana</label>
+              <label className="text-black dark:text-white font-medium">Permitir Despesas em Fins de Semana</label>
               <p className="text-dark-600 text-sm mt-1">
                 Colaboradores podem registrar despesas aos sábados e domingos
               </p>
@@ -115,7 +115,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Aprovação do Gerente */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Aprovação do Gerente Obrigatória</label>
+              <label className="text-black dark:text-white font-medium">Aprovação do Gerente Obrigatória</label>
               <p className="text-dark-600 text-sm mt-1">
                 Todas as despesas devem ser aprovadas por um gerente
               </p>
@@ -134,7 +134,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Notificação Novo Funcionário */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Notificar sobre Novos Colaboradores</label>
+              <label className="text-black dark:text-white font-medium">Notificar sobre Novos Colaboradores</label>
               <p className="text-dark-600 text-sm mt-1">
                 Enviar notificação quando um novo colaborador for adicionado
               </p>
@@ -153,7 +153,7 @@ const ConfiguracoesColaboradores = () => {
           {/* Edição de Perfil */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Colaborador Pode Editar Perfil</label>
+              <label className="text-black dark:text-white font-medium">Colaborador Pode Editar Perfil</label>
               <p className="text-dark-600 text-sm mt-1">
                 Permitir que colaboradores editem suas próprias informações
               </p>

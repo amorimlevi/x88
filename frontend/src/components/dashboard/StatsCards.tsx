@@ -74,7 +74,7 @@ const StatsCards = ({ onSectionChange }: StatsCardsProps) => {
               </div>
               
               <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <Icon className="text-white" size="lg" />
+                <Icon className="text-black dark:text-white" size="lg" />
               </div>
             </div>
           </div>

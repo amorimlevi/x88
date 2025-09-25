@@ -127,14 +127,14 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                 <User className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Nome</p>
-                  <p className="text-white font-medium">{adiantamento.funcionarioNome}</p>
+                  <p className="text-black dark:text-white font-medium">{adiantamento.funcionarioNome}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <FileText className="w-5 h-5 text-dark-600" />
                 <div>
                   <p className="text-dark-600 text-sm">Cargo</p>
-                  <p className="text-white font-medium">{adiantamento.cargo}</p>
+                  <p className="text-black dark:text-white font-medium">{adiantamento.cargo}</p>
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                 <Euro className="w-5 h-5 text-dark-600 mt-0.5" />
                 <div>
                   <p className="text-dark-600 text-sm">Valor Solicitado (Bruto)</p>
-                  <p className="text-white font-bold text-xl">{formatEuro(adiantamento.valor)}</p>
+                  <p className="text-black dark:text-white font-bold text-xl">{formatEuro(adiantamento.valor)}</p>
                 </div>
               </div>
 
@@ -185,7 +185,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                 <FileText className="w-5 h-5 text-dark-600 mt-0.5" />
                 <div>
                   <p className="text-dark-600 text-sm">Motivo</p>
-                  <p className="text-white font-medium">{adiantamento.motivo}</p>
+                  <p className="text-black dark:text-white font-medium">{adiantamento.motivo}</p>
                 </div>
               </div>
 
@@ -194,7 +194,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                   <FileText className="w-5 h-5 text-dark-600 mt-0.5" />
                   <div>
                     <p className="text-dark-600 text-sm">Descrição</p>
-                    <p className="text-white">{adiantamento.descricao}</p>
+                    <p className="text-black dark:text-white">{adiantamento.descricao}</p>
                   </div>
                 </div>
               )}
@@ -204,7 +204,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                   <AlertTriangle className="w-5 h-5 text-dark-600 mt-0.5" />
                   <div>
                     <p className="text-dark-600 text-sm">Justificativa</p>
-                    <p className="text-white">{adiantamento.justificativa}</p>
+                    <p className="text-black dark:text-white">{adiantamento.justificativa}</p>
                   </div>
                 </div>
               )}
@@ -219,7 +219,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                 <Calendar className="w-5 h-5 text-dark-600 mt-0.5" />
                 <div>
                   <p className="text-dark-600 text-sm">Data da Solicitação</p>
-                  <p className="text-white font-medium">{formatDateTime(adiantamento.dataSolicitacao)}</p>
+                  <p className="text-black dark:text-white font-medium">{formatDateTime(adiantamento.dataSolicitacao)}</p>
                 </div>
               </div>
               
@@ -248,7 +248,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
             <div className="card">
               <h3 className="text-lg font-semibold text-white mb-4">Observações do Gestor</h3>
               <div className="bg-dark-200 rounded-lg p-4">
-                <p className="text-white">{adiantamento.observacoesGestor}</p>
+                <p className="text-black dark:text-white">{adiantamento.observacoesGestor}</p>
               </div>
             </div>
           )}
@@ -260,7 +260,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
               <div className="flex items-center gap-3 p-4 bg-dark-200 rounded-lg">
                 <FileText className="w-8 h-8 text-primary-500" />
                 <div>
-                  <p className="text-white font-medium">{adiantamento.documentoComprovativo}</p>
+                  <p className="text-black dark:text-white font-medium">{adiantamento.documentoComprovativo}</p>
                   <p className="text-dark-600 text-sm">Documento anexado pelo motorista</p>
                 </div>
               </div>
@@ -272,7 +272,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
             <h3 className="text-lg font-semibold text-white mb-4">Origem</h3>
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full ${adiantamento.origem === 'app_motorista' ? 'bg-green-500' : 'bg-blue-500'}`}></div>
-              <p className="text-white">
+              <p className="text-black dark:text-white">
                 {adiantamento.origem === 'app_motorista' ? 'Aplicação do Motorista' : 'Criado Manualmente'}
               </p>
             </div>

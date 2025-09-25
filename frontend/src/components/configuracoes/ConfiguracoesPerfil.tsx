@@ -30,7 +30,7 @@ const ConfiguracoesPerfil = () => {
       <div className="card">
         <div className="flex items-start gap-6">
           <div className="w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl flex items-center justify-center shadow-soft">
-            <ProfileIcon className="text-white" size="xl" />
+            <ProfileIcon className="text-black dark:text-white" size="xl" />
           </div>
           <div className="flex-1">
             <h2 className="heading-2 mb-2">Perfil do Usuário</h2>

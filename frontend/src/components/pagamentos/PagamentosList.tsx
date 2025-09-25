@@ -241,7 +241,7 @@ const PagamentosList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Gestão Financeira</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">Gestão Financeira</h1>
           <p className="text-dark-600 mt-2">
             Pagamentos realizados e contas a receber dos adiantamentos
           </p>
@@ -332,7 +332,7 @@ const PagamentosList = () => {
               <p className="text-2xl font-bold text-white">{pagamentos.length}</p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">{pagamentos.length}</span>
+              <span className="text-black dark:text-white font-bold">{pagamentos.length}</span>
             </div>
           </div>
         </div>
@@ -437,7 +437,7 @@ const PagamentosList = () => {
                       <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
-                      <span className="text-white font-medium">{pagamento.funcionarioNome}</span>
+                      <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4">
@@ -446,7 +446,7 @@ const PagamentosList = () => {
                     </span>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-white">{pagamento.descricao}</span>
+                    <span className="text-black dark:text-white">{pagamento.descricao}</span>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`font-semibold ${pagamento.valor >= 0 ? 'text-primary-500' : 'text-red-500'}`}>
@@ -458,7 +458,7 @@ const PagamentosList = () => {
                     <div>
                       {pagamento.dataPagamento ? (
                         <div>
-                          <p className="text-white text-sm">{formatDate(pagamento.dataPagamento)}</p>
+                          <p className="text-black dark:text-white text-sm">{formatDate(pagamento.dataPagamento)}</p>
                           <p className="text-dark-600 text-xs">{formatDateTime(pagamento.dataPagamento).split(' ')[1]}</p>
                         </div>
                       ) : pagamento.dataVencimento ? (
@@ -517,7 +517,7 @@ const PagamentosList = () => {
                     <Clock className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <p className="text-white font-medium">{pagamento.funcionarioNome}</p>
+                    <p className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</p>
                     <p className="text-black dark:text-white text-sm">{pagamento.descricao}</p>
                   </div>
                 </div>

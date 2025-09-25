@@ -50,7 +50,7 @@ const ConfiguracoesAdiantamento = () => {
           {/* Habilitar Adiantamentos */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-white font-medium">Habilitar Sistema de Adiantamentos</label>
+              <label className="text-black dark:text-white font-medium">Habilitar Sistema de Adiantamentos</label>
               <p className="text-dark-600 text-sm mt-1">
                 Permitir que colaboradores solicitem adiantamentos salariais
               </p>
@@ -124,7 +124,7 @@ const ConfiguracoesAdiantamento = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-white font-medium">Aprovação Automática</label>
+                    <label className="text-black dark:text-white font-medium">Aprovação Automática</label>
                     <p className="text-dark-600 text-sm mt-1">
                       Aprovar automaticamente adiantamentos abaixo do limite estabelecido
                     </p>
@@ -159,7 +159,7 @@ const ConfiguracoesAdiantamento = () => {
               {/* Aprovação do Gerente */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Aprovação do Gerente Obrigatória</label>
+                  <label className="text-black dark:text-white font-medium">Aprovação do Gerente Obrigatória</label>
                   <p className="text-dark-600 text-sm mt-1">
                     Todos os adiantamentos devem ser aprovados por um gerente
                   </p>
@@ -178,7 +178,7 @@ const ConfiguracoesAdiantamento = () => {
               {/* Dedução do Salário */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Deduzir Automaticamente do Salário</label>
+                  <label className="text-black dark:text-white font-medium">Deduzir Automaticamente do Salário</label>
                   <p className="text-dark-600 text-sm mt-1">
                     Descontar o valor do adiantamento automaticamente do próximo salário
                   </p>
@@ -216,7 +216,7 @@ const ConfiguracoesAdiantamento = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-white font-medium">Exigir Justificativa</label>
+                    <label className="text-black dark:text-white font-medium">Exigir Justificativa</label>
                     <p className="text-dark-600 text-sm mt-1">
                       Colaborador deve informar o motivo do adiantamento
                     </p>
@@ -252,7 +252,7 @@ const ConfiguracoesAdiantamento = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-white font-medium">Permitir Adiantamentos Recorrentes</label>
+                    <label className="text-black dark:text-white font-medium">Permitir Adiantamentos Recorrentes</label>
                     <p className="text-dark-600 text-sm mt-1">
                       Colaboradores podem configurar adiantamentos automáticos mensais
                     </p>
@@ -318,7 +318,7 @@ const ConfiguracoesAdiantamento = () => {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-white font-medium">Notificar sobre Solicitações</label>
+                    <label className="text-black dark:text-white font-medium">Notificar sobre Solicitações</label>
                     <p className="text-dark-600 text-sm mt-1">
                       Enviar notificações quando houver novas solicitações de adiantamento
                     </p>
@@ -376,7 +376,7 @@ const ConfiguracoesAdiantamento = () => {
               <TrendingUp className="h-8 w-8 text-primary-500" />
               <div>
                 <p className="text-dark-600 text-sm">Adiantamentos este mês</p>
-                <p className="text-white text-2xl font-bold">23</p>
+                <p className="text-black dark:text-white text-2xl font-bold">23</p>
               </div>
             </div>
           </div>
@@ -386,7 +386,7 @@ const ConfiguracoesAdiantamento = () => {
               <TrendingUp className="h-8 w-8 text-green-500" />
               <div>
                 <p className="text-dark-600 text-sm">Valor total (€)</p>
-                <p className="text-white text-2xl font-bold">12.450</p>
+                <p className="text-black dark:text-white text-2xl font-bold">12.450</p>
               </div>
             </div>
           </div>
@@ -396,7 +396,7 @@ const ConfiguracoesAdiantamento = () => {
               <TrendingUp className="h-8 w-8 text-yellow-500" />
               <div>
                 <p className="text-dark-600 text-sm">Pendentes</p>
-                <p className="text-white text-2xl font-bold">5</p>
+                <p className="text-black dark:text-white text-2xl font-bold">5</p>
               </div>
             </div>
           </div>

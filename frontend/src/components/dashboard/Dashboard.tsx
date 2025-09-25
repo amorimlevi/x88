@@ -108,7 +108,7 @@ const Dashboard = () => {
                 >
                 <div className="flex flex-col items-center justify-center text-center w-full">
                 <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                <span className="text-white text-sm font-medium">{solicitacao.iniciais}</span>
+                <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                 </div>
                 <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{solicitacao.nome}</p>
                 <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{solicitacao.viagem}</p>
@@ -143,7 +143,7 @@ const Dashboard = () => {
                   >
                     <div className="flex flex-col items-center justify-center text-center w-full">
                     <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-white text-sm font-medium">{pagamento.iniciais}</span>
+                      <span className="text-black dark:text-white text-sm font-medium">{pagamento.iniciais}</span>
                      </div>
                      <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{pagamento.nome}</p>
                     <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{pagamento.viagem}</p>

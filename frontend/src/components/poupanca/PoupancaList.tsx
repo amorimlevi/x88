@@ -135,7 +135,7 @@ const PoupancaList = () => {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <PiggyBank className="h-8 w-8 text-primary-500" />
-            <h1 className="text-3xl font-bold text-white">Poupança Mensal</h1>
+            <h1 className="text-3xl font-bold text-black dark:text-white">Poupança Mensal</h1>
           </div>
           <p className="text-dark-600">
             Controle de economias e análise de desempenho financeiro
@@ -262,7 +262,7 @@ const PoupancaList = () => {
                   return (
                     <tr key={poupanca.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                       <td className="py-4 px-4">
-                        <span className="text-white font-medium">{poupanca.mes}</span>
+                        <span className="text-black dark:text-white font-medium">{poupanca.mes}</span>
                       </td>
                       <td className="py-4 px-4">
                         <span className="text-green-400 font-semibold">
@@ -331,7 +331,7 @@ const PoupancaList = () => {
               <div key={categoria} className="bg-dark-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-2">
                   <Euro className="w-5 h-5 text-primary-500" />
-                  <h4 className="text-white font-medium capitalize">{categoria}</h4>
+                  <h4 className="text-black dark:text-white font-medium capitalize">{categoria}</h4>
                 </div>
                 <p className="text-2xl font-bold text-primary-500">{formatEuro(valor)}</p>
                 <p className="text-dark-600 text-sm mt-1">

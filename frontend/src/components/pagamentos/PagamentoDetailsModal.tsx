@@ -111,11 +111,11 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
               </label>
               <div className="flex items-center gap-3 p-3 bg-dark-200 rounded-lg">
                 <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
+                  <span className="text-black dark:text-white text-sm font-medium">
                     {pagamento.funcionarioNome.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <span className="text-white font-medium">{pagamento.funcionarioNome}</span>
+                <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
               </div>
             </div>
 
@@ -153,7 +153,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                 Origem
               </label>
               <div className="p-3 bg-dark-200 rounded-lg">
-                <span className="text-white">
+                <span className="text-black dark:text-white">
                   {pagamento.origem === 'manual' ? 'Cadastro Manual' : 'Aplicativo Terceiro'}
                 </span>
               </div>
@@ -167,7 +167,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
               Descrição
             </label>
             <div className="p-4 bg-dark-200 rounded-lg">
-              <p className="text-white">{pagamento.descricao}</p>
+              <p className="text-black dark:text-white">{pagamento.descricao}</p>
             </div>
           </div>
 
@@ -180,7 +180,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                   Data do Pagamento
                 </label>
                 <div className="p-3 bg-dark-200 rounded-lg">
-                  <p className="text-white">{formatDateTime(pagamento.dataPagamento)}</p>
+                  <p className="text-black dark:text-white">{formatDateTime(pagamento.dataPagamento)}</p>
                 </div>
               </div>
             )}
@@ -192,7 +192,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                   {pagamento.status === 'agendado' ? 'Data Agendada' : 'Data de Vencimento'}
                 </label>
                 <div className="p-3 bg-dark-200 rounded-lg">
-                  <p className="text-white">{formatDateTime(pagamento.dataVencimento)}</p>
+                  <p className="text-black dark:text-white">{formatDateTime(pagamento.dataVencimento)}</p>
                 </div>
               </div>
             )}
@@ -206,7 +206,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                 Método de Pagamento
               </label>
               <div className="p-3 bg-dark-200 rounded-lg">
-                <span className="text-white">{getMetodoPagamento(pagamento.metodoPagamento)}</span>
+                <span className="text-black dark:text-white">{getMetodoPagamento(pagamento.metodoPagamento)}</span>
               </div>
             </div>
           )}
@@ -233,7 +233,7 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
                 Observações
               </label>
               <div className="p-4 bg-dark-200 rounded-lg">
-                <p className="text-white">{pagamento.observacoes}</p>
+                <p className="text-black dark:text-white">{pagamento.observacoes}</p>
               </div>
             </div>
           )}
