@@ -139,19 +139,17 @@ const Dashboard = () => {
                   onClick={() => handleSolicitacaoClick(solicitacao)}
                   className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 >
-                  <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                  <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                     <span className="text-black dark:text-white text-xs font-medium">{solicitacao.iniciais}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-black dark:text-white font-medium text-sm">{solicitacao.nome}</p>
-                        <p className="text-neutral-600 dark:text-gray-300 text-xs">Adiantamento - {solicitacao.viagem}</p>
-                        <p className="text-neutral-500 dark:text-gray-400 text-xs">há {solicitacao.tempo}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
-                      </div>
+                  <div className="flex-1 flex items-center justify-between">
+                    <div>
+                      <p className="text-black dark:text-white font-medium text-sm">{solicitacao.nome}</p>
+                      <p className="text-neutral-600 dark:text-gray-300 text-xs">Adiantamento - {solicitacao.viagem}</p>
+                      <p className="text-neutral-500 dark:text-gray-400 text-xs">há {solicitacao.tempo}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
                     </div>
                   </div>
                 </div>
@@ -180,18 +178,16 @@ const Dashboard = () => {
                     onClick={() => handlePagamentoClick(pagamento)}
                     className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                   >
-                    <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-2 flex-shrink-0">
+                    <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0">
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-black dark:text-white font-medium text-sm">{pagamento.nome}</p>
-                          <p className="text-neutral-600 dark:text-gray-300 text-xs">Pagamento viagem {pagamento.viagem}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-black dark:text-white font-semibold text-sm">€ {pagamento.valor},00</p>
-                          <p className="text-neutral-500 dark:text-gray-400 text-xs">Ontem</p>
-                        </div>
+                    <div className="flex-1 flex items-center justify-between">
+                      <div>
+                        <p className="text-black dark:text-white font-medium text-sm">{pagamento.nome}</p>
+                        <p className="text-neutral-600 dark:text-gray-300 text-xs">Pagamento viagem {pagamento.viagem}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-black dark:text-white font-semibold text-sm">€ {pagamento.valor},00</p>
+                        <p className="text-neutral-500 dark:text-gray-400 text-xs">Ontem</p>
                       </div>
                     </div>
                   </div>
