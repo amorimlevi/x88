@@ -132,23 +132,23 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1">
                 {solicitacoesMock.map((solicitacao) => (
                 <div 
                   key={solicitacao.id} 
                   onClick={() => handleSolicitacaoClick(solicitacao)}
-                  className="flex items-center py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[50px]"
                 >
-                  <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3">
+                  <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                     <span className="text-black dark:text-white text-xs font-medium">{solicitacao.iniciais}</span>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-black dark:text-white font-medium text-sm">{solicitacao.nome}</p>
-                    <p className="text-neutral-600 dark:text-gray-300 text-xs">Adiantamento - {solicitacao.viagem}</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-xs">há {solicitacao.tempo}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-black dark:text-white font-medium text-sm leading-tight truncate">{solicitacao.nome}</p>
+                    <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight">Adiantamento - {solicitacao.viagem}</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">há {solicitacao.tempo}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base">€ {solicitacao.valor},00</p>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
                   </div>
                 </div>
                 ))}
@@ -169,22 +169,22 @@ const Dashboard = () => {
                   </button>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {pagamentosMock.map((pagamento) => (
                   <div 
                     key={pagamento.id} 
                     onClick={() => handlePagamentoClick(pagamento)}
-                    className="flex items-center py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                    className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[45px]"
                   >
-                    <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3">
+                    <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0">
                     </div>
-                    <div className="flex-1">
-                      <p className="text-black dark:text-white font-medium text-sm">{pagamento.nome}</p>
-                      <p className="text-neutral-600 dark:text-gray-300 text-xs">Pagamento viagem {pagamento.viagem}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-black dark:text-white font-medium text-sm leading-tight truncate">{pagamento.nome}</p>
+                      <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight">Pagamento viagem {pagamento.viagem}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-black dark:text-white font-semibold text-base">€ {pagamento.valor},00</p>
-                      <p className="text-neutral-500 dark:text-gray-400 text-xs">Ontem</p>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-black dark:text-white font-semibold text-sm">€ {pagamento.valor},00</p>
+                      <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">Ontem</p>
                     </div>
                   </div>
                   ))}
