@@ -486,11 +486,11 @@ const RelatoriosList = () => {
                   </td>
                   <td className="py-4 px-4">
                     {pagamento.metodoPagamento ? (
-                      <span className="text-white text-sm">
+                      <span className="text-black dark:text-white text-sm">
                         {pagamento.metodoPagamento.charAt(0).toUpperCase() + pagamento.metodoPagamento.slice(1)}
                       </span>
                     ) : (
-                      <span className="text-white text-sm">--</span>
+                      <span className="text-black dark:text-white text-sm">--</span>
                     )}
                   </td>
                 </tr>

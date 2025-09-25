@@ -433,7 +433,7 @@ const AdiantamentosList = () => {
                       </div>
                       <div>
                         <span className="text-white font-medium">{adiantamento.funcionarioNome}</span>
-                        <p className="text-white text-xs">{adiantamento.cargo}</p>
+                        <p className="text-black dark:text-white text-xs">{adiantamento.cargo}</p>
                       </div>
                     </div>
                   </td>
@@ -441,7 +441,7 @@ const AdiantamentosList = () => {
                     <div>
                       <span className="text-white font-medium">{adiantamento.motivo}</span>
                       {adiantamento.descricao && (
-                        <p className="text-white text-sm truncate max-w-xs" title={adiantamento.descricao}>
+                        <p className="text-black dark:text-white text-sm truncate max-w-xs" title={adiantamento.descricao}>
                           {adiantamento.descricao}
                         </p>
                       )}
@@ -473,13 +473,13 @@ const AdiantamentosList = () => {
                   <td className="py-4 px-4">
                     <div>
                       <p className="text-white text-sm">{formatDate(adiantamento.dataSolicitacao)}</p>
-                      <p className="text-white text-xs">{formatDateTime(adiantamento.dataSolicitacao).split(' ')[1]}</p>
+                      <p className="text-black dark:text-white text-xs">{formatDateTime(adiantamento.dataSolicitacao).split(' ')[1]}</p>
                     </div>
                   </td>
                   <td className="py-4 px-4">
                     <div>
                       <p className="text-yellow-400 text-sm">{formatDate(adiantamento.dataVencimentoDesejada)}</p>
-                      <p className="text-white text-xs">{formatDateTime(adiantamento.dataVencimentoDesejada).split(' ')[1]}</p>
+                      <p className="text-black dark:text-white text-xs">{formatDateTime(adiantamento.dataVencimentoDesejada).split(' ')[1]}</p>
                     </div>
                   </td>
                   <td className="py-4 px-4">

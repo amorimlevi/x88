@@ -518,12 +518,12 @@ const PagamentosList = () => {
                   </div>
                   <div>
                     <p className="text-white font-medium">{pagamento.funcionarioNome}</p>
-                    <p className="text-white text-sm">{pagamento.descricao}</p>
+                    <p className="text-black dark:text-white text-sm">{pagamento.descricao}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-primary-500 font-semibold">{formatEuro(pagamento.valor)}</p>
-                  <p className="text-white text-xs">
+                  <p className="text-black dark:text-white text-xs">
                     {pagamento.dataVencimento && formatDate(pagamento.dataVencimento)}
                   </p>
                 </div>

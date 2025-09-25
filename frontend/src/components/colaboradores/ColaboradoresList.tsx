@@ -327,7 +327,7 @@ const ColaboradoresList = () => {
                       </div>
                       <div>
                         <p className="text-white font-medium">{colaborador.nome}</p>
-                        <p className="text-white text-sm flex items-center gap-1">
+                        <p className="text-black dark:text-white text-sm flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(colaborador.dataContratacao)}
                         </p>
@@ -343,7 +343,7 @@ const ColaboradoresList = () => {
                         <Mail className="w-3 h-3" />
                         {colaborador.email}
                       </p>
-                      <p className="text-white text-sm flex items-center gap-1">
+                      <p className="text-black dark:text-white text-sm flex items-center gap-1">
                         <Phone className="w-3 h-3" />
                         {colaborador.telefone}
                       </p>
