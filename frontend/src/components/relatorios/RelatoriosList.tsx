@@ -450,7 +450,14 @@ const RelatoriosList = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          {pagamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="text-black dark:text-white font-medium">{pagamento.funcionarioNome}</span>
+                    </div>
                   </td>
                   <td className="py-4 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
