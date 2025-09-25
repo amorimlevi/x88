@@ -180,12 +180,7 @@ const Dashboard = () => {
                     onClick={() => handlePagamentoClick(pagamento)}
                     className="flex items-center py-2 px-3 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                   >
-<<<<<<< HEAD
                     <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-2 flex-shrink-0">
-=======
-                    <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white text-xs font-medium">{pagamento.iniciais}</span>
->>>>>>> f0b76b8885a5aa0069b89f07a3d5bbf5b45addb1
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
