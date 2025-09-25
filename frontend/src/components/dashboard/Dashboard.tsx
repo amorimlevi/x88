@@ -149,7 +149,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base">€ {solicitacao.valor},00</p>
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base mb-1">€ {solicitacao.valor},00</p>
                     <p className="text-neutral-500 dark:text-gray-400 text-sm">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
                   </div>
                 </div>
