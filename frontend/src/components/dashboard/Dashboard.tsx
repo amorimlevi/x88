@@ -132,22 +132,24 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-4">
                 {solicitacoesMock.map((solicitacao) => (
                 <div 
                   key={solicitacao.id} 
                   onClick={() => handleSolicitacaoClick(solicitacao)}
-                  className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                  className="flex items-center py-4 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 >
-                <div className="flex flex-col items-center justify-center text-center w-full">
-                <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
-                </div>
-                <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{solicitacao.nome}</p>
-                <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{solicitacao.viagem}</p>
-                <p className="text-brand-600 dark:text-brand-400 font-semibold text-xs leading-tight mb-1">€ {solicitacao.valor}</p>
-                <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">{solicitacao.tempo}</p>
-                </div>
+                  <div className="w-12 h-12 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-black dark:text-white font-medium text-base leading-tight">{solicitacao.nome}</p>
+                    <p className="text-neutral-600 dark:text-gray-300 text-sm leading-tight">Adiantamento - {solicitacao.viagem}</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">há {solicitacao.tempo}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-lg">€ {solicitacao.valor},00</p>
+                  </div>
                 </div>
                 ))}
                 </div>
@@ -167,23 +169,24 @@ const Dashboard = () => {
                   </button>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-4">
                   {pagamentosMock.map((pagamento) => (
                   <div 
                     key={pagamento.id} 
                     onClick={() => handlePagamentoClick(pagamento)}
-                    className="flex items-center justify-center py-3 px-2 list-item min-h-[60px] relative overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                    className="flex items-center py-4 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                   >
-                    <div className="flex flex-col items-center justify-center text-center w-full">
-                    <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-black dark:text-white text-sm font-medium">{pagamento.iniciais}</span>
-                     </div>
-                     <p className="text-black dark:text-white font-medium text-xs leading-tight mb-1">{pagamento.nome}</p>
-                    <p className="text-neutral-600 dark:text-gray-300 text-xs leading-tight mb-2">{pagamento.viagem}</p>
-                    <p className="text-black dark:text-white font-semibold text-xs leading-tight mb-1">€ {pagamento.valor}</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-tight">{pagamento.tempo}</p>
+                    <div className="w-3 h-3 bg-brand-600 dark:bg-brand-500 rounded-full mr-4">
                     </div>
+                    <div className="flex-1">
+                      <p className="text-black dark:text-white font-medium text-base leading-tight">{pagamento.nome}</p>
+                      <p className="text-neutral-600 dark:text-gray-300 text-sm leading-tight">Pagamento viagem {pagamento.viagem}</p>
                     </div>
+                    <div className="text-right">
+                      <p className="text-black dark:text-white font-semibold text-lg">€ {pagamento.valor},00</p>
+                      <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">Ontem</p>
+                    </div>
+                  </div>
                   ))}
                 </div>
               </div>
