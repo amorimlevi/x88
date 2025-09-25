@@ -176,19 +176,19 @@ const Dashboard = () => {
                   <div 
                     key={pagamento.id} 
                     onClick={() => handlePagamentoClick(pagamento)}
-                    className="flex items-center justify-between py-3 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors min-h-[55px]"
+                    className="py-2 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                   >
-                    <div className="flex items-center flex-1">
-                      <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-brand-600 dark:bg-brand-500 rounded-full mr-3 flex-shrink-0 mt-2">
+                        </div>
+                        <p className="text-black dark:text-white font-medium text-base leading-none mt-1">{pagamento.nome}</p>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-black dark:text-white font-medium text-base leading-snug">{pagamento.nome}</p>
-                        <p className="text-neutral-600 dark:text-gray-300 text-sm leading-tight">Pagamento viagem {pagamento.viagem}</p>
-                      </div>
+                      <p className="text-black dark:text-white font-semibold text-base leading-none mt-1">€ {pagamento.valor},00</p>
                     </div>
-                    <div className="text-right flex-shrink-0 self-center">
-                      <p className="text-black dark:text-white font-semibold text-base leading-snug">€ {pagamento.valor},00</p>
-                      <p className="text-neutral-500 dark:text-gray-400 text-sm leading-tight">Ontem</p>
+                    <div className="flex justify-between -mt-4">
+                      <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[20px] leading-none">Pagamento viagem {pagamento.viagem}</p>
+                      <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">Ontem</p>
                     </div>
                   </div>
                   ))}
