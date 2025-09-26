@@ -242,7 +242,7 @@ const Dashboard = () => {
                     Últimos Pagamentos
                   </h3>
                   <button 
-                    onClick={() => setActiveSection('pagamentos')}
+                    onClick={() => setActiveSection('historico')}
                     className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                   >
                     Ver todos
