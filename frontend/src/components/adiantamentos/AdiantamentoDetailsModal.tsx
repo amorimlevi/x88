@@ -1,5 +1,6 @@
 import { X, User, Euro, Calendar, Clock, FileText, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
+import { historicoService } from '../../services/historicoService'
 
 interface Adiantamento {
   id: string
@@ -24,10 +25,38 @@ interface AdiantamentoDetailsModalProps {
   isOpen: boolean
   onClose: () => void
   adiantamento: Adiantamento | null
+  onApprove?: (adiantamento: Adiantamento) => void
+  onReject?: (adiantamento: Adiantamento) => void
 }
 
-const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: AdiantamentoDetailsModalProps) => {
+const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento, onApprove, onReject }: AdiantamentoDetailsModalProps) => {
   if (!isOpen || !adiantamento) return null
+
+  const handleApprove = () => {
+    // Registrar no histórico
+    historicoService.registrarAprovacao({
+      nome: adiantamento.funcionarioNome,
+      iniciais: adiantamento.funcionarioNome.split(' ').map(n => n[0]).join(''),
+      valor: adiantamento.valor,
+      viagem: adiantamento.motivo || adiantamento.descricao || 'Adiantamento'
+    })
+    
+    // Chamar callback se existir
+    if (onApprove) onApprove(adiantamento)
+  }
+
+  const handleReject = () => {
+    // Registrar no histórico
+    historicoService.registrarNegacao({
+      nome: adiantamento.funcionarioNome,
+      iniciais: adiantamento.funcionarioNome.split(' ').map(n => n[0]).join(''),
+      valor: adiantamento.valor,
+      viagem: adiantamento.motivo || adiantamento.descricao || 'Adiantamento'
+    }, 'Adiantamento rejeitado pelo gestor')
+    
+    // Chamar callback se existir
+    if (onReject) onReject(adiantamento)
+  }
 
   // Constantes e cálculos de retenção
   const TAXA_RETENCAO = 0.10 // 10%
@@ -284,20 +313,14 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
           <div className="flex items-center justify-end gap-3 p-6 border-t border-dark-300">
             <button
               className="btn-secondary"
-              onClick={() => {
-                // TODO: Implementar funcionalidade de rejeição
-                console.log('Rejeitando adiantamento:', adiantamento.id)
-              }}
+              onClick={handleReject}
             >
               <XCircle className="w-4 h-4 mr-2" />
               Rejeitar
             </button>
             <button
               className="btn-primary"
-              onClick={() => {
-                // TODO: Implementar funcionalidade de aprovação
-                console.log('Aprovando adiantamento:', adiantamento.id)
-              }}
+              onClick={handleApprove}
             >
               <CheckCircle2 className="w-4 h-4 mr-2" />
               Aprovar

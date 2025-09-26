@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, X, CreditCard, DollarSign } from 'lucide-react'
+import { Calendar, Filter, Euro, Clock, CheckCircle, XCircle, Eye, X, CreditCard, DollarSign } from 'lucide-react'
 import { formatEuro, formatDateTime, formatDate } from '../../utils/formatters'
 import PagamentoDetailsModal from './PagamentoDetailsModal'
 import ContasAReceber from './ContasAReceber'
@@ -40,7 +40,7 @@ const PagamentosList = () => {
   ]
 
   // Dados mock - em produção viriam da API
-  const [pagamentos] = useState<Pagamento[]>([
+  const [pagamentos, setPagamentos] = useState<Pagamento[]>([
     {
       id: '1',
       funcionarioId: '1',

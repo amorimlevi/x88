@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Clock, User, Check, X, Eye, AlertCircle, Calendar, Euro, FileText } from 'lucide-react'
+import { Clock, Check, X, Eye, Calendar, Euro, FileText } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 import { historicoService } from '../../services/historicoService'
 
