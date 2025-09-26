@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
   const menuItems = [
     { id: 'dashboard', icon: DashboardIcon, label: 'Dashboard' },
     { id: 'solicitacoes', icon: RequestsIcon, label: 'Solicitações' },
-    { id: 'historico', icon: AdvanceIcon, label: 'Histórico' },
+    { id: 'adiantamentos', icon: AdvanceIcon, label: 'Adiantamentos' },
     { id: 'relatorios', icon: ReportsIcon, label: 'Relatórios' },
     { id: 'funcionarios', icon: UsersIcon, label: 'Colaboradores' },
     { id: 'configuracoes', icon: SettingsIcon, label: 'Configurações' },
