@@ -10,6 +10,7 @@ import HistoricoPage from '../historico/HistoricoPage'
 import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
+import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
 
 import Notification from '../ui/Notification'
 
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
   const [selectedAdiantamento, setSelectedAdiantamento] = useState<string | null>(null)
+  const [isAddPagamentoModalOpen, setIsAddPagamentoModalOpen] = useState(false)
 
   const [notification, setNotification] = useState<{
     isVisible: boolean
@@ -119,6 +121,21 @@ const Dashboard = () => {
     showNotification('error', 'Solicitação Negada', `A solicitação de ${solicitacao.nome} foi negada.`)
   }
 
+  const handleNewPagamento = () => {
+    setIsAddPagamentoModalOpen(true)
+  }
+
+  const handleSavePagamento = (pagamento: any) => {
+    // Aqui você pode processar o pagamento (salvar no estado, enviar para API, etc.)
+    console.log('Novo pagamento criado:', pagamento)
+    
+    // Mostrar notificação de sucesso
+    showNotification('success', 'Pagamento Criado', `Pagamento para ${pagamento.funcionarioNome} foi criado com sucesso.`)
+    
+    // Fechar modal
+    setIsAddPagamentoModalOpen(false)
+  }
+
   return (
     <div className="flex h-screen bg-white dark:bg-black">
       {/* Sidebar */}
@@ -134,7 +151,7 @@ const Dashboard = () => {
         {/* Header */}
         <Header 
           onMenuClick={toggleSidebar} 
-          onNewPagamento={() => {}}
+          onNewPagamento={handleNewPagamento}
           onSectionChange={setActiveSection}
           onSelectAdiantamento={setSelectedAdiantamento}
         />
@@ -166,7 +183,7 @@ const Dashboard = () => {
                   </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-brand-600 dark:bg-brand-500 text-white px-2 py-1 rounded-full">
-                      5 novas
+                      {solicitacoesMock.length} novas
                     </span>
                     <button 
                       onClick={handleVerTodasSolicitacoes}
@@ -196,22 +213,6 @@ const Dashboard = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => handleNegarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors group"
-                          title="Negar solicitação"
-                        >
-                          <X className="w-4 h-4 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                        </button>
-                        <button
-                          onClick={(e) => handleApprovarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-900/20 transition-colors group"
-                          title="Aprovar solicitação"
-                        >
-                          <Check className="w-4 h-4 text-green-500 group-hover:text-green-600 dark:group-hover:text-green-400" />
-                        </button>
-                      </div>
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">
@@ -303,6 +304,13 @@ const Dashboard = () => {
           onDenied={handleSolicitacaoAprovada}
         />
       )}
+
+      {/* Modal de Novo Pagamento */}
+      <AddPagamentoModal
+        isOpen={isAddPagamentoModalOpen}
+        onClose={() => setIsAddPagamentoModalOpen(false)}
+        onSave={handleSavePagamento}
+      />
 
       {/* Notificação */}
       <Notification
