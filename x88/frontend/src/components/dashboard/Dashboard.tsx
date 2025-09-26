@@ -86,10 +86,20 @@ const Dashboard = () => {
   }
 
   const handleSavePagamento = (pagamento: any) => {
-    // Aqui você pode salvar o pagamento no seu serviço/API
+    // Criar objeto compatível com historicoService
+    const pagamentoParaHistorico = {
+      nome: pagamento.funcionarioNome,
+      iniciais: pagamento.funcionarioNome.split(' ').map((n: string) => n[0]).join('').toUpperCase(),
+      valor: pagamento.valor,
+      viagem: 'Pagamento aprovado'
+    }
+    
+    // Registrar o pagamento no histórico
+    historicoService.registrarPagamento(pagamentoParaHistorico)
+    
     console.log('Novo pagamento criado:', pagamento)
     
-    showNotification('success', 'Pagamento Aprovado', 'O pagamento foi aprovado com sucesso!')
+    showNotification('success', 'Pagamento Aprovado', 'O pagamento foi aprovado e registrado no histórico!')
     setIsAddPagamentoModalOpen(false)
   }
 
@@ -205,23 +215,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => handleNegarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors group"
-                          title="Negar solicitação"
-                        >
-                          <X className="w-4 h-4 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                        </button>
-                        <button
-                          onClick={(e) => handleApprovarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-900/20 transition-colors group"
-                          title="Aprovar solicitação"
-                        >
-                          <Check className="w-4 h-4 text-green-500 group-hover:text-green-600 dark:group-hover:text-green-400" />
-                        </button>
-                      </div>
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">

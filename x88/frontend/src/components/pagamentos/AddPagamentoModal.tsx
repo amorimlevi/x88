@@ -25,19 +25,15 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
     const newErrors: Record<string, string> = {}
     
     if (!formData.funcionarioNome.trim()) {
-      newErrors.funcionarioNome = 'Nome do funcionário é obrigatório'
+      newErrors.funcionarioNome = 'Nome do colaborador é obrigatório'
     }
     
     if (!formData.valor || parseFloat(formData.valor) <= 0) {
       newErrors.valor = 'Valor deve ser maior que zero'
     }
     
-    if (!formData.descricao.trim()) {
-      newErrors.descricao = 'Descrição é obrigatória'
-    }
-    
     if (!formData.dataVencimento) {
-      newErrors.dataVencimento = 'Data de vencimento é obrigatória'
+      newErrors.dataVencimento = 'Data de pagamento é obrigatória'
     }
 
     setErrors(newErrors)
@@ -52,14 +48,12 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         id: Date.now().toString(),
         funcionarioId: formData.funcionarioId || Date.now().toString(),
         funcionarioNome: formData.funcionarioNome,
-        tipo: formData.tipo,
         valor: parseFloat(formData.valor),
-        descricao: formData.descricao,
         dataVencimento: formData.dataVencimento,
         dataPagamento: new Date().toISOString(),
         metodoPagamento: formData.metodoPagamento,
         observacoes: formData.observacoes,
-        status: 'pendente'
+        status: 'aprovado'
       }
       
       onSave(novoPagamento)
@@ -111,23 +105,23 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Informações do Funcionário */}
           <div>
-            <h3 className="text-lg font-medium text-white mb-4">Informações do Beneficiário</h3>
+            <h3 className="text-lg font-medium text-white mb-4">Informações do Colaborador</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black font-medium mb-2">
-                  Nome do Funcionário *
+                <label className="block text-white font-medium mb-2">
+                  Nome do Colaborador *
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
                   <input
                     type="text"
                     value={formData.funcionarioNome}
                     onChange={(e) => handleChange('funcionarioNome', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
                       errors.funcionarioNome ? 'border-red-500' : 'border-dark-300'
                     }`}
-                    placeholder="Digite o nome do funcionário"
+                    placeholder="Digite o nome do colaborador"
                   />
                 </div>
                 {errors.funcionarioNome && (
@@ -135,22 +129,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                 )}
               </div>
 
-              <div>
-                <label className="block text-black font-medium mb-2">
-                  Tipo de Pagamento
-                </label>
-                <select
-                  value={formData.tipo}
-                  onChange={(e) => handleChange('tipo', e.target.value)}
-                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black"
-                >
-                  <option value="adiantamento">Adiantamento</option>
-                  <option value="salario">Salário</option>
-                  <option value="bonus">Bônus</option>
-                  <option value="reembolso">Reembolso</option>
-                  <option value="comissao">Comissão</option>
-                </select>
-              </div>
+
             </div>
           </div>
 
@@ -160,18 +139,18 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black font-medium mb-2">
-                  Valor (€) *
+                <label className="block text-white font-medium mb-2">
+                  Valor Solicitado *
                 </label>
                 <div className="relative">
-                  <Euro className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500" />
+                  <Euro className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     value={formData.valor}
                     onChange={(e) => handleChange('valor', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
                       errors.valor ? 'border-red-500' : 'border-dark-300'
                     }`}
                     placeholder="0,00"
@@ -180,19 +159,40 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                 {errors.valor && (
                   <p className="text-red-500 text-sm mt-1">{errors.valor}</p>
                 )}
+                
+                {/* Mostrar cálculo automático */}
+                {formData.valor && parseFloat(formData.valor) > 0 && (
+                  <div className="mt-3 p-3 bg-dark-300 rounded-lg border border-dark-400">
+                    <div className="text-white text-sm space-y-1">
+                      <div className="flex justify-between">
+                        <span>Valor Bruto:</span>
+                        <span className="font-medium">€ {parseFloat(formData.valor).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-red-400">
+                        <span>Dedução (10%):</span>
+                        <span className="font-medium">- € {(parseFloat(formData.valor) * 0.10).toFixed(2)}</span>
+                      </div>
+                      <hr className="border-dark-500" />
+                      <div className="flex justify-between text-green-400 font-semibold">
+                        <span>Valor Líquido:</span>
+                        <span>€ {(parseFloat(formData.valor) * 0.90).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
-                <label className="block text-black font-medium mb-2">
-                  Data de Vencimento *
+                <label className="block text-white font-medium mb-2">
+                  Data de Pagamento *
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500" />
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
                   <input
                     type="date"
                     value={formData.dataVencimento}
                     onChange={(e) => handleChange('dataVencimento', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
                       errors.dataVencimento ? 'border-red-500' : 'border-dark-300'
                     }`}
                   />
@@ -203,26 +203,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
               </div>
             </div>
 
-            <div className="mt-4">
-              <label className="block text-black font-medium mb-2">
-                Descrição *
-              </label>
-              <div className="relative">
-                <FileText className="absolute left-3 top-3 w-5 h-5 text-primary-500" />
-                <textarea
-                  value={formData.descricao}
-                  onChange={(e) => handleChange('descricao', e.target.value)}
-                  rows={3}
-                  className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black resize-none ${
-                    errors.descricao ? 'border-red-500' : 'border-dark-300'
-                  }`}
-                  placeholder="Descreva o motivo do pagamento"
-                />
-              </div>
-              {errors.descricao && (
-                <p className="text-red-500 text-sm mt-1">{errors.descricao}</p>
-              )}
-            </div>
+
           </div>
 
           {/* Método de Pagamento */}
@@ -231,33 +212,30 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black font-medium mb-2">
+                <label className="block text-white font-medium mb-2">
                   Método
                 </label>
-                <div className="relative">
-                  <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500" />
-                  <select
-                    value={formData.metodoPagamento}
-                    onChange={(e) => handleChange('metodoPagamento', e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black"
-                  >
-                    <option value="mbway">MB WAY</option>
-                    <option value="transferencia">Transferência Bancária</option>
-                    <option value="dinheiro">Dinheiro</option>
-                    <option value="cartao">Cartão de Crédito</option>
-                  </select>
-                </div>
+                <select
+                  value={formData.metodoPagamento}
+                  onChange={(e) => handleChange('metodoPagamento', e.target.value)}
+                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black"
+                >
+                  <option value="mbway">MB WAY</option>
+                  <option value="transferencia">Transferência Bancária</option>
+                  <option value="dinheiro">Dinheiro</option>
+                  <option value="cartao">Cartão de Crédito</option>
+                </select>
               </div>
 
               <div>
-                <label className="block text-black font-medium mb-2">
+                <label className="block text-white font-medium mb-2">
                   Observações
                 </label>
                 <textarea
                   value={formData.observacoes}
                   onChange={(e) => handleChange('observacoes', e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black resize-none"
+                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black resize-none"
                   placeholder="Observações adicionais (opcional)"
                 />
               </div>
