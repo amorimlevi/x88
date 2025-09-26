@@ -1,6 +1,6 @@
 # Dependencies
-node_modules/
-*/node_modules/
+# node_modules/
+# */node_modules/
 jspm_packages/
 
 # Build outputs
@@ -76,3 +76,4 @@ workbox-*.js
 # Temporary folders
 tmp/
 temp/
+node_modules

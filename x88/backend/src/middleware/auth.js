@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 
-// Middleware para verificar token JWT 
+
+
+// Middleware para verificar token JWT testanto
+
 export const authenticate = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '')

@@ -85,6 +85,24 @@ const Dashboard = () => {
     setActiveSection('pagamentos')
   }
 
+  const handleSavePagamento = (pagamento: any) => {
+    // Criar objeto compatível com historicoService
+    const pagamentoParaHistorico = {
+      nome: pagamento.funcionarioNome,
+      iniciais: pagamento.funcionarioNome.split(' ').map((n: string) => n[0]).join('').toUpperCase(),
+      valor: pagamento.valor,
+      viagem: 'Pagamento aprovado'
+    }
+    
+    // Registrar o pagamento no histórico
+    historicoService.registrarPagamento(pagamentoParaHistorico)
+    
+    console.log('Novo pagamento criado:', pagamento)
+    
+    showNotification('success', 'Pagamento Aprovado', 'O pagamento foi aprovado e registrado no histórico!')
+    setIsAddPagamentoModalOpen(false)
+  }
+
   const handleApprovarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
     event.stopPropagation() // Evita que o click no item seja disparado
     
@@ -151,7 +169,10 @@ const Dashboard = () => {
         {/* Header */}
         <Header 
           onMenuClick={toggleSidebar} 
-          onNewPagamento={handleNewPagamento}
+
+
+          onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
+
           onSectionChange={setActiveSection}
           onSelectAdiantamento={setSelectedAdiantamento}
         />
@@ -212,7 +233,9 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
+
+                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
+
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">
