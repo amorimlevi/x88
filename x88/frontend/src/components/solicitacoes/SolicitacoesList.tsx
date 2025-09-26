@@ -464,19 +464,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-dark-600 text-sm">Em Análise</p>
-              <p className="text-2xl font-bold text-black dark:text-white">
-              {solicitacoes.filter(s => s.status === 'em_analise').length}
-              </p>
-            </div>
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-white" />
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Filters */}
@@ -487,7 +475,6 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
             {[
               { value: 'todos', label: 'Todos', count: solicitacoes.length },
               { value: 'pendente', label: 'Pendentes', count: solicitacoes.filter(s => s.status === 'pendente').length },
-              { value: 'em_analise', label: 'Em Análise', count: solicitacoes.filter(s => s.status === 'em_analise').length },
               { value: 'aprovada', label: 'Aprovadas', count: solicitacoes.filter(s => s.status === 'aprovada').length },
               { value: 'negada', label: 'Negadas', count: solicitacoes.filter(s => s.status === 'negada').length }
             ].map((filter) => (
