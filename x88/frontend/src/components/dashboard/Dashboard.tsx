@@ -6,10 +6,11 @@ import ColaboradoresList from '../colaboradores/ColaboradoresList'
 import { Check, X } from 'lucide-react'
 import { historicoService } from '../../services/historicoService'
 
-import HistoricoPage from '../historico/HistoricoPage'
+import AdiantamentosList from '../adiantamentos/AdiantamentosList'
 import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
+
 import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
 import { ultimosPagamentosData } from '../../data/pagamentosData'
 
@@ -19,9 +20,11 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
+
   const [selectedAdiantamento, setSelectedAdiantamento] = useState<string | null>(null)
   const [isAddPagamentoModalOpen, setIsAddPagamentoModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+
 
   const [notification, setNotification] = useState<{
     isVisible: boolean
@@ -50,27 +53,19 @@ const Dashboard = () => {
 
 
   // Mock data para solicitações
-  const [solicitacoesMock, setSolicitacoesMock] = useState([
-    { id: 1, nome: 'Ricardo Mendes', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'RM' },
-    { id: 2, nome: 'Beatriz Almeida', viagem: 'Viagem RJ', valor: 800, tempo: '4h', iniciais: 'BA' },
-    { id: 3, nome: 'Gabriel Rodrigues', viagem: 'Viagem BH', valor: 300, tempo: '6h', iniciais: 'GR' },
-    { id: 4, nome: 'Larissa Pereira', viagem: 'Viagem Salvador', valor: 650, tempo: '1d', iniciais: 'LP' }
-  ])
+  const solicitacoesMock = [
+    { id: 1, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 2, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 3, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
+    { id: 4, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' }
+  ]
 
   // Dados compartilhados para pagamentos
   const pagamentosMock = ultimosPagamentosData
 
   const handleSolicitacaoClick = (solicitacao: any) => {
     setSelectedSolicitacao(solicitacao)
-    // Não navega para solicitacoes, apenas abre o modal de detalhes
-  }
-
-  const handleSolicitacaoAprovada = (solicitacaoAprovada: any) => {
-    // Remove a solicitação do card de pendentes baseado no nome do selectedSolicitacao original
-    if (selectedSolicitacao) {
-      setSolicitacoesMock(prev => prev.filter(s => s.nome !== selectedSolicitacao.nome))
-    }
-    setSelectedSolicitacao(null)
+    setActiveSection('solicitacoes')
   }
 
   const handleVerTodasSolicitacoes = () => {
@@ -91,24 +86,6 @@ const Dashboard = () => {
     setActiveSection('pagamentos')
   }
 
-  const handleSavePagamento = (pagamento: any) => {
-    // Criar objeto compatível com historicoService
-    const pagamentoParaHistorico = {
-      nome: pagamento.funcionarioNome,
-      iniciais: pagamento.funcionarioNome.split(' ').map((n: string) => n[0]).join('').toUpperCase(),
-      valor: pagamento.valor,
-      viagem: 'Pagamento aprovado'
-    }
-    
-    // Registrar o pagamento no histórico
-    historicoService.registrarPagamento(pagamentoParaHistorico)
-    
-    console.log('Novo pagamento criado:', pagamento)
-    
-    showNotification('success', 'Pagamento Aprovado', 'O pagamento foi aprovado e registrado no histórico!')
-    setIsAddPagamentoModalOpen(false)
-  }
-
   const handleApprovarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
     event.stopPropagation() // Evita que o click no item seja disparado
     
@@ -119,9 +96,6 @@ const Dashboard = () => {
       valor: solicitacao.valor,
       viagem: solicitacao.viagem || 'Solicitação'
     })
-
-    // Remover da lista de pendentes
-    setSolicitacoesMock(prev => prev.filter(s => s.id !== solicitacao.id))
 
     // Mostrar notificação
     showNotification('success', 'Solicitação Aprovada', `A solicitação de ${solicitacao.nome} foi aprovada com sucesso.`)
@@ -138,15 +112,8 @@ const Dashboard = () => {
       viagem: solicitacao.viagem || 'Solicitação'
     }, 'Solicitação negada diretamente da dashboard')
 
-    // Remover da lista de pendentes
-    setSolicitacoesMock(prev => prev.filter(s => s.id !== solicitacao.id))
-
     // Mostrar notificação
     showNotification('error', 'Solicitação Negada', `A solicitação de ${solicitacao.nome} foi negada.`)
-  }
-
-  const handleNewPagamento = () => {
-    setIsAddPagamentoModalOpen(true)
   }
 
   return (
@@ -162,6 +129,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
+
         <Header 
           onMenuClick={toggleSidebar} 
           onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
@@ -169,6 +137,7 @@ const Dashboard = () => {
           onSelectAdiantamento={setSelectedAdiantamento}
           onSearch={handleSearch}
         />
+
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-black">
@@ -218,7 +187,7 @@ const Dashboard = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start">
                       <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                        <span className="text-white text-sm font-medium">{solicitacao.iniciais}</span>
+                        <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                       </div>
                       <div>
                         <p className="text-black dark:text-white font-medium text-base leading-none">{solicitacao.nome}</p>
@@ -226,9 +195,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
-
+                      <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">
@@ -246,7 +213,7 @@ const Dashboard = () => {
                     Últimos Pagamentos
                   </h3>
                   <button 
-                    onClick={() => setActiveSection('historico')}
+                    onClick={() => setActiveSection('adiantamentos')}
                     className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                   >
                     Ver todos
@@ -263,7 +230,7 @@ const Dashboard = () => {
                 <div className="flex items-start justify-between">
                 <div className="flex items-start">
                 <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                  <span className="text-white text-sm font-medium">{pagamento.iniciais}</span>
+                  <span className="text-black dark:text-white text-sm font-medium">{pagamento.iniciais}</span>
                 </div>
                   <p className="text-black dark:text-white font-medium text-base leading-none mt-1">{pagamento.nome}</p>
                 </div>
@@ -288,8 +255,8 @@ const Dashboard = () => {
 
 
 
-            {activeSection === 'historico' && (
-              <HistoricoPage />
+            {activeSection === 'adiantamentos' && (
+              <AdiantamentosList />
             )}
 
             {activeSection === 'relatorios' && (
@@ -301,14 +268,12 @@ const Dashboard = () => {
             )}
 
             {activeSection === 'solicitacoes' && (
-              <SolicitacoesList 
-                selectedSolicitacao={selectedSolicitacao} 
-                selectedAdiantamentoId={selectedAdiantamento}
-              />
+              <SolicitacoesList selectedSolicitacao={selectedSolicitacao} />
             )}
           </div>
         </main>
       </div>
+
 
       {/* Modal de Solicitação sempre presente quando há uma selecionada */}
       {selectedSolicitacao && activeSection !== 'solicitacoes' && (
@@ -328,6 +293,7 @@ const Dashboard = () => {
         onClose={() => setIsAddPagamentoModalOpen(false)}
         onSave={handleSavePagamento}
       />
+
 
       {/* Notificação */}
       <Notification
