@@ -1,4 +1,5 @@
 import { UsersIcon, PaymentsIcon, AdvanceIcon, ReportsIcon } from '../ui/Icons'
+import { FileText } from 'lucide-react'
 
 interface StatsCardsProps {
   onSectionChange: (section: string) => void
@@ -7,13 +8,13 @@ interface StatsCardsProps {
 const StatsCards = ({ onSectionChange }: StatsCardsProps) => {
   const stats = [
     {
-      title: 'Total de Colaboradores',
-      value: '24',
-      change: '+2 este mês',
+      title: 'Solicitações',
+      value: '18',
+      change: '6 pendentes',
       changeType: 'positive' as const,
-      icon: UsersIcon,
+      icon: FileText,
       color: 'bg-brand-600 dark:bg-brand-500',
-      section: 'funcionarios'
+      section: 'solicitacoes'
     },
     {
       title: 'Pagamentos Realizados',
@@ -74,7 +75,11 @@ const StatsCards = ({ onSectionChange }: StatsCardsProps) => {
               </div>
               
               <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <Icon className="text-black dark:text-white" size="lg" />
+                {Icon === FileText ? (
+                  <FileText className="text-black dark:text-white w-6 h-6" />
+                ) : (
+                  <Icon className="text-black dark:text-white" size="lg" />
+                )}
               </div>
             </div>
           </div>

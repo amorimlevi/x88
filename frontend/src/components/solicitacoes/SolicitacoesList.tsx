@@ -201,8 +201,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Pendentes</p>
-              <p className="text-2xl font-bold text-yellow-400">
-                {solicitacoes.filter(s => s.status === 'pendente').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {solicitacoes.filter(s => s.status === 'pendente').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
@@ -215,8 +215,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Aprovadas</p>
-              <p className="text-2xl font-bold text-green-400">
-                {solicitacoes.filter(s => s.status === 'aprovada').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {solicitacoes.filter(s => s.status === 'aprovada').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -229,8 +229,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Negadas</p>
-              <p className="text-2xl font-bold text-red-400">
-                {solicitacoes.filter(s => s.status === 'negada').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {solicitacoes.filter(s => s.status === 'negada').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
@@ -243,8 +243,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Em Análise</p>
-              <p className="text-2xl font-bold text-blue-400">
-                {solicitacoes.filter(s => s.status === 'em_analise').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {solicitacoes.filter(s => s.status === 'em_analise').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -302,14 +302,14 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
               {filteredSolicitacoes.map((solicitacao) => (
                 <tr key={solicitacao.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
-                    <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                        {solicitacao.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
-                      </span>
-                      </div>
-                       <span className="text-black dark:text-white font-medium">{solicitacao.funcionarioNome}</span>
-                     </div>
+                  <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-black dark:text-white text-sm font-medium">
+                  {solicitacao.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                  </span>
+                  </div>
+                  <span className="text-black dark:text-white font-medium">{solicitacao.funcionarioNome}</span>
+                  </div>
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2">
@@ -394,23 +394,23 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
 
       {/* Alertas para Solicitações Urgentes */}
       {solicitacoes.filter(s => s.prioridade === 'urgente' && s.status === 'pendente').length > 0 && (
-        <div className="card bg-red-900/20 border border-red-800/30">
+        <div className="card bg-red-600 border border-red-700">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-red-400 font-medium mb-2">Solicitações Urgentes</h3>
-              <p className="text-red-300 text-sm mb-4">
+              <h3 className="text-white font-bold mb-2">Solicitações Urgentes</h3>
+              <p className="text-white text-sm mb-4">
                 Existem {solicitacoes.filter(s => s.prioridade === 'urgente' && s.status === 'pendente').length} solicitações urgentes que precisam de atenção imediata.
               </p>
               <div className="space-y-2">
                 {solicitacoes
                   .filter(s => s.prioridade === 'urgente' && s.status === 'pendente')
                   .map(sol => (
-                    <div key={sol.id} className="flex items-center justify-between bg-red-800/20 p-3 rounded-lg">
-                      <div>
-                        <p className="text-red-300 font-medium">{sol.funcionarioNome}</p>
-                        <p className="text-red-400 text-sm">{sol.descricao}</p>
-                      </div>
+                    <div key={sol.id} className="flex items-center justify-between bg-red-700 p-3 rounded-lg">
+                    <div>
+                    <p className="text-white font-bold">{sol.funcionarioNome}</p>
+                    <p className="text-white text-sm">{sol.descricao}</p>
+                    </div>
                       <div className="flex gap-2">
                         <button 
                           onClick={() => handleAprovar(sol.id)}

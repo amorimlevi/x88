@@ -24,7 +24,7 @@ interface Adiantamento {
   origem: 'app_motorista' | 'manual'
 }
 
-type FilterStatus = 'todos' | 'pendente' | 'aprovado' | 'rejeitado' | 'pago'
+type FilterStatus = 'todos' | 'pendente' | 'rejeitado' | 'pago'
 type FilterUrgencia = 'todos' | 'baixa' | 'media' | 'alta' | 'critica'
 
 const AdiantamentosList = () => {
@@ -145,7 +145,11 @@ const AdiantamentosList = () => {
     }
 
     if (statusFilter !== 'todos') {
-      filtered = filtered.filter(adiantamento => adiantamento.status === statusFilter)
+      if (statusFilter === 'pago') {
+        filtered = filtered.filter(adiantamento => adiantamento.status === 'pago' || adiantamento.status === 'aprovado')
+      } else {
+        filtered = filtered.filter(adiantamento => adiantamento.status === statusFilter)
+      }
     }
 
     if (urgenciaFilter !== 'todos') {
@@ -193,9 +197,9 @@ const AdiantamentosList = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pago': return 'bg-green-500/20 text-green-400'
+      case 'pago': 
+      case 'aprovado': return 'bg-green-500/20 text-green-400'
       case 'pendente': return 'bg-yellow-500/20 text-yellow-400'
-      case 'aprovado': return 'bg-blue-500/20 text-blue-400'
       case 'rejeitado': return 'bg-red-500/20 text-red-400'
       case 'cancelado': return 'bg-gray-500/20 text-gray-400'
       default: return 'bg-gray-500/20 text-gray-400'
@@ -214,10 +218,10 @@ const AdiantamentosList = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pago': return <CheckCircle className="w-4 h-4" />
+      case 'pago': 
+      case 'aprovado': return <CheckCircle className="w-4 h-4" />
       case 'rejeitado': return <XCircle className="w-4 h-4" />
       case 'pendente': return <Clock className="w-4 h-4" />
-      case 'aprovado': return <CheckCircle className="w-4 h-4" />
       default: return <Clock className="w-4 h-4" />
     }
   }
@@ -262,7 +266,7 @@ const AdiantamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Pendentes</p>
-              <p className="text-2xl font-bold text-yellow-400">{formatEuro(getTotalLiquidoPorStatus('pendente'))}</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{formatEuro(getTotalLiquidoPorStatus('pendente'))}</p>
               <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'pendente').length} solicitações</p>
               <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('pendente'))}</p>
             </div>
@@ -275,24 +279,10 @@ const AdiantamentosList = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-dark-600 text-sm">Aprovados</p>
-              <p className="text-2xl font-bold text-blue-400">{formatEuro(getTotalLiquidoPorStatus('aprovado'))}</p>
-              <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'aprovado').length} solicitações</p>
-              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('aprovado'))}</p>
-            </div>
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-dark-600 text-sm">Pagos (Líquido)</p>
-              <p className="text-2xl font-bold text-green-400">{formatEuro(getTotalLiquidoPorStatus('pago'))}</p>
-              <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'pago').length} pagamentos</p>
-              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('pago'))}</p>
+              <p className="text-dark-600 text-sm">Pagos</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{formatEuro(getTotalLiquidoPorStatus('pago') + getTotalLiquidoPorStatus('aprovado'))}</p>
+              <p className="text-dark-600 text-xs">{adiantamentos.filter(a => a.status === 'pago' || a.status === 'aprovado').length} pagamentos</p>
+              <p className="text-dark-600 text-xs">Bruto: {formatEuro(getTotalPorStatus('pago') + getTotalPorStatus('aprovado'))}</p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
               <Euro className="w-5 h-5 text-white" />
@@ -304,11 +294,11 @@ const AdiantamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Retido (Casa)</p>
-              <p className="text-2xl font-bold text-primary-500">
-                {formatEuro(getTotalRetidoPorStatus('pago') + getTotalRetidoPorStatus('aprovado'))}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {formatEuro(getTotalRetidoPorStatus('pago') + getTotalRetidoPorStatus('aprovado'))}
               </p>
               <p className="text-dark-600 text-xs">10% de retenção</p>
-              <p className="text-dark-600 text-xs">Dos pagos + aprovados</p>
+              <p className="text-dark-600 text-xs">Dos pagos</p>
             </div>
             <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
               <FileText className="w-5 h-5 text-white" />
@@ -319,8 +309,8 @@ const AdiantamentosList = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-dark-600 text-sm">Total Geral</p>
-              <p className="text-2xl font-bold text-white">{adiantamentos.length}</p>
+              <p className="text-black dark:text-white text-sm">Total Geral</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{adiantamentos.length}</p>
               <p className="text-dark-600 text-xs">Bruto: {formatEuro(adiantamentos.reduce((total, a) => total + a.valor, 0))}</p>
               <p className="text-dark-600 text-xs">Líquido: {formatEuro(adiantamentos.reduce((total, a) => total + calcularValorLiquido(a.valor), 0))}</p>
             </div>
@@ -339,7 +329,7 @@ const AdiantamentosList = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
               <AlertCircle className="w-4 h-4 text-white" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Filtros de Adiantamentos</h3>
+            <h3 className="text-lg font-semibold text-black dark:text-white">Filtros de Adiantamentos</h3>
           </div>
 
           {/* Date Range Filters */}
@@ -381,7 +371,6 @@ const AdiantamentosList = () => {
               options={[
                 { value: 'todos', label: 'Todos os estados' },
                 { value: 'pendente', label: 'Pendentes' },
-                { value: 'aprovado', label: 'Aprovados' },
                 { value: 'pago', label: 'Pagos' },
                 { value: 'rejeitado', label: 'Rejeitados' }
               ]}
@@ -428,10 +417,10 @@ const AdiantamentosList = () => {
                 <tr key={adiantamento.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                        {adiantamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
-                      </span>
+                    <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-black dark:text-white text-sm font-medium">
+                    {adiantamento.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                    </span>
                     </div>
                     <div>
                       <span className="text-black dark:text-white font-medium">{adiantamento.funcionarioNome}</span>
@@ -488,7 +477,7 @@ const AdiantamentosList = () => {
                     <div className="flex items-center gap-2">
                       {getStatusIcon(adiantamento.status)}
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(adiantamento.status)}`}>
-                        {adiantamento.status.charAt(0).toUpperCase() + adiantamento.status.slice(1)}
+                      {adiantamento.status === 'aprovado' ? 'Pago' : adiantamento.status.charAt(0).toUpperCase() + adiantamento.status.slice(1)}
                       </span>
                     </div>
                   </td>

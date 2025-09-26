@@ -1,43 +1,40 @@
-import { useState } from 'react'
-import { Calendar, TrendingUp, TrendingDown, Euro, FileText, Download, BarChart3, PieChart, X, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { FileText, BarChart3, Clock, CheckCircle, AlertCircle, Lightbulb } from 'lucide-react'
 import { formatEuro, formatDate, formatDateTime } from '../../utils/formatters'
-import DatePicker from '../ui/DatePicker'
-import Select from '../ui/Select'
-
-// Interfaces para tipagem
-interface Pagamento {
-  id: string
-  funcionarioId: string
-  funcionarioNome: string
-  tipo: 'salario' | 'adiantamento' | 'viagem' | 'bonus' | 'desconto'
-  valor: number
-  descricao: string
-  status: 'pendente' | 'aprovado' | 'rejeitado' | 'pago' | 'cancelado' | 'agendado'
-  dataPagamento?: string
-  dataVencimento?: string
-  metodoPagamento?: 'pix' | 'transferencia' | 'dinheiro' | 'cartao'
-  origem: 'manual' | 'app_terceiro'
-}
-
-interface RelatorioMetrica {
-  titulo: string
-  valor: number
-  periodo: string
-  variacao?: number
-  tipo: 'receita' | 'despesa' | 'saldo'
-}
-
-type FiltroTempo = 'semanal' | 'mensal' | 'anual' | 'customizado'
-type TipoRelatorio = 'geral' | 'pagamentos' | 'adiantamentos' | 'faturamento'
+import { Pagamento, FiltroTempo, TipoRelatorio, RelatorioMetrica } from '../../types/reports'
+import { reportsService } from '../../services/reportsService'
+import MetricsCard from './components/MetricsCard'
+import ReportChart from './components/ReportChart'
+import AdvancedFilters from './components/AdvancedFilters'
 
 const RelatoriosList = () => {
   const [filtroTempo, setFiltroTempo] = useState<FiltroTempo>('mensal')
   const [tipoRelatorio, setTipoRelatorio] = useState<TipoRelatorio>('geral')
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
+  const [pagamentos, setPagamentos] = useState<Pagamento[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [showCharts, setShowCharts] = useState(true)
 
-  // Dados mock mais extensos para relatórios
-  const [pagamentos] = useState<Pagamento[]>([
+  // Carregar dados quando os filtros mudarem
+  useEffect(() => {
+    loadReportData()
+  }, [filtroTempo, tipoRelatorio, startDate, endDate])
+
+  const loadReportData = async () => {
+    setIsLoading(true)
+    try {
+      const filters = {
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+        ...(tipoRelatorio !== 'geral' && { tipo: tipoRelatorio })
+      }
+      const data = await reportsService.getPaymentData(filters)
+      setPagamentos(data)
+    } catch (error) {
+      console.error('Erro ao carregar dados dos relatórios:', error)
+      // Fallback para dados mock em desenvolvimento
+      setPagamentos([
     // Dados do mês atual
     {
       id: '1',
@@ -134,7 +131,11 @@ const RelatoriosList = () => {
       metodoPagamento: 'transferencia',
       origem: 'manual'
     }
-  ])
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const getDataRange = () => {
     const now = new Date()
@@ -179,51 +180,10 @@ const RelatoriosList = () => {
     })
   }
 
+  // Usar o serviço para calcular métricas
   const calcularMetricas = (): RelatorioMetrica[] => {
-    const filteredPagamentos = getFilteredPagamentos()
-    
-    const pagos = filteredPagamentos.filter(p => p.status === 'pago')
-    const pendentes = filteredPagamentos.filter(p => ['pendente', 'agendado', 'aprovado'].includes(p.status))
-    
-    const totalPago = pagos.reduce((sum, p) => sum + p.valor, 0)
-    const totalPendente = pendentes.reduce((sum, p) => sum + p.valor, 0)
-    const totalAdiantamentos = pagos.filter(p => p.tipo === 'adiantamento').reduce((sum, p) => sum + p.valor, 0)
-    const totalSalarios = pagos.filter(p => p.tipo === 'salario').reduce((sum, p) => sum + p.valor, 0)
-
-    // Calcular variação em relação ao período anterior (mock)
-    const variacaoPago = Math.round((Math.random() - 0.5) * 20) // -10% a +10%
-    const variacaoPendente = Math.round((Math.random() - 0.5) * 30) // -15% a +15%
-
-    return [
-      {
-        titulo: 'Total Pago',
-        valor: totalPago,
-        periodo: filtroTempo,
-        variacao: variacaoPago,
-        tipo: 'despesa'
-      },
-      {
-        titulo: 'Pendente de Pagamento',
-        valor: totalPendente,
-        periodo: filtroTempo,
-        variacao: variacaoPendente,
-        tipo: 'despesa'
-      },
-      {
-        titulo: 'Adiantamentos Pagos',
-        valor: totalAdiantamentos,
-        periodo: filtroTempo,
-        variacao: Math.round((Math.random() - 0.5) * 25),
-        tipo: 'despesa'
-      },
-      {
-        titulo: 'Salários Pagos',
-        valor: totalSalarios,
-        periodo: filtroTempo,
-        variacao: Math.round((Math.random() - 0.5) * 15),
-        tipo: 'despesa'
-      }
-    ]
+    const filtro = filtroTempo === 'hoje' ? 'semanal' : filtroTempo
+    return reportsService.calculateMetrics(getFilteredPagamentos(), filtro as 'semanal' | 'mensal' | 'anual')
   }
 
   const metricas = calcularMetricas()
@@ -235,11 +195,31 @@ const RelatoriosList = () => {
     setFiltroTempo('mensal')
   }
 
-  const hasCustomDates = startDate || endDate
+  const exportarRelatorio = async () => {
+    try {
+      const dados = {
+        periodo: filtroTempo === 'customizado' ? `${startDate} - ${endDate}` : filtroTempo,
+        tipo: tipoRelatorio,
+        metricas,
+        transacoes: filteredPagamentos,
+        totalPagamentos: filteredPagamentos.length,
+        valorTotal: filteredPagamentos.reduce((sum, p) => sum + p.valor, 0),
+        dataGeracao: new Date().toLocaleDateString('pt-PT')
+      }
+      
+      await reportsService.exportReport(dados, 'json', tipoRelatorio)
+    } catch (error) {
+      console.error('Erro ao exportar relatório:', error)
+    }
+  }
 
-  const exportarRelatorio = () => {
-    // TODO: Implementar funcionalidade de exportação
-    console.log('Exportando relatório...', { filtroTempo, tipoRelatorio, metricas })
+  const refreshData = () => {
+    loadReportData()
+  }
+
+  // Usar o serviço para gerar insights
+  const gerarInsights = () => {
+    return reportsService.generateInsights(filteredPagamentos)
   }
 
   return (
@@ -247,138 +227,121 @@ const RelatoriosList = () => {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-black dark:text-white">Relatórios</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">Relatórios Avançados</h1>
           <p className="text-dark-600 mt-2">
-            Análise completa de pagamentos, faturamento e métricas financeiras
+            Análise completa e inteligente de pagamentos, faturamento e métricas financeiras
           </p>
-        </div>
-        <button
-          onClick={exportarRelatorio}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Download className="w-5 h-5" />
-          Exportar Relatório
-        </button>
-      </div>
-
-      {/* Filtros */}
-      <div className="card bg-gradient-to-br from-dark-100 to-dark-200 border border-dark-300/50 shadow-2xl">
-        <div className="space-y-6">
-          {/* Header dos Filtros */}
-          <div className="flex items-center gap-3 pb-4 border-b border-dark-300/30">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-              <Calendar className="w-4 h-4 text-white" />
+          <div className="flex items-center gap-6 mt-3">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-dark-600">{filteredPagamentos.filter(p => p.status === 'pago').length} Pagos</span>
             </div>
-            <h3 className="text-lg font-semibold text-white">Filtros de Análise</h3>
-          </div>
-
-          {/* Filtros de Data e Período */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <DatePicker
-              label="📅 Data Inicial"
-              value={startDate}
-              onChange={(date) => {
-                setStartDate(date)
-                setFiltroTempo('customizado')
-              }}
-              placeholder="Selecionar data inicial"
-            />
-            
-            <DatePicker
-              label="📅 Data Final"
-              value={endDate}
-              onChange={(date) => {
-                setEndDate(date)
-                setFiltroTempo('customizado')
-              }}
-              placeholder="Selecionar data final"
-            />
-
-            {hasCustomDates && (
-              <div className="flex items-end">
-                <button
-                  onClick={clearDateFilters}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-                  title="Limpar filtros de data"
-                >
-                  <X className="w-4 h-4" />
-                  Limpar Datas
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Filtro de Período */}
-            {!hasCustomDates && (
-              <Select
-                label="⏰ Período de Análise"
-                value={filtroTempo}
-                onChange={(value) => setFiltroTempo(value as FiltroTempo)}
-                options={[
-                  { value: 'semanal', label: 'Última semana' },
-                  { value: 'mensal', label: 'Último mês' },
-                  { value: 'anual', label: 'Último ano' }
-                ]}
-                icon={<Calendar className="w-5 h-5" />}
-              />
-            )}
-
-            {/* Tipo de Relatório */}
-            <Select
-              label="📊 Tipo de Relatório"
-              value={tipoRelatorio}
-              onChange={(value) => setTipoRelatorio(value as TipoRelatorio)}
-              options={[
-                { value: 'geral', label: 'Relatório Geral' },
-                { value: 'pagamentos', label: 'Apenas Pagamentos Realizados' },
-                { value: 'adiantamentos', label: 'Apenas Adiantamentos' },
-                { value: 'faturamento', label: 'Faturamento' }
-              ]}
-              icon={<BarChart3 className="w-5 h-5" />}
-            />
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <span className="text-sm text-dark-600">{filteredPagamentos.filter(p => ['pendente', 'aprovado'].includes(p.status)).length} Pendentes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span className="text-sm text-dark-600">{filteredPagamentos.filter(p => p.status === 'agendado').length} Agendados</span>
+            </div>
           </div>
         </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowCharts(!showCharts)}
+            className={`btn-secondary flex items-center gap-2 ${showCharts ? 'bg-brand-500 text-white' : ''}`}
+          >
+            <BarChart3 className="w-5 h-5" />
+            {showCharts ? 'Ocultar Gráficos' : 'Mostrar Gráficos'}
+          </button>
+          <button
+            onClick={() => {
+              const insights = gerarInsights()
+              console.log('📊 Análise Inteligente:', {
+                periodo: filtroTempo,
+                totalTransacoes: filteredPagamentos.length,
+                valorTotal: filteredPagamentos.reduce((sum, p) => sum + p.valor, 0),
+                insights,
+                metricas
+              })
+            }}
+            className="btn-secondary flex items-center gap-2"
+          >
+            <Lightbulb className="w-5 h-5" />
+            Análise IA
+          </button>
+        </div>
       </div>
+
+      {/* Filtros Avançados */}
+      <AdvancedFilters
+        filtroTempo={filtroTempo}
+        setFiltroTempo={setFiltroTempo}
+        tipoRelatorio={tipoRelatorio}
+        setTipoRelatorio={setTipoRelatorio}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        onExportData={exportarRelatorio}
+        onClearFilters={clearDateFilters}
+        onRefreshData={refreshData}
+        isLoading={isLoading}
+        totalRecords={filteredPagamentos.length}
+      />
 
       {/* Métricas Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {metricas.map((metrica, index) => (
-          <div key={index} className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-dark-600 text-sm">{metrica.titulo}</p>
-                <p className="text-2xl font-bold text-white">{formatEuro(metrica.valor)}</p>
-                {metrica.variacao !== undefined && (
-                  <div className="flex items-center gap-1 mt-1">
-                    {metrica.variacao >= 0 ? (
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <TrendingDown className="w-4 h-4 text-red-500" />
-                    )}
-                    <span className={`text-sm ${metrica.variacao >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                      {metrica.variacao >= 0 ? '+' : ''}{metrica.variacao}%
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                metrica.tipo === 'receita' ? 'bg-green-500' : 
-                metrica.tipo === 'despesa' ? 'bg-red-500' : 'bg-blue-500'
-              }`}>
-                <Euro className="w-5 h-5 text-white" />
-              </div>
-            </div>
-          </div>
+          <MetricsCard
+            key={index}
+            metrica={metrica}
+            isLoading={isLoading}
+            onClick={() => {
+              console.log('Métrica clicada:', metrica)
+              // Futuramente pode abrir modal com detalhes
+            }}
+          />
         ))}
       </div>
 
+      {/* Gráficos */}
+      {showCharts && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ReportChart
+            data={filteredPagamentos}
+            type="bar"
+            title="Distribuição por Tipo de Pagamento"
+          />
+          
+          <ReportChart
+            data={filteredPagamentos.filter(p => p.status === 'pago')}
+            type="pie"
+            title="Composição dos Pagamentos Realizados"
+          />
+          
+          <ReportChart
+            data={filteredPagamentos}
+            type="line"
+            title="Evolução Temporal dos Pagamentos"
+            className="lg:col-span-2"
+          />
+        </div>
+      )}
+
       {/* Resumo por Status */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <PieChart className="w-5 h-5" />
-          Resumo por Status de Pagamento
-        </h3>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-black dark:text-white flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-brand-500" />
+            Resumo por Status de Pagamento
+          </h3>
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <span>{filteredPagamentos.length} transações</span>
+            <span>•</span>
+            <span>{formatEuro(filteredPagamentos.reduce((sum, p) => sum + p.valor, 0))} total</span>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {['pago', 'pendente', 'agendado'].map((status) => {
             const statusPagamentos = filteredPagamentos.filter(p => 
@@ -388,22 +351,31 @@ const RelatoriosList = () => {
             )
             const total = statusPagamentos.reduce((sum, p) => sum + p.valor, 0)
             const count = statusPagamentos.length
+            const percentage = filteredPagamentos.length > 0 ? (count / filteredPagamentos.length * 100).toFixed(1) : '0'
 
             return (
-              <div key={status} className="bg-dark-200 rounded-lg p-4">
-                <div className="flex items-center gap-3">
-                  {status === 'pago' && <CheckCircle className="w-5 h-5 text-green-500" />}
-                  {status === 'pendente' && <AlertCircle className="w-5 h-5 text-yellow-500" />}
-                  {status === 'agendado' && <Clock className="w-5 h-5 text-blue-500" />}
-                  <div>
-                    <p className="text-dark-600 text-sm">
+              <div key={status} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-3 mb-3">
+                  {status === 'pago' && <CheckCircle className="w-6 h-6 text-green-500" />}
+                  {status === 'pendente' && <AlertCircle className="w-6 h-6 text-yellow-500" />}
+                  {status === 'agendado' && <Clock className="w-6 h-6 text-blue-500" />}
+                  <div className="flex-1">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">
                       {status === 'pago' ? 'Pagamentos Realizados' :
                        status === 'pendente' ? 'Aguardando Pagamento' :
                        'Pagamentos Agendados'}
                     </p>
-                    <p className="text-black dark:text-white font-bold text-lg">{formatEuro(total)}</p>
-                    <p className="text-dark-600 text-xs">{count} transações</p>
+                    <p className="text-black dark:text-white font-bold text-xl">{formatEuro(total)}</p>
                   </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">{count} transações</span>
+                  <span className={`font-medium ${
+                    status === 'pago' ? 'text-green-600' :
+                    status === 'pendente' ? 'text-yellow-600' : 'text-blue-600'
+                  }`}>
+                    {percentage}%
+                  </span>
                 </div>
               </div>
             )
@@ -414,7 +386,7 @@ const RelatoriosList = () => {
       {/* Tabela de Transações */}
       <div className="card overflow-hidden">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black dark:text-white flex items-center gap-2">
             <FileText className="w-5 h-5" />
             Transações do Período
           </h3>
@@ -513,42 +485,130 @@ const RelatoriosList = () => {
         )}
       </div>
 
-      {/* Resumo Final */}
-      <div className="card">
-        <h3 className="text-lg font-semibold text-white mb-4">Resumo do Relatório</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h4 className="text-black dark:text-white font-medium mb-2">Próximos Pagamentos</h4>
-            <div className="space-y-2">
-              {filteredPagamentos
-                .filter(p => ['pendente', 'agendado', 'aprovado'].includes(p.status))
-                .slice(0, 3)
-                .map((pagamento) => (
-                  <div key={pagamento.id} className="flex items-center justify-between p-2 bg-dark-200 rounded">
-                    <span className="text-black dark:text-white text-sm">{pagamento.funcionarioNome}</span>
-                    <span className="text-primary-500 font-medium">{formatEuro(pagamento.valor)}</span>
-                  </div>
-                ))}
+      {/* Insights Inteligentes */}
+      <div className="card bg-gradient-to-br from-brand-50 to-blue-50 dark:from-brand-900/20 dark:to-blue-900/20 border border-brand-200 dark:border-brand-800">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-brand-500 to-blue-500 rounded-xl flex items-center justify-center">
+              <Lightbulb className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-black dark:text-white">
+                Insights Inteligentes
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Análise automática dos seus dados financeiros
+              </p>
             </div>
           </div>
-          
-          <div>
-            <h4 className="text-black dark:text-white font-medium mb-2">Principais Categorias</h4>
-            <div className="space-y-2">
-              {['salario', 'adiantamento', 'viagem'].map((tipo) => {
-                const total = filteredPagamentos
-                  .filter(p => p.tipo === tipo && p.status === 'pago')
-                  .reduce((sum, p) => sum + p.valor, 0)
-                return total > 0 && (
-                  <div key={tipo} className="flex items-center justify-between p-2 bg-dark-200 rounded">
-                    <span className="text-black dark:text-white text-sm">
-                      {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
-                    </span>
-                    <span className="text-primary-500 font-medium">{formatEuro(total)}</span>
-                  </div>
-                )
-              })}
+          <div className="px-3 py-1 bg-brand-500 text-white rounded-full text-xs font-medium">
+            IA
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {gerarInsights().map((insight, index) => (
+            <div key={index} className="bg-white dark:bg-gray-800 border border-brand-200 dark:border-brand-700 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-brand-500 rounded-full mt-2"></div>
+                <p className="text-black dark:text-white text-sm leading-relaxed">{insight}</p>
+              </div>
             </div>
+          ))}
+          {gerarInsights().length === 0 && (
+            <div className="md:col-span-2">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
+                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <BarChart3 className="w-6 h-6 text-gray-400" />
+                </div>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Sem insights significativos para o período selecionado
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                  Experimente expandir o período ou incluir mais dados
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Resumo Final Expandido */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="card">
+          <h3 className="text-lg font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+            <Clock className="w-5 h-5 text-orange-500" />
+            Próximos Pagamentos
+          </h3>
+          <div className="space-y-3">
+            {filteredPagamentos
+              .filter(p => ['pendente', 'agendado', 'aprovado'].includes(p.status))
+              .slice(0, 5)
+              .map((pagamento) => (
+                <div key={pagamento.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-medium">
+                        {pagamento.funcionarioNome.split(' ').map(n => n.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-black dark:text-white text-sm font-medium">{pagamento.funcionarioNome}</span>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{pagamento.descricao}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-orange-600 dark:text-orange-400 font-bold">{formatEuro(pagamento.valor)}</span>
+                    {pagamento.dataVencimento && (
+                      <p className="text-xs text-gray-500">{formatDate(pagamento.dataVencimento)}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            {filteredPagamentos.filter(p => ['pendente', 'agendado', 'aprovado'].includes(p.status)).length === 0 && (
+              <div className="text-center py-6 text-gray-500 dark:text-gray-400">
+                <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>Nenhum pagamento pendente</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="card">
+          <h3 className="text-lg font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-blue-500" />
+            Principais Categorias
+          </h3>
+          <div className="space-y-3">
+            {['salario', 'adiantamento', 'viagem', 'bonus'].map((tipo) => {
+              const pagamentosTipo = filteredPagamentos.filter(p => p.tipo === tipo && p.status === 'pago')
+              const total = pagamentosTipo.reduce((sum, p) => sum + p.valor, 0)
+              const count = pagamentosTipo.length
+              const totalGeral = filteredPagamentos.filter(p => p.status === 'pago').reduce((sum, p) => sum + p.valor, 0)
+              const percentage = totalGeral > 0 ? ((total / totalGeral) * 100).toFixed(1) : '0'
+              
+              return total > 0 && (
+                <div key={tipo} className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${
+                      tipo === 'salario' ? 'bg-blue-500' :
+                      tipo === 'adiantamento' ? 'bg-orange-500' :
+                      tipo === 'viagem' ? 'bg-purple-500' : 'bg-green-500'
+                    }`}></div>
+                    <div>
+                      <span className="text-black dark:text-white text-sm font-medium">
+                        {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                      </span>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{count} transações</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-blue-600 dark:text-blue-400 font-bold">{formatEuro(total)}</span>
+                    <p className="text-xs text-gray-500">{percentage}%</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

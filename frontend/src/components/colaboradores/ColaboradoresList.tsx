@@ -213,7 +213,7 @@ const ColaboradoresList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Total</p>
-              <p className="text-2xl font-bold text-white">{colaboradores.length}</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{colaboradores.length}</p>
             </div>
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
               <span className="text-black dark:text-white font-bold">{colaboradores.length}</span>
@@ -225,8 +225,8 @@ const ColaboradoresList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Activos</p>
-              <p className="text-2xl font-bold text-green-400">
-                {colaboradores.filter(c => c.status === 'ativo').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {colaboradores.filter(c => c.status === 'ativo').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
@@ -241,8 +241,8 @@ const ColaboradoresList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Suspensos</p>
-              <p className="text-2xl font-bold text-red-400">
-                {colaboradores.filter(c => c.status === 'suspenso').length}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {colaboradores.filter(c => c.status === 'suspenso').length}
               </p>
             </div>
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
@@ -257,8 +257,8 @@ const ColaboradoresList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Folha Salarial</p>
-              <p className="text-2xl font-bold text-primary-500">
-                {formatEuro(colaboradores.reduce((sum, c) => sum + c.salario, 0))}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {formatEuro(colaboradores.reduce((sum, c) => sum + c.salario, 0))}
               </p>
             </div>
             <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">

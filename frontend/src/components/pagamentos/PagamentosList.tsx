@@ -283,7 +283,7 @@ const PagamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Total Pago</p>
-              <p className="text-2xl font-bold text-green-400">{formatEuro(getTotalPago())}</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{formatEuro(getTotalPago())}</p>
             </div>
             <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-white" />
@@ -295,7 +295,7 @@ const PagamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Pendente/Agendado</p>
-              <p className="text-2xl font-bold text-yellow-400">{formatEuro(getTotalPendente())}</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{formatEuro(getTotalPendente())}</p>
             </div>
             <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
               <Clock className="w-5 h-5 text-white" />
@@ -307,16 +307,16 @@ const PagamentosList = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-600 text-sm">Este Mês</p>
-              <p className="text-2xl font-bold text-primary-500">
-                {formatEuro(pagamentos
-                  .filter(p => {
-                    const date = new Date(p.dataPagamento || p.dataVencimento || '')
-                    const now = new Date()
-                    return date.getMonth() === now.getMonth() && 
-                           date.getFullYear() === now.getFullYear()
-                  })
-                  .reduce((total, p) => total + (p.status === 'pago' ? p.valor : 0), 0)
-                )}
+              <p className="text-2xl font-bold text-black dark:text-white">
+              {formatEuro(pagamentos
+              .filter(p => {
+              const date = new Date(p.dataPagamento || p.dataVencimento || '')
+              const now = new Date()
+              return date.getMonth() === now.getMonth() && 
+              date.getFullYear() === now.getFullYear()
+              })
+              .reduce((total, p) => total + (p.status === 'pago' ? p.valor : 0), 0)
+              )}
               </p>
             </div>
             <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">

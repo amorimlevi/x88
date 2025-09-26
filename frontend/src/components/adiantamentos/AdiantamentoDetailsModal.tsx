@@ -37,32 +37,32 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'pendente':
-        return { label: 'Pendente', icon: <Clock className="w-5 h-5" />, color: 'text-yellow-500', bgColor: 'bg-yellow-500/20' }
+        return { label: 'Pendente', icon: <Clock className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-yellow-500' }
       case 'aprovado':
-        return { label: 'Aprovado', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-blue-500', bgColor: 'bg-blue-500/20' }
+        return { label: 'Pago', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-green-500' }
       case 'rejeitado':
-        return { label: 'Rejeitado', icon: <XCircle className="w-5 h-5" />, color: 'text-red-500', bgColor: 'bg-red-500/20' }
+        return { label: 'Rejeitado', icon: <XCircle className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-red-500' }
       case 'pago':
-        return { label: 'Pago', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-green-500', bgColor: 'bg-green-500/20' }
+        return { label: 'Pago', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-green-500' }
       case 'cancelado':
-        return { label: 'Cancelado', icon: <XCircle className="w-5 h-5" />, color: 'text-gray-500', bgColor: 'bg-gray-500/20' }
+        return { label: 'Cancelado', icon: <XCircle className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-gray-500' }
       default:
-        return { label: 'Desconhecido', icon: <Clock className="w-5 h-5" />, color: 'text-gray-500', bgColor: 'bg-gray-500/20' }
+        return { label: 'Desconhecido', icon: <Clock className="w-5 h-5" />, color: 'text-white', bgColor: 'bg-gray-500' }
     }
   }
 
   const getUrgenciaInfo = (urgencia: string) => {
     switch (urgencia) {
       case 'critica':
-        return { label: 'Crítica', color: 'text-red-500', bgColor: 'bg-red-500/20' }
+        return { label: 'Crítica', color: 'text-white', bgColor: 'bg-red-500' }
       case 'alta':
-        return { label: 'Alta', color: 'text-orange-500', bgColor: 'bg-orange-500/20' }
+        return { label: 'Alta', color: 'text-white', bgColor: 'bg-orange-500' }
       case 'media':
-        return { label: 'Média', color: 'text-yellow-500', bgColor: 'bg-yellow-500/20' }
+        return { label: 'Média', color: 'text-white', bgColor: 'bg-yellow-500' }
       case 'baixa':
-        return { label: 'Baixa', color: 'text-green-500', bgColor: 'bg-green-500/20' }
+        return { label: 'Baixa', color: 'text-white', bgColor: 'bg-green-500' }
       default:
-        return { label: 'Desconhecida', color: 'text-gray-500', bgColor: 'bg-gray-500/20' }
+        return { label: 'Desconhecida', color: 'text-white', bgColor: 'bg-gray-500' }
     }
   }
 
@@ -80,7 +80,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
             </div>
             <div>
               <h2 className="text-xl font-semibold text-white">Detalhes do Adiantamento</h2>
-              <p className="text-dark-600 text-sm">Solicitação #{adiantamento.id}</p>
+              <p className="text-white text-sm">Solicitação #{adiantamento.id}</p>
             </div>
           </div>
           <button
@@ -101,7 +101,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                   {statusInfo.icon}
                 </div>
                 <div>
-                  <p className="text-dark-600 text-sm">Estado</p>
+                  <p className="text-white text-sm font-bold">Estado</p>
                   <p className={`font-semibold ${statusInfo.color}`}>{statusInfo.label}</p>
                 </div>
               </div>
@@ -112,7 +112,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-dark-600 text-sm">Urgência</p>
+                  <p className="text-white text-sm font-bold">Urgência</p>
                   <p className={`font-semibold ${urgenciaInfo.color}`}>{urgenciaInfo.label}</p>
                 </div>
               </div>
@@ -121,7 +121,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
 
           {/* Informações do Motorista */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4">Informações do Motorista</h3>
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Informações do Motorista</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
                 <User className="w-5 h-5 text-dark-600" />
@@ -141,19 +141,19 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
           </div>
 
           {/* Aviso de Retenção */}
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+          <div className="bg-amber-500 border border-amber-600 rounded-lg p-4">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              <AlertTriangle className="w-5 h-5 text-white" />
               <div>
-                <p className="text-amber-400 font-medium">Sistema de Retenção Ativo</p>
-                <p className="text-amber-300 text-sm">10% do valor solicitado será retido pela casa em todos os adiantamentos.</p>
+                <p className="text-white font-medium">Sistema de Retenção Ativo</p>
+                <p className="text-white text-sm">10% do valor solicitado será retido pela casa em todos os adiantamentos.</p>
               </div>
             </div>
           </div>
 
           {/* Detalhes do Adiantamento */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4">Detalhes da Solicitação</h3>
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Detalhes da Solicitação</h3>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <Euro className="w-5 h-5 text-dark-600 mt-0.5" />
@@ -213,7 +213,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
 
           {/* Datas */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4">Cronologia</h3>
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Cronologia</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
                 <Calendar className="w-5 h-5 text-dark-600 mt-0.5" />
@@ -246,7 +246,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
           {/* Observações do Gestor */}
           {adiantamento.observacoesGestor && (
             <div className="card">
-              <h3 className="text-lg font-semibold text-white mb-4">Observações do Gestor</h3>
+              <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Observações do Gestor</h3>
               <div className="bg-dark-200 rounded-lg p-4">
                 <p className="text-black dark:text-white">{adiantamento.observacoesGestor}</p>
               </div>
@@ -256,7 +256,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
           {/* Documento Comprovativo */}
           {adiantamento.documentoComprovativo && (
             <div className="card">
-              <h3 className="text-lg font-semibold text-white mb-4">Documento Comprovativo</h3>
+              <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Documento Comprovativo</h3>
               <div className="flex items-center gap-3 p-4 bg-dark-200 rounded-lg">
                 <FileText className="w-8 h-8 text-primary-500" />
                 <div>
@@ -269,7 +269,7 @@ const AdiantamentoDetailsModal = ({ isOpen, onClose, adiantamento }: Adiantament
 
           {/* Origem da Solicitação */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4">Origem</h3>
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-4">Origem</h3>
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full ${adiantamento.origem === 'app_motorista' ? 'bg-green-500' : 'bg-blue-500'}`}></div>
               <p className="text-black dark:text-white">
