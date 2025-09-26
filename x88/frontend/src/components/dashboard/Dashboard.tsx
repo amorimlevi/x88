@@ -10,6 +10,7 @@ import HistoricoPage from '../historico/HistoricoPage'
 import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
+import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
 
 import Notification from '../ui/Notification'
 
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
   const [selectedAdiantamento, setSelectedAdiantamento] = useState<string | null>(null)
+  const [isAddPagamentoModalOpen, setIsAddPagamentoModalOpen] = useState(false)
 
   const [notification, setNotification] = useState<{
     isVisible: boolean
@@ -83,6 +85,14 @@ const Dashboard = () => {
     setActiveSection('pagamentos')
   }
 
+  const handleSavePagamento = (pagamento: any) => {
+    // Aqui você pode salvar o pagamento no seu serviço/API
+    console.log('Novo pagamento criado:', pagamento)
+    
+    showNotification('success', 'Pagamento Aprovado', 'O pagamento foi aprovado com sucesso!')
+    setIsAddPagamentoModalOpen(false)
+  }
+
   const handleApprovarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
     event.stopPropagation() // Evita que o click no item seja disparado
     
@@ -134,7 +144,7 @@ const Dashboard = () => {
         {/* Header */}
         <Header 
           onMenuClick={toggleSidebar} 
-          onNewPagamento={() => {}}
+          onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
           onSectionChange={setActiveSection}
           onSelectAdiantamento={setSelectedAdiantamento}
         />
@@ -303,6 +313,13 @@ const Dashboard = () => {
           onDenied={handleSolicitacaoAprovada}
         />
       )}
+
+      {/* Modal de Novo Pagamento */}
+      <AddPagamentoModal
+        isOpen={isAddPagamentoModalOpen}
+        onClose={() => setIsAddPagamentoModalOpen(false)}
+        onSave={handleSavePagamento}
+      />
 
       {/* Notificação */}
       <Notification

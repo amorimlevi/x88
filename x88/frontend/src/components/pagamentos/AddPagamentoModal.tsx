@@ -98,7 +98,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
               <Euro className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-black dark:text-white">Novo Pagamento</h2>
+            <h2 className="text-xl font-semibold text-white">Novo Pagamento</h2>
           </div>
           <button 
             onClick={onClose}
@@ -111,11 +111,11 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Informações do Funcionário */}
           <div>
-            <h3 className="text-lg font-medium text-black dark:text-white mb-4">Informações do Beneficiário</h3>
+            <h3 className="text-lg font-medium text-white mb-4">Informações do Beneficiário</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Nome do Funcionário *
                 </label>
                 <div className="relative">
@@ -124,7 +124,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                     type="text"
                     value={formData.funcionarioNome}
                     onChange={(e) => handleChange('funcionarioNome', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
                       errors.funcionarioNome ? 'border-red-500' : 'border-dark-300'
                     }`}
                     placeholder="Digite o nome do funcionário"
@@ -136,13 +136,13 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
               </div>
 
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Tipo de Pagamento
                 </label>
                 <select
                   value={formData.tipo}
                   onChange={(e) => handleChange('tipo', e.target.value)}
-                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white"
+                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black"
                 >
                   <option value="adiantamento">Adiantamento</option>
                   <option value="salario">Salário</option>
@@ -156,11 +156,11 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
 
           {/* Detalhes do Pagamento */}
           <div>
-            <h3 className="text-lg font-medium text-black dark:text-white mb-4">Detalhes do Pagamento</h3>
+            <h3 className="text-lg font-medium text-white mb-4">Detalhes do Pagamento</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Valor (€) *
                 </label>
                 <div className="relative">
@@ -171,7 +171,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                     min="0"
                     value={formData.valor}
                     onChange={(e) => handleChange('valor', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
                       errors.valor ? 'border-red-500' : 'border-dark-300'
                     }`}
                     placeholder="0,00"
@@ -183,7 +183,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
               </div>
 
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Data de Vencimento *
                 </label>
                 <div className="relative">
@@ -192,7 +192,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                     type="date"
                     value={formData.dataVencimento}
                     onChange={(e) => handleChange('dataVencimento', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white ${
+                    className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black ${
                       errors.dataVencimento ? 'border-red-500' : 'border-dark-300'
                     }`}
                   />
@@ -204,7 +204,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             </div>
 
             <div className="mt-4">
-              <label className="block text-black dark:text-white font-medium mb-2">
+              <label className="block text-black font-medium mb-2">
                 Descrição *
               </label>
               <div className="relative">
@@ -213,7 +213,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                   value={formData.descricao}
                   onChange={(e) => handleChange('descricao', e.target.value)}
                   rows={3}
-                  className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white resize-none ${
+                  className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black resize-none ${
                     errors.descricao ? 'border-red-500' : 'border-dark-300'
                   }`}
                   placeholder="Descreva o motivo do pagamento"
@@ -227,11 +227,11 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
 
           {/* Método de Pagamento */}
           <div>
-            <h3 className="text-lg font-medium text-black dark:text-white mb-4">Método de Pagamento</h3>
+            <h3 className="text-lg font-medium text-white mb-4">Método de Pagamento</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Método
                 </label>
                 <div className="relative">
@@ -239,7 +239,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                   <select
                     value={formData.metodoPagamento}
                     onChange={(e) => handleChange('metodoPagamento', e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white"
+                    className="w-full pl-10 pr-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black"
                   >
                     <option value="mbway">MB WAY</option>
                     <option value="transferencia">Transferência Bancária</option>
@@ -250,14 +250,14 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
               </div>
 
               <div>
-                <label className="block text-black dark:text-white font-medium mb-2">
+                <label className="block text-black font-medium mb-2">
                   Observações
                 </label>
                 <textarea
                   value={formData.observacoes}
                   onChange={(e) => handleChange('observacoes', e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-white resize-none"
+                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black resize-none"
                   placeholder="Observações adicionais (opcional)"
                 />
               </div>
