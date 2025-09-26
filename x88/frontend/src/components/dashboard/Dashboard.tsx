@@ -11,12 +11,20 @@ import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
 
+import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
+import { ultimosPagamentosData } from '../../data/pagamentosData'
+
 import Notification from '../ui/Notification'
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
+
+  const [selectedAdiantamento, setSelectedAdiantamento] = useState<string | null>(null)
+  const [isAddPagamentoModalOpen, setIsAddPagamentoModalOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+
 
   const [notification, setNotification] = useState<{
     isVisible: boolean
@@ -52,13 +60,8 @@ const Dashboard = () => {
     { id: 4, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' }
   ]
 
-  // Mock data para pagamentos
-  const pagamentosMock = [
-    { id: 1, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
-    { id: 2, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
-    { id: 3, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' },
-    { id: 4, nome: 'Maria Santos', viagem: 'Viagem RJ', valor: 1200, tempo: '1d', iniciais: 'MS' }
-  ]
+  // Dados compartilhados para pagamentos
+  const pagamentosMock = ultimosPagamentosData
 
   const handleSolicitacaoClick = (solicitacao: any) => {
     setSelectedSolicitacao(solicitacao)
@@ -68,6 +71,15 @@ const Dashboard = () => {
   const handleVerTodasSolicitacoes = () => {
     setSelectedSolicitacao(null) // Limpar solicitação selecionada
     setActiveSection('solicitacoes')
+  }
+
+  const handleViewSolicitacao = (solicitacao: any) => {
+    setSelectedSolicitacao(solicitacao) // Manter solicitação selecionada
+    setActiveSection('solicitacoes') // Navegar para página de solicitações
+  }
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
   }
 
   const handlePagamentoClick = (pagamento: any) => {
@@ -117,7 +129,15 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <Header onMenuClick={toggleSidebar} onNewPagamento={() => {}} />
+
+        <Header 
+          onMenuClick={toggleSidebar} 
+          onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
+          onSectionChange={setActiveSection}
+          onSelectAdiantamento={setSelectedAdiantamento}
+          onSearch={handleSearch}
+        />
+
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-black">
@@ -230,7 +250,7 @@ const Dashboard = () => {
 
             {/* Colaboradores Section */}
             {activeSection === 'funcionarios' && (
-              <ColaboradoresList />
+              <ColaboradoresList externalSearchTerm={searchTerm} />
             )}
 
 
@@ -254,6 +274,25 @@ const Dashboard = () => {
         </main>
       </div>
 
+
+      {/* Modal de Solicitação sempre presente quando há uma selecionada */}
+      {selectedSolicitacao && activeSection !== 'solicitacoes' && (
+        <SolicitacoesList 
+          selectedSolicitacao={selectedSolicitacao} 
+          modalOnly={true} 
+          onClose={() => setSelectedSolicitacao(null)}
+          onApproved={handleSolicitacaoAprovada}
+          onDenied={handleSolicitacaoAprovada}
+          onViewSolicitacao={handleViewSolicitacao}
+        />
+      )}
+
+      {/* Modal de Novo Pagamento */}
+      <AddPagamentoModal
+        isOpen={isAddPagamentoModalOpen}
+        onClose={() => setIsAddPagamentoModalOpen(false)}
+        onSave={handleSavePagamento}
+      />
 
 
       {/* Notificação */}

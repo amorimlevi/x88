@@ -3,6 +3,7 @@ import { FileText, Clock, CheckCircle, XCircle, TrendingUp, Calendar, Activity }
 import DatePicker from '../ui/DatePicker'
 import { formatEuro } from '../../utils/formatters'
 import { historicoService } from '../../services/historicoService'
+import { ultimosPagamentosData } from '../../data/pagamentosData'
 
 interface HistoricoProps {}
 
@@ -199,6 +200,44 @@ const HistoricoPage = ({}: HistoricoProps) => {
               </select>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Card Últimos Pagamentos */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="heading-3">
+            Últimos Pagamentos
+          </h3>
+          <button 
+            onClick={() => {/* Navegar para pagamentos */}}
+            className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
+          >
+            Ver todos
+          </button>
+        </div>
+        
+        <div className="space-y-1">
+          {ultimosPagamentosData.map((pagamento) => (
+            <div 
+              key={pagamento.id} 
+              className="py-2 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-start">
+                  <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <span className="text-white text-sm font-medium">{pagamento.iniciais}</span>
+                  </div>
+                  <p className="text-black dark:text-white font-medium text-base leading-none mt-1">{pagamento.nome}</p>
+                </div>
+                <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-none mt-1">€ {pagamento.valor},00</p>
+              </div>
+              <div className="flex justify-between -mt-4">
+                <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-none">Pagamento - {pagamento.viagem}</p>
+                <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">há {pagamento.tempo === '1d' ? '1 dia' : pagamento.tempo}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

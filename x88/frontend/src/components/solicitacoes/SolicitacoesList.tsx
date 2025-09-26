@@ -21,9 +21,21 @@ interface Solicitacao {
 
 interface Props {
   selectedSolicitacao?: any
+
 }
 
 const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Props) => {
+
+  selectedAdiantamentoId?: string | null
+  modalOnly?: boolean
+  onClose?: () => void
+  onApproved?: (solicitacao: any) => void
+  onDenied?: (solicitacao: any) => void
+  onViewSolicitacao?: (solicitacao: any) => void
+}
+
+const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, selectedAdiantamentoId, modalOnly = false, onClose, onApproved, onDenied, onViewSolicitacao }: Props) => {
+
   const [statusFilter, setStatusFilter] = useState<'todos' | 'pendente' | 'aprovada' | 'negada' | 'em_analise'>('pendente')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<Solicitacao | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -192,6 +204,102 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
       default: return <Clock className="w-4 h-4" />
     }
   }
+
+
+
+  // Se modalOnly for true, renderiza apenas o modal
+  if (modalOnly) {
+    return (
+      <>
+        {/* Modal de Detalhes */}
+        {isModalOpen && selectedSolicitacao && (
+          <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            <div className="bg-dark-100 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Detalhes da Solicitação</h2>
+                  <button 
+                    onClick={() => {
+                      setIsModalOpen(false)
+                      if (onClose) onClose()
+                    }}
+                    className="text-white dark:text-dark-600 hover:text-white"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-white text-sm font-bold">Colaborador</label>
+                      <p className="text-white font-medium">{selectedSolicitacao.funcionarioNome}</p>
+                    </div>
+                    <div>
+                      <label className="text-white text-sm font-bold">Tipo</label>
+                      <p className="text-white font-medium capitalize">{selectedSolicitacao.tipo}</p>
+                    </div>
+                    <div>
+                      <label className="text-white text-sm font-bold">Status</label>
+                      <div className="mt-1">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedSolicitacao.status)}`}>
+                          {selectedSolicitacao.status === 'pendente' ? 'Pendente' : selectedSolicitacao.status}
+                        </span>
+                      </div>
+                    </div>
+                    {selectedSolicitacao.valor && (
+                    <>
+                    <div>
+                      <label className="text-white text-sm font-bold">Valor Solicitado</label>
+                        <p className="text-white font-semibold text-lg">{formatEuro(selectedSolicitacao.valor)}</p>
+                        </div>
+                       <div>
+                         <label className="text-white text-sm font-bold">Valor Líquido (após dedução de 10%)</label>
+                         <p className="text-green-400 font-bold text-xl">{formatEuro(selectedSolicitacao.valor * 0.9)}</p>
+                         <p className="text-gray-400 text-xs">Taxa de serviço: {formatEuro(selectedSolicitacao.valor * 0.1)}</p>
+                       </div>
+                     </>
+                   )}
+                    <div>
+                      <label className="text-white text-sm font-bold">Data da Solicitação</label>
+                      <p className="text-white">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
+                    </div>
+                  </div>
+
+
+
+                  {selectedSolicitacao.observacoes && (
+                    <div>
+                      <label className="text-white text-sm font-bold">Observações</label>
+                      <p className="text-white">{selectedSolicitacao.observacoes}</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4 pt-4 border-t border-dark-300">
+                    <button 
+                      onClick={() => {
+                        setIsModalOpen(false)
+                        if (onClose) onClose()
+                        // Navegar para a página de solicitações mantendo a solicitação selecionada
+                        if (onViewSolicitacao) {
+                          onViewSolicitacao(selectedSolicitacao)
+                        }
+                      }}
+                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      Visualizar Solicitação
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }
+
 
   return (
     <div className="space-y-6 pb-96">
