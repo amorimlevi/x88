@@ -54,19 +54,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
       status: 'pendente',
       prioridade: 'media'
     },
-    {
-      id: '3',
-      funcionarioId: '3',
-      funcionarioNome: 'Pedro Costa',
-      tipo: 'reembolso',
-      valor: 120,
-      descricao: 'Reembolso combustível viagem extra',
-      justificativa: 'Fiz uma viagem adicional a pedido da empresa para entrega urgente. Anexo os comprovantes de combustível.',
-      datasolicitacao: '2024-01-22T16:45:00',
-      status: 'em_analise',
-      prioridade: 'media',
-      documentos: ['nota_combustivel_1.jpg', 'nota_combustivel_2.jpg']
-    },
+
     {
       id: '4',
       funcionarioId: '4',
@@ -181,13 +169,13 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-96">
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
           <div className="flex items-center gap-3 mb-4">
             <Clock className="h-8 w-8 text-primary-500" />
-            <h1 className="text-3xl font-bold text-black dark:text-white">Solicitações Pendentes</h1>
+            <h1 className="text-3xl font-bold text-black dark:text-white">Solicitações</h1>
           </div>
           <p className="text-dark-600">
             Gerencie todas as solicitações dos colaboradores
@@ -196,7 +184,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
@@ -239,40 +227,34 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-dark-600 text-sm">Em Análise</p>
-              <p className="text-2xl font-bold text-black dark:text-white">
-              {solicitacoes.filter(s => s.status === 'em_analise').length}
-              </p>
-            </div>
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-white" />
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Filters */}
       <div className="card">
-        <div className="flex flex-wrap items-center gap-4">
+        {/* Desktop Filters */}
+        <div className="hidden md:flex flex-wrap items-center gap-4">
           <h3 className="text-lg font-semibold text-white">Filtrar por Status:</h3>
           <div className="flex flex-wrap gap-2">
             {[
-              { value: 'todos', label: 'Todos', count: solicitacoes.length },
-              { value: 'pendente', label: 'Pendentes', count: solicitacoes.filter(s => s.status === 'pendente').length },
-              { value: 'em_analise', label: 'Em Análise', count: solicitacoes.filter(s => s.status === 'em_analise').length },
-              { value: 'aprovada', label: 'Aprovadas', count: solicitacoes.filter(s => s.status === 'aprovada').length },
-              { value: 'negada', label: 'Negadas', count: solicitacoes.filter(s => s.status === 'negada').length }
+              { value: 'todos', label: 'Todos', count: solicitacoes.length, color: 'gray' },
+              { value: 'pendente', label: 'Pendentes', count: solicitacoes.filter(s => s.status === 'pendente').length, color: 'yellow' },
+              { value: 'aprovada', label: 'Aprovadas', count: solicitacoes.filter(s => s.status === 'aprovada').length, color: 'green' },
+              { value: 'negada', label: 'Negadas', count: solicitacoes.filter(s => s.status === 'negada').length, color: 'red' }
             ].map((filter) => (
               <button
                 key={filter.value}
                 onClick={() => setStatusFilter(filter.value as any)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
                   statusFilter === filter.value
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-dark-200 text-dark-600 hover:bg-dark-300 hover:text-white'
+                    ? filter.color === 'yellow' 
+                      ? 'bg-yellow-500 text-black border-yellow-500'
+                      : filter.color === 'green'
+                      ? 'bg-green-500 text-white border-green-500'
+                      : filter.color === 'red'
+                      ? 'bg-red-500 text-white border-red-500'
+                      : 'bg-gray-500 text-white border-gray-500'
+                    : 'bg-dark-200 text-dark-600 border-dark-300 hover:bg-dark-300 hover:text-white hover:border-dark-400'
                 }`}
               >
                 {filter.label} ({filter.count})
@@ -280,22 +262,52 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
             ))}
           </div>
         </div>
+
+        {/* Mobile Filters */}
+        <div className="block md:hidden">
+          <h3 className="text-lg font-semibold text-white mb-4 text-center">Filtrar por Status</h3>
+          <div className="flex gap-1">
+            {[
+              { value: 'todos', label: 'Todos', count: solicitacoes.length, color: 'gray' },
+              { value: 'pendente', label: 'Pendentes', count: solicitacoes.filter(s => s.status === 'pendente').length, color: 'yellow' },
+              { value: 'aprovada', label: 'Aprovadas', count: solicitacoes.filter(s => s.status === 'aprovada').length, color: 'green' },
+              { value: 'negada', label: 'Negadas', count: solicitacoes.filter(s => s.status === 'negada').length, color: 'red' }
+            ].map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setStatusFilter(filter.value as any)}
+                className={`flex-1 px-1 py-2 rounded-lg text-xs font-medium transition-colors border text-center ${
+                  statusFilter === filter.value
+                    ? filter.color === 'yellow' 
+                      ? 'bg-yellow-500 text-black border-yellow-500'
+                      : filter.color === 'green'
+                      ? 'bg-green-500 text-white border-green-500'
+                      : filter.color === 'red'
+                      ? 'bg-red-500 text-white border-red-500'
+                      : 'bg-gray-500 text-white border-gray-500'
+                    : 'bg-dark-200 text-dark-600 border-dark-300 hover:bg-dark-300 hover:text-white hover:border-dark-400'
+                }`}
+              >
+                <div className="leading-tight">{filter.label}</div>
+                <div className="text-xs opacity-75">({filter.count})</div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Solicitações Table */}
-      <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Solicitações Table - Desktop */}
+      <div className="card overflow-hidden hidden md:block">
+        <div className="overflow-x-auto scrollbar-thin">
           <table className="w-full">
             <thead>
               <tr className="border-b border-dark-300">
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Colaborador</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Tipo</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Descrição</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Prioridade</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Data</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Status</th>
-                <th className="text-right py-3 px-4 text-dark-600 font-medium">Ações</th>
+              <th className="text-left py-3 px-4 text-dark-600 font-medium">Colaborador</th>
+              <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor Solicitado</th>
+              <th className="text-left py-3 px-4 text-dark-600 font-medium">Valor Líquido</th>
+              <th className="text-left py-3 px-4 text-dark-600 font-medium">Data</th>
+              <th className="text-left py-3 px-4 text-dark-600 font-medium">Status</th>
+              <th className="text-right py-3 px-4 text-dark-600 font-medium">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -312,20 +324,6 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                   </div>
                   </td>
                   <td className="py-4 px-4">
-                    <div className="flex items-center gap-2">
-                      {getTipoIcon(solicitacao.tipo)}
-                      <span className="text-primary-400 capitalize">{solicitacao.tipo}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span className="text-black dark:text-white">{solicitacao.descricao}</span>
-                    {solicitacao.documentos && solicitacao.documentos.length > 0 && (
-                      <p className="text-blue-400 text-xs mt-1">
-                        📎 {solicitacao.documentos.length} documento(s)
-                      </p>
-                    )}
-                  </td>
-                  <td className="py-4 px-4">
                     {solicitacao.valor ? (
                       <span className="text-primary-500 font-semibold">
                         {formatEuro(solicitacao.valor)}
@@ -335,9 +333,13 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                     )}
                   </td>
                   <td className="py-4 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPrioridadeColor(solicitacao.prioridade)}`}>
-                      {solicitacao.prioridade.charAt(0).toUpperCase() + solicitacao.prioridade.slice(1)}
-                    </span>
+                    {solicitacao.valor ? (
+                      <span className="text-green-500 font-semibold">
+                        {formatEuro(solicitacao.valor * 0.9)}
+                      </span>
+                    ) : (
+                      <span className="text-dark-600">--</span>
+                    )}
                   </td>
                   <td className="py-4 px-4">
                     <div>
@@ -354,7 +356,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                     <div className="flex items-center gap-2 justify-end">
                       <button 
                         onClick={() => handleViewDetails(solicitacao)}
-                        className="p-2 text-dark-600 hover:text-primary-500 hover:bg-dark-200 rounded-lg transition-colors"
+                        className="p-2 bg-blue-500 text-white hover:bg-blue-600 rounded-lg transition-colors"
                         title="Ver detalhes"
                       >
                         <Eye className="w-4 h-4" />
@@ -363,14 +365,14 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                         <>
                           <button 
                             onClick={() => handleAprovar(solicitacao.id)}
-                            className="p-2 text-dark-600 hover:text-green-500 hover:bg-dark-200 rounded-lg transition-colors"
+                            className="p-2 bg-green-500 text-white hover:bg-green-600 rounded-lg transition-colors"
                             title="Aprovar"
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button 
                             onClick={() => handleNegar(solicitacao.id)}
-                            className="p-2 text-dark-600 hover:text-red-500 hover:bg-dark-200 rounded-lg transition-colors"
+                            className="p-2 bg-red-500 text-white hover:bg-red-600 rounded-lg transition-colors"
                             title="Negar"
                           >
                             <X className="w-4 h-4" />
@@ -392,51 +394,88 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
         )}
       </div>
 
-      {/* Alertas para Solicitações Urgentes */}
-      {solicitacoes.filter(s => s.prioridade === 'urgente' && s.status === 'pendente').length > 0 && (
-        <div className="card bg-red-600 border border-red-700">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-white font-bold mb-2">Solicitações Urgentes</h3>
-              <p className="text-white text-sm mb-4">
-                Existem {solicitacoes.filter(s => s.prioridade === 'urgente' && s.status === 'pendente').length} solicitações urgentes que precisam de atenção imediata.
-              </p>
-              <div className="space-y-2">
-                {solicitacoes
-                  .filter(s => s.prioridade === 'urgente' && s.status === 'pendente')
-                  .map(sol => (
-                    <div key={sol.id} className="flex items-center justify-between bg-red-700 p-3 rounded-lg">
-                    <div>
-                    <p className="text-white font-bold">{sol.funcionarioNome}</p>
-                    <p className="text-white text-sm">{sol.descricao}</p>
-                    </div>
-                      <div className="flex gap-2">
-                        <button 
-                          onClick={() => handleAprovar(sol.id)}
-                          className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
-                        >
-                          Aprovar
-                        </button>
-                        <button 
-                          onClick={() => handleNegar(sol.id)}
-                          className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
-                        >
-                          Negar
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+      {/* Solicitações Cards - Mobile */}
+      <div className="block md:hidden space-y-3">
+        {filteredSolicitacoes.map((solicitacao) => (
+          <div key={solicitacao.id} className="card">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-black dark:text-white text-sm font-medium">
+                  {solicitacao.funcionarioNome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0 pt-2">
+                <h3 className="text-white font-medium truncate">{solicitacao.funcionarioNome}</h3>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(solicitacao.status)}`}>
+                {solicitacao.status.charAt(0).toUpperCase() + solicitacao.status.slice(1)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-4">
+                {solicitacao.valor ? (
+                  <div className="text-left">
+                    <p className="text-dark-600 text-xs">Valor Solicitado</p>
+                    <p className="text-primary-500 font-semibold text-sm">{formatEuro(solicitacao.valor)}</p>
+                  </div>
+                ) : null}
+                {solicitacao.valor ? (
+                  <div className="text-left">
+                    <p className="text-dark-600 text-xs">Valor Líquido</p>
+                    <p className="text-green-500 font-semibold text-sm">{formatEuro(solicitacao.valor * 0.9)}</p>
+                  </div>
+                ) : null}
+                <div className="text-left">
+                  <p className="text-dark-600 text-xs">Data</p>
+                  <p className="text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
+                </div>
               </div>
             </div>
+
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => handleViewDetails(solicitacao)}
+                className="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm flex items-center justify-center gap-2"
+              >
+                <Eye className="w-4 h-4" />
+                Ver detalhes
+              </button>
+              {solicitacao.status === 'pendente' && (
+                <>
+                  <button 
+                    onClick={() => handleAprovar(solicitacao.id)}
+                    className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm flex items-center justify-center"
+                    title="Aprovar"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleNegar(solicitacao.id)}
+                    className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm flex items-center justify-center"
+                    title="Negar"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        ))}
+
+        {filteredSolicitacoes.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-dark-600">Nenhuma solicitação encontrada para o filtro selecionado.</p>
+          </div>
+        )}
+      </div>
+
+
 
       {/* Modal de Detalhes */}
       {isModalOpen && selectedSolicitacao && (
         <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-100 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700">
+          <div className="bg-dark-100 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-thin shadow-2xl border border-gray-700">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white">Detalhes da Solicitação</h2>
@@ -449,77 +488,60 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
               </div>
 
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-dark-600 text-sm">Colaborador</label>
-                    <p className="text-black dark:text-white font-medium">{selectedSolicitacao.funcionarioNome}</p>
-                  </div>
-                  <div>
-                    <label className="text-dark-600 text-sm">Tipo</label>
-                    <p className="text-primary-400 font-medium capitalize">{selectedSolicitacao.tipo}</p>
-                  </div>
-                  <div>
-                    <label className="text-dark-600 text-sm">Status</label>
-                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedSolicitacao.status)}`}>
-                      {selectedSolicitacao.status}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="text-dark-600 text-sm">Prioridade</label>
-                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getPrioridadeColor(selectedSolicitacao.prioridade)}`}>
-                      {selectedSolicitacao.prioridade}
-                    </span>
-                  </div>
-                  {selectedSolicitacao.valor && (
-                    <div>
-                      <label className="text-dark-600 text-sm">Valor</label>
-                      <p className="text-primary-500 font-semibold text-lg">{formatEuro(selectedSolicitacao.valor)}</p>
-                    </div>
-                  )}
-                  <div>
-                    <label className="text-dark-600 text-sm">Data da Solicitação</label>
-                    <p className="text-black dark:text-white">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
-                  </div>
-                </div>
-
+                {/* Colaborador */}
                 <div>
-                  <label className="text-dark-600 text-sm">Descrição</label>
-                  <p className="text-black dark:text-white">{selectedSolicitacao.descricao}</p>
+                  <label className="text-dark-600 text-sm block mb-1">Colaborador</label>
+                  <p className="text-black dark:text-white font-bold text-xl">{selectedSolicitacao.funcionarioNome}</p>
                 </div>
 
+                {/* Tipo */}
                 <div>
-                  <label className="text-dark-600 text-sm">Justificativa</label>
-                  <p className="text-black dark:text-white bg-dark-200 p-3 rounded-lg">{selectedSolicitacao.justificativa}</p>
+                  <label className="text-dark-600 text-sm block mb-1">Tipo</label>
+                  <p className="text-black dark:text-white font-bold text-xl capitalize">{selectedSolicitacao.tipo}</p>
                 </div>
 
-                {selectedSolicitacao.documentos && selectedSolicitacao.documentos.length > 0 && (
+                {/* Status */}
+                <div>
+                  <label className="text-dark-600 text-sm block mb-2">Status</label>
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedSolicitacao.status)}`}>
+                    {selectedSolicitacao.status.charAt(0).toUpperCase() + selectedSolicitacao.status.slice(1)}
+                  </span>
+                </div>
+
+                {/* Valor Solicitado */}
+                {selectedSolicitacao.valor && (
                   <div>
-                    <label className="text-dark-600 text-sm">Documentos Anexos</label>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSolicitacao.documentos.map((doc, index) => (
-                        <span key={index} className="text-blue-400 bg-dark-200 px-2 py-1 rounded text-sm">
-                          📎 {doc}
-                        </span>
-                      ))}
-                    </div>
+                    <label className="text-dark-600 text-sm block mb-1">Valor Solicitado</label>
+                    <p className="text-black dark:text-white font-bold text-2xl">{formatEuro(selectedSolicitacao.valor)}</p>
                   </div>
                 )}
 
-                {selectedSolicitacao.observacoes && (
+                {/* Valor Líquido */}
+                {selectedSolicitacao.valor && (
                   <div>
-                    <label className="text-dark-600 text-sm">Observações</label>
-                    <p className="text-yellow-400">{selectedSolicitacao.observacoes}</p>
+                    <label className="text-dark-600 text-sm block mb-1">Valor Líquido (após dedução de 10%)</label>
+                    <p className="text-green-500 font-bold text-2xl">{formatEuro(selectedSolicitacao.valor * 0.9)}</p>
+                    <p className="text-dark-600 text-sm mt-1">Taxa de serviço: {formatEuro(selectedSolicitacao.valor * 0.1)}</p>
                   </div>
                 )}
+
+                {/* Data da Solicitação */}
+                <div>
+                  <label className="text-dark-600 text-sm block mb-1">Data da Solicitação</label>
+                  <p className="text-black dark:text-white font-bold text-xl">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
+                </div>
+
+                {/* Linha separadora */}
+                <div className="border-t border-dark-300 my-6"></div>
 
                 {selectedSolicitacao.status === 'pendente' && (
-                  <div className="flex gap-4 pt-4 border-t border-dark-300">
+                  <div className="flex gap-4">
                     <button 
                       onClick={() => {
                         handleAprovar(selectedSolicitacao.id)
                         setIsModalOpen(false)
                       }}
-                      className="flex-1 btn-primary flex items-center justify-center gap-2"
+                      className="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <Check className="w-4 h-4" />
                       Aprovar
@@ -529,7 +551,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
                         handleNegar(selectedSolicitacao.id)
                         setIsModalOpen(false)
                       }}
-                      className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <X className="w-4 h-4" />
                       Negar

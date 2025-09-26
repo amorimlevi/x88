@@ -10,7 +10,7 @@
   }
   
   body {
-    @apply bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary transition-colors;
+    @apply bg-white dark:bg-black text-light-text-primary dark:text-dark-text-primary transition-colors;
   }
 
   * {
@@ -70,7 +70,7 @@
   }
 
   .dark .card {
-    background-color: #1C1C1E;
+    background-color: #1a1a1a;
     border: 1px solid rgba(34, 197, 94, 0.3);
   }
 
@@ -195,11 +195,11 @@
 
   /* Professional Layout */
   .container-app {
-    @apply min-h-screen bg-white dark:bg-dark-bg transition-colors;
+    @apply min-h-screen bg-white dark:bg-black transition-colors;
   }
 
   .sidebar {
-    @apply bg-white dark:bg-dark-surface border-r border-neutral-200 dark:border-dark-border;
+    @apply bg-white dark:bg-black border-r border-neutral-200 dark:border-dark-border;
   }
 
   .nav-item {
@@ -223,41 +223,147 @@
     @apply text-red-600 bg-red-50 dark:bg-red-950 px-3 py-1 rounded-full text-sm font-medium;
   }
 
-  /* Scrollbars */
+  /* Scrollbars Customizados */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.neutral.300') transparent;
+    scrollbar-color: rgba(34, 197, 94, 0.6) rgba(0, 0, 0, 0.05);
   }
 
   .dark .scrollbar-thin {
-    scrollbar-color: theme('colors.neutral.700') transparent;
+    scrollbar-color: rgba(34, 197, 94, 0.7) rgba(255, 255, 255, 0.05);
   }
 
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 12px;
+    height: 12px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin: 2px;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 2px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: theme('colors.neutral.300');
-    border-radius: 3px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(34, 197, 94, 0.6));
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: all 0.3s ease;
   }
 
   .dark .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: theme('colors.neutral.700');
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(34, 197, 94, 0.7));
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: all 0.3s ease;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.neutral.400');
+    background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(34, 197, 94, 0.8));
+    border: 1px solid transparent;
+    transform: scale(1.1);
   }
 
   .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.neutral.600');
+    background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(34, 197, 94, 0.9));
+    border: 1px solid transparent;
+    transform: scale(1.1);
   }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, rgba(22, 163, 74, 1), rgba(22, 163, 74, 0.9));
+    transform: scale(0.95);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-corner {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Scrollbars Globais - Aplicar em todos os elementos */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  margin: 2px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(34, 197, 94, 0.6));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: all 0.3s ease;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(34, 197, 94, 0.7));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(34, 197, 94, 0.8));
+  border: 1px solid transparent;
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(34, 197, 94, 0.9));
+  border: 1px solid transparent;
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(135deg, rgba(22, 163, 74, 1), rgba(22, 163, 74, 0.9));
+  transform: scale(0.95);
+  box-shadow: 0 1px 3px rgba(22, 163, 74, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+/* Para Firefox - scrollbar global */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.6) rgba(0, 0, 0, 0.05);
+}
+
+.dark * {
+  scrollbar-color: rgba(34, 197, 94, 0.7) rgba(255, 255, 255, 0.05);
 }
 
 /* Regra global para remover qualquer tipo de ponto ou marcador visual */

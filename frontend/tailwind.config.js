@@ -49,8 +49,8 @@ export default {
         },
         // Dark mode colors  
         dark: {
-          bg: '#0f172a',
-          surface: '#1e293b',
+          bg: '#000000',
+          surface: '#000000',
           border: '#334155',
           text: {
             primary: '#f1f5f9',
