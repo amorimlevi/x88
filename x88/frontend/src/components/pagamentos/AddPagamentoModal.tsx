@@ -168,7 +168,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                   <div className="mt-3 p-4 bg-dark-200 rounded-lg border border-dark-300">
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-dark-600 text-sm">Taxa de serviço (10%):</span>
+                        <span className="text-white text-sm">Taxa de serviço (10%):</span>
                         <span className="text-red-400 font-medium">
                           €{calcularTaxaServico(formData.valor).toFixed(2)}
                         </span>
