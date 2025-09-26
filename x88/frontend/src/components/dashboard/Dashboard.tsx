@@ -139,6 +139,10 @@ const Dashboard = () => {
     showNotification('error', 'Solicitação Negada', `A solicitação de ${solicitacao.nome} foi negada.`)
   }
 
+  const handleNewPagamento = () => {
+    setIsAddPagamentoModalOpen(true)
+  }
+
   return (
     <div className="flex h-screen bg-white dark:bg-black">
       {/* Sidebar */}
@@ -154,7 +158,10 @@ const Dashboard = () => {
         {/* Header */}
         <Header 
           onMenuClick={toggleSidebar} 
+
+
           onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
+
           onSectionChange={setActiveSection}
           onSelectAdiantamento={setSelectedAdiantamento}
         />
@@ -186,7 +193,7 @@ const Dashboard = () => {
                   </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-brand-600 dark:bg-brand-500 text-white px-2 py-1 rounded-full">
-                      5 novas
+                      {solicitacoesMock.length} novas
                     </span>
                     <button 
                       onClick={handleVerTodasSolicitacoes}
@@ -215,7 +222,9 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+
                     <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
+
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">
@@ -233,7 +242,7 @@ const Dashboard = () => {
                     Últimos Pagamentos
                   </h3>
                   <button 
-                    onClick={() => setActiveSection('pagamentos')}
+                    onClick={() => setActiveSection('historico')}
                     className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                   >
                     Ver todos

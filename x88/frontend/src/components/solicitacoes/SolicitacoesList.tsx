@@ -3,6 +3,7 @@ import { Clock, User, Check, X, Eye, AlertCircle, Calendar, Euro, FileText } fro
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 import { historicoService } from '../../services/historicoService'
 import { relatoriosService } from '../../services/relatoriosService'
+import { paymentsService } from '../../services/paymentsService'
 
 interface Solicitacao {
   id: string
@@ -180,33 +181,60 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
 
   const filteredSolicitacoes = getFilteredSolicitacoes()
 
-  const handleAprovar = (id: string) => {
+  const handleAprovar = async (id: string) => {
     setSolicitacoes(prev => prev.map(s => {
       if (s.id === id) {
         const solicitacaoAtualizada = { ...s, status: 'aprovada' as const }
         
-        // Registrar no histórico e relatórios
-        historicoService.registrarAprovacao({
-          nome: s.funcionarioNome,
-          iniciais: s.funcionarioNome.split(' ').map(n => n[0]).join(''),
-          valor: s.valor || 0,
-          viagem: s.descricao,
-          observacoes: s.observacoes
-        })
-        
-        relatoriosService.registrarAprovacao({
-          nome: s.funcionarioNome,
-          valor: s.valor || 0,
-          viagem: s.descricao,
-          observacoes: s.observacoes
-        })
-        
-        console.log('💰 Pagamento aprovado e registrado no histórico:', s.funcionarioNome)
+        // Processar pagamento de forma assíncrona
+        processarPagamento(s)
         
         return solicitacaoAtualizada
       }
       return s
     }))
+  }
+
+  // Função para processar o pagamento no backend
+  const processarPagamento = async (solicitacao: Solicitacao) => {
+    try {
+      // Criar pagamento no backend
+      const pagamento = await paymentsService.criarPagamento(solicitacao)
+      
+      // Registrar no histórico local
+      historicoService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: solicitacao.observacoes
+      })
+      
+      // Registrar nos relatórios
+      relatoriosService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: solicitacao.observacoes
+      })
+      
+      console.log('💰 Pagamento aprovado, registrado no histórico e salvo no backend:', {
+        funcionario: solicitacao.funcionarioNome,
+        valor: solicitacao.valor,
+        pagamentoId: pagamento._id
+      })
+    } catch (error) {
+      console.error('❌ Erro ao processar pagamento:', error)
+      
+      // Em caso de erro, ainda registra localmente mas avisa sobre o problema
+      historicoService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: `${solicitacao.observacoes} [ERRO: Não foi possível salvar no backend]`
+      })
+    }
   }
 
   const handleNegar = (id: string, motivo?: string) => {
@@ -436,19 +464,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-dark-600 text-sm">Em Análise</p>
-              <p className="text-2xl font-bold text-black dark:text-white">
-              {solicitacoes.filter(s => s.status === 'em_analise').length}
-              </p>
-            </div>
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-white" />
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Filters */}
@@ -459,7 +475,6 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
             {[
               { value: 'todos', label: 'Todos', count: solicitacoes.length },
               { value: 'pendente', label: 'Pendentes', count: solicitacoes.filter(s => s.status === 'pendente').length },
-              { value: 'em_analise', label: 'Em Análise', count: solicitacoes.filter(s => s.status === 'em_analise').length },
               { value: 'aprovada', label: 'Aprovadas', count: solicitacoes.filter(s => s.status === 'aprovada').length },
               { value: 'negada', label: 'Negadas', count: solicitacoes.filter(s => s.status === 'negada').length }
             ].map((filter) => (
