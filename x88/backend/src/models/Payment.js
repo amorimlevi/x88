@@ -2,18 +2,21 @@ import mongoose from 'mongoose'
 
 const paymentSchema = new mongoose.Schema({
   funcionarioId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type: String, // Mudança temporária para aceitar string do frontend
     required: [true, 'ID do funcionário é obrigatório']
+  },
+  funcionarioNome: {
+    type: String,
+    required: [true, 'Nome do funcionário é obrigatório']
   },
   gestorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'ID do gestor é obrigatório']
+    required: false // Tornando opcional por enquanto
   },
   tipo: {
     type: String,
-    enum: ['salario', 'adiantamento', 'viagem', 'bonus', 'desconto'],
+    enum: ['salario', 'adiantamento', 'viagem', 'bonus', 'desconto', 'ferias', 'folga', 'reembolso', 'ajuste_salario'],
     required: [true, 'Tipo de pagamento é obrigatório']
   },
   valor: {
@@ -66,14 +69,16 @@ const paymentSchema = new mongoose.Schema({
   }],
   // Dados do pagamento
   dataPagamento: Date,
+  dataVencimento: Date,
+  justificativa: String,
   metodoPagamento: {
     type: String,
     enum: ['pix', 'transferencia', 'dinheiro', 'cartao'],
-    required: function() { return this.status === 'pago' }
+    required: false // Tornando opcional para simplificar
   },
   comprovante: {
     type: String, // URL do comprovante
-    required: function() { return this.status === 'pago' }
+    required: false // Tornando opcional para simplificar
   },
   observacoes: String
 }, {

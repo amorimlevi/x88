@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import { X, Euro, User, Calendar, FileText, CreditCard, Check } from 'lucide-react'
 
 interface AddPagamentoModalProps {
@@ -11,12 +12,10 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
   const [formData, setFormData] = useState({
     funcionarioNome: '',
     funcionarioId: '',
-    tipo: 'adiantamento',
     valor: '',
-    descricao: '',
-    dataVencimento: '',
     metodoPagamento: 'mbway',
-    observacoes: ''
+    observacoes: '',
+    dataPagamento: new Date().toISOString().split('T')[0] // Data atual
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -31,10 +30,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
     if (!formData.valor || parseFloat(formData.valor) <= 0) {
       newErrors.valor = 'Valor deve ser maior que zero'
     }
-    
-    if (!formData.dataVencimento) {
-      newErrors.dataVencimento = 'Data de pagamento é obrigatória'
-    }
+
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -48,8 +44,10 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         id: Date.now().toString(),
         funcionarioId: formData.funcionarioId || Date.now().toString(),
         funcionarioNome: formData.funcionarioNome,
+
         valor: parseFloat(formData.valor),
         dataVencimento: formData.dataVencimento,
+
         dataPagamento: new Date().toISOString(),
         metodoPagamento: formData.metodoPagamento,
         observacoes: formData.observacoes,
@@ -63,12 +61,10 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
       setFormData({
         funcionarioNome: '',
         funcionarioId: '',
-        tipo: 'adiantamento',
         valor: '',
-        descricao: '',
-        dataVencimento: '',
         metodoPagamento: 'mbway',
-        observacoes: ''
+        observacoes: '',
+        dataPagamento: new Date().toISOString().split('T')[0] // Resetar com data atual
       })
       setErrors({})
     }
@@ -79,6 +75,18 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
+  }
+
+  // Calcular valor líquido (90% do valor solicitado)
+  const calcularValorLiquido = (valorSolicitado: string): number => {
+    const valor = parseFloat(valorSolicitado) || 0
+    return valor * 0.9 // 90% do valor (retira 10%)
+  }
+
+  // Calcular taxa de serviço (10% do valor)
+  const calcularTaxaServico = (valorSolicitado: string): number => {
+    const valor = parseFloat(valorSolicitado) || 0
+    return valor * 0.1 // 10% do valor
   }
 
   if (!isOpen) return null
@@ -96,7 +104,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
           </div>
           <button 
             onClick={onClose}
-            className="text-dark-600 hover:text-white transition-colors"
+            className="text-white hover:text-gray-300 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -105,12 +113,16 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Informações do Funcionário */}
           <div>
+
             <h3 className="text-lg font-medium text-white mb-4">Informações do Colaborador</h3>
+
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-white font-medium mb-2">
+
                   Nome do Colaborador *
+
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
@@ -118,7 +130,9 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                     type="text"
                     value={formData.funcionarioNome}
                     onChange={(e) => handleChange('funcionarioNome', e.target.value)}
+
                     className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
+
                       errors.funcionarioNome ? 'border-red-500' : 'border-dark-300'
                     }`}
                     placeholder="Digite o nome do colaborador"
@@ -138,9 +152,11 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             <h3 className="text-lg font-medium text-white mb-4">Detalhes do Pagamento</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
               <div>
                 <label className="block text-white font-medium mb-2">
                   Valor Solicitado *
+
                 </label>
                 <div className="relative">
                   <Euro className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
@@ -150,7 +166,9 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                     min="0"
                     value={formData.valor}
                     onChange={(e) => handleChange('valor', e.target.value)}
+
                     className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
+
                       errors.valor ? 'border-red-500' : 'border-dark-300'
                     }`}
                     placeholder="0,00"
@@ -159,6 +177,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                 {errors.valor && (
                   <p className="text-red-500 text-sm mt-1">{errors.valor}</p>
                 )}
+
                 
                 {/* Mostrar cálculo automático */}
                 {formData.valor && parseFloat(formData.valor) > 0 && (
@@ -176,6 +195,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                       <div className="flex justify-between text-green-400 font-semibold">
                         <span>Valor Líquido:</span>
                         <span>€ {(parseFloat(formData.valor) * 0.90).toFixed(2)}</span>
+
                       </div>
                     </div>
                   </div>
@@ -184,22 +204,24 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
 
               <div>
                 <label className="block text-white font-medium mb-2">
+
                   Data de Pagamento *
+
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-500 dark:text-black" />
                   <input
                     type="date"
+
                     value={formData.dataVencimento}
                     onChange={(e) => handleChange('dataVencimento', e.target.value)}
                     className={`w-full pl-10 pr-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
                       errors.dataVencimento ? 'border-red-500' : 'border-dark-300'
                     }`}
+
                   />
                 </div>
-                {errors.dataVencimento && (
-                  <p className="text-red-500 text-sm mt-1">{errors.dataVencimento}</p>
-                )}
+                <p className="text-white text-xs mt-1">Data atual definida automaticamente</p>
               </div>
             </div>
 
@@ -218,12 +240,14 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                 <select
                   value={formData.metodoPagamento}
                   onChange={(e) => handleChange('metodoPagamento', e.target.value)}
+
                   className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black"
                 >
                   <option value="mbway">MB WAY</option>
                   <option value="transferencia">Transferência Bancária</option>
                   <option value="dinheiro">Dinheiro</option>
                   <option value="cartao">Cartão de Crédito</option>
+
                 </select>
               </div>
 
@@ -235,7 +259,9 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
                   value={formData.observacoes}
                   onChange={(e) => handleChange('observacoes', e.target.value)}
                   rows={3}
+
                   className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black resize-none"
+
                   placeholder="Observações adicionais (opcional)"
                 />
               </div>

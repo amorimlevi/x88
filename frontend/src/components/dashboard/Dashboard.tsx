@@ -146,7 +146,7 @@ const Dashboard = () => {
                   </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-brand-600 dark:bg-brand-500 text-white px-2 py-1 rounded-full">
-                      5 novas
+                      {solicitacoesMock.length} novas
                     </span>
                     <button 
                       onClick={handleVerTodasSolicitacoes}
@@ -176,22 +176,6 @@ const Dashboard = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => handleNegarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors group"
-                          title="Negar solicitação"
-                        >
-                          <X className="w-4 h-4 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                        </button>
-                        <button
-                          onClick={(e) => handleApprovarSolicitacao(solicitacao, e)}
-                          className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-900/20 transition-colors group"
-                          title="Aprovar solicitação"
-                        >
-                          <Check className="w-4 h-4 text-green-500 group-hover:text-green-600 dark:group-hover:text-green-400" />
-                        </button>
-                      </div>
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">

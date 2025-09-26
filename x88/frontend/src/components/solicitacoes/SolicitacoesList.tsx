@@ -3,6 +3,7 @@ import { Clock, User, Check, X, Eye, AlertCircle, Calendar, Euro, FileText } fro
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 import { historicoService } from '../../services/historicoService'
 import { relatoriosService } from '../../services/relatoriosService'
+import { paymentsService } from '../../services/paymentsService'
 
 interface Solicitacao {
   id: string
@@ -180,33 +181,60 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
 
   const filteredSolicitacoes = getFilteredSolicitacoes()
 
-  const handleAprovar = (id: string) => {
+  const handleAprovar = async (id: string) => {
     setSolicitacoes(prev => prev.map(s => {
       if (s.id === id) {
         const solicitacaoAtualizada = { ...s, status: 'aprovada' as const }
         
-        // Registrar no histórico e relatórios
-        historicoService.registrarAprovacao({
-          nome: s.funcionarioNome,
-          iniciais: s.funcionarioNome.split(' ').map(n => n[0]).join(''),
-          valor: s.valor || 0,
-          viagem: s.descricao,
-          observacoes: s.observacoes
-        })
-        
-        relatoriosService.registrarAprovacao({
-          nome: s.funcionarioNome,
-          valor: s.valor || 0,
-          viagem: s.descricao,
-          observacoes: s.observacoes
-        })
-        
-        console.log('💰 Pagamento aprovado e registrado no histórico:', s.funcionarioNome)
+        // Processar pagamento de forma assíncrona
+        processarPagamento(s)
         
         return solicitacaoAtualizada
       }
       return s
     }))
+  }
+
+  // Função para processar o pagamento no backend
+  const processarPagamento = async (solicitacao: Solicitacao) => {
+    try {
+      // Criar pagamento no backend
+      const pagamento = await paymentsService.criarPagamento(solicitacao)
+      
+      // Registrar no histórico local
+      historicoService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: solicitacao.observacoes
+      })
+      
+      // Registrar nos relatórios
+      relatoriosService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: solicitacao.observacoes
+      })
+      
+      console.log('💰 Pagamento aprovado, registrado no histórico e salvo no backend:', {
+        funcionario: solicitacao.funcionarioNome,
+        valor: solicitacao.valor,
+        pagamentoId: pagamento._id
+      })
+    } catch (error) {
+      console.error('❌ Erro ao processar pagamento:', error)
+      
+      // Em caso de erro, ainda registra localmente mas avisa sobre o problema
+      historicoService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao,
+        observacoes: `${solicitacao.observacoes} [ERRO: Não foi possível salvar no backend]`
+      })
+    }
   }
 
   const handleNegar = (id: string, motivo?: string) => {
