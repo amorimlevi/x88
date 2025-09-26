@@ -3,6 +3,8 @@ import Sidebar from './Sidebar'
 import Header from './Header'
 import StatsCards from './StatsCards'
 import ColaboradoresList from '../colaboradores/ColaboradoresList'
+import { Check, X } from 'lucide-react'
+import { historicoService } from '../../services/historicoService'
 
 import AdiantamentosList from '../adiantamentos/AdiantamentosList'
 import RelatoriosList from '../relatorios/RelatoriosList'
@@ -72,6 +74,36 @@ const Dashboard = () => {
     setActiveSection('pagamentos')
   }
 
+  const handleApprovarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
+    event.stopPropagation() // Evita que o click no item seja disparado
+    
+    // Registrar aprovação no histórico
+    historicoService.registrarAprovacao({
+      nome: solicitacao.nome,
+      iniciais: solicitacao.iniciais,
+      valor: solicitacao.valor,
+      viagem: solicitacao.viagem || 'Solicitação'
+    })
+
+    // Mostrar notificação
+    showNotification('success', 'Solicitação Aprovada', `A solicitação de ${solicitacao.nome} foi aprovada com sucesso.`)
+  }
+
+  const handleNegarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
+    event.stopPropagation() // Evita que o click no item seja disparado
+    
+    // Registrar negação no histórico
+    historicoService.registrarNegacao({
+      nome: solicitacao.nome,
+      iniciais: solicitacao.iniciais,
+      valor: solicitacao.valor,
+      viagem: solicitacao.viagem || 'Solicitação'
+    }, 'Solicitação negada diretamente da dashboard')
+
+    // Mostrar notificação
+    showNotification('error', 'Solicitação Negada', `A solicitação de ${solicitacao.nome} foi negada.`)
+  }
+
   return (
     <div className="flex h-screen bg-white dark:bg-black">
       {/* Sidebar */}
@@ -137,13 +169,33 @@ const Dashboard = () => {
                       <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                         <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                       </div>
-                      <p className="text-black dark:text-white font-medium text-base leading-none mt-1">{solicitacao.nome}</p>
+                      <div>
+                        <p className="text-black dark:text-white font-medium text-base leading-none">{solicitacao.nome}</p>
+                        <p className="text-neutral-600 dark:text-gray-300 text-sm leading-none mt-1">Adiantamento - {solicitacao.viagem}</p>
+                      </div>
                     </div>
-                    <p className="text-brand-600 dark:text-brand-400 font-semibold text-base leading-none mt-1">€ {solicitacao.valor},00</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-brand-600 dark:text-brand-400 font-semibold text-sm">€ {solicitacao.valor},00</p>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={(e) => handleNegarSolicitacao(solicitacao, e)}
+                          className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors group"
+                          title="Negar solicitação"
+                        >
+                          <X className="w-4 h-4 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                        </button>
+                        <button
+                          onClick={(e) => handleApprovarSolicitacao(solicitacao, e)}
+                          className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-900/20 transition-colors group"
+                          title="Aprovar solicitação"
+                        >
+                          <Check className="w-4 h-4 text-green-500 group-hover:text-green-600 dark:group-hover:text-green-400" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between -mt-4">
-                    <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-none">Adiantamento - {solicitacao.viagem}</p>
-                    <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
+                  <div className="flex justify-end -mt-2">
+                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-none">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
                   </div>
                 </div>
                 ))}
