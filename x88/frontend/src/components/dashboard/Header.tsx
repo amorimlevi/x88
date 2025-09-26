@@ -8,10 +8,12 @@ interface HeaderProps {
   onNewPagamento?: () => void
   onSectionChange?: (section: string) => void
   onSelectAdiantamento?: (adiantamentoId: string) => void
+  onSearch?: (term: string) => void
 }
 
-const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantamento }: HeaderProps) => {
+const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantamento, onSearch }: HeaderProps) => {
   const [showNotifications, setShowNotifications] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const notificationRef = useRef<HTMLDivElement>(null)
 
   // Mock data de notificações de adiantamentos
@@ -75,6 +77,18 @@ const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantam
 
   const unreadCount = notificationsList.filter(n => !n.lida).length
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value
+    setSearchTerm(term)
+    if (onSearch) {
+      onSearch(term)
+    }
+    // Se há termo de pesquisa e não estamos na página de funcionários, navegar para lá
+    if (term && onSectionChange) {
+      onSectionChange('funcionarios')
+    }
+  }
+
   // Fechar painel ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -111,7 +125,9 @@ const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantam
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500 dark:text-gray-400" size="sm" />
             <input
               type="text"
-              placeholder="Pesquisar..."
+              placeholder="Pesquisar colaboradores..."
+              value={searchTerm}
+              onChange={handleSearchChange}
               className="input w-64 pl-10"
             />
           </div>

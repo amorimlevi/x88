@@ -42,7 +42,11 @@ interface Colaborador {
   dataUltimaAtualizacao?: string
 }
 
-const ColaboradoresList = () => {
+interface ColaboradoresListProps {
+  externalSearchTerm?: string
+}
+
+const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'todos' | 'ativo' | 'inativo' | 'suspenso'>('todos')
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
@@ -159,9 +163,10 @@ const ColaboradoresList = () => {
   ])
 
   const filteredColaboradores = colaboradores.filter(colaborador => {
-    const matchesSearch = colaborador.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         colaborador.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         colaborador.cargo.toLowerCase().includes(searchTerm.toLowerCase())
+    const effectiveSearchTerm = externalSearchTerm || searchTerm
+    const matchesSearch = colaborador.nome.toLowerCase().includes(effectiveSearchTerm.toLowerCase()) ||
+                         colaborador.email.toLowerCase().includes(effectiveSearchTerm.toLowerCase()) ||
+                         colaborador.cargo.toLowerCase().includes(effectiveSearchTerm.toLowerCase())
     
     const matchesStatus = statusFilter === 'todos' || colaborador.status === statusFilter
 
