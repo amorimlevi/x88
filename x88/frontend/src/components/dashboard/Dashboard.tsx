@@ -143,17 +143,6 @@ const Dashboard = () => {
     setIsAddPagamentoModalOpen(true)
   }
 
-  const handleSavePagamento = (pagamento: any) => {
-    // Aqui você pode processar o pagamento (salvar no estado, enviar para API, etc.)
-    console.log('Novo pagamento criado:', pagamento)
-    
-    // Mostrar notificação de sucesso
-    showNotification('success', 'Pagamento Criado', `Pagamento para ${pagamento.funcionarioNome} foi criado com sucesso.`)
-    
-    // Fechar modal
-    setIsAddPagamentoModalOpen(false)
-  }
-
   return (
     <div className="flex h-screen bg-white dark:bg-black">
       {/* Sidebar */}
