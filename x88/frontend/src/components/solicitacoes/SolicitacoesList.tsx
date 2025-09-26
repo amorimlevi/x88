@@ -28,9 +28,10 @@ interface Props {
   onClose?: () => void
   onApproved?: (solicitacao: any) => void
   onDenied?: (solicitacao: any) => void
+  onViewSolicitacao?: (solicitacao: any) => void
 }
 
-const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, selectedAdiantamentoId, modalOnly = false, onClose, onApproved, onDenied }: Props) => {
+const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, selectedAdiantamentoId, modalOnly = false, onClose, onApproved, onDenied, onViewSolicitacao }: Props) => {
   const [statusFilter, setStatusFilter] = useState<'todos' | 'pendente' | 'aprovada' | 'negada' | 'em_analise'>('pendente')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<Solicitacao | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -368,34 +369,22 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
                     </div>
                   )}
 
-                  {selectedSolicitacao.status === 'pendente' && (
-                    <div className="flex gap-4 pt-4 border-t border-dark-300">
-                      <button 
-                        onClick={() => {
-                          handleAprovar(selectedSolicitacao.id)
-                          setIsModalOpen(false)
-                          if (onApproved) onApproved(selectedSolicitacao)
-                          if (onClose) onClose()
-                        }}
-                        className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
-                      >
-                        <Check className="w-4 h-4" />
-                        Aprovar
-                      </button>
-                      <button 
-                        onClick={() => {
-                          handleNegar(selectedSolicitacao.id)
-                          setIsModalOpen(false)
-                          if (onDenied) onDenied(selectedSolicitacao)
-                          if (onClose) onClose()
-                        }}
-                        className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Negar
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex gap-4 pt-4 border-t border-dark-300">
+                    <button 
+                      onClick={() => {
+                        setIsModalOpen(false)
+                        if (onClose) onClose()
+                        // Navegar para a página de solicitações mantendo a solicitação selecionada
+                        if (onViewSolicitacao) {
+                          onViewSolicitacao(selectedSolicitacao)
+                        }
+                      }}
+                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      Visualizar Solicitação
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

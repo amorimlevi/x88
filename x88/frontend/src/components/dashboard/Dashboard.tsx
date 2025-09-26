@@ -81,6 +81,11 @@ const Dashboard = () => {
     setActiveSection('solicitacoes')
   }
 
+  const handleViewSolicitacao = (solicitacao: any) => {
+    setSelectedSolicitacao(solicitacao) // Manter solicitação selecionada
+    setActiveSection('solicitacoes') // Navegar para página de solicitações
+  }
+
   const handlePagamentoClick = (pagamento: any) => {
     setActiveSection('pagamentos')
   }
@@ -314,6 +319,7 @@ const Dashboard = () => {
           onClose={() => setSelectedSolicitacao(null)}
           onApproved={handleSolicitacaoAprovada}
           onDenied={handleSolicitacaoAprovada}
+          onViewSolicitacao={handleViewSolicitacao}
         />
       )}
 
