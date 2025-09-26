@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Clock, User, Check, X, Eye, AlertCircle, Calendar, Euro, FileText } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
+import { historicoService } from '../../services/historicoService'
 
 interface Solicitacao {
   id: string
@@ -123,15 +124,39 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Prop
   const filteredSolicitacoes = getFilteredSolicitacoes()
 
   const handleAprovar = (id: string) => {
-    setSolicitacoes(prev => prev.map(s => 
-      s.id === id ? { ...s, status: 'aprovada' as const } : s
-    ))
+    const solicitacao = solicitacoes.find(s => s.id === id)
+    if (solicitacao) {
+      // Atualizar estado local
+      setSolicitacoes(prev => prev.map(s => 
+        s.id === id ? { ...s, status: 'aprovada' as const } : s
+      ))
+      
+      // Registrar no histórico
+      historicoService.registrarAprovacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao
+      })
+    }
   }
 
   const handleNegar = (id: string) => {
-    setSolicitacoes(prev => prev.map(s => 
-      s.id === id ? { ...s, status: 'negada' as const } : s
-    ))
+    const solicitacao = solicitacoes.find(s => s.id === id)
+    if (solicitacao) {
+      // Atualizar estado local
+      setSolicitacoes(prev => prev.map(s => 
+        s.id === id ? { ...s, status: 'negada' as const } : s
+      ))
+      
+      // Registrar no histórico
+      historicoService.registrarNegacao({
+        nome: solicitacao.funcionarioNome,
+        iniciais: solicitacao.funcionarioNome.split(' ').map(n => n[0]).join(''),
+        valor: solicitacao.valor || 0,
+        viagem: solicitacao.descricao
+      }, 'Solicitação negada pelo administrador')
+    }
   }
 
   const handleViewDetails = (solicitacao: Solicitacao) => {

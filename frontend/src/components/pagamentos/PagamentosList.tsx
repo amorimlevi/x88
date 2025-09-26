@@ -544,6 +544,30 @@ const PagamentosList = () => {
             setSelectedPagamento(null)
           }}
           pagamento={selectedPagamento}
+          onApprove={(pagamento) => {
+            // Atualizar o status do pagamento na lista
+            setPagamentos(prev => prev.map(p => 
+              p.id === pagamento.id ? { ...p, status: 'aprovado' as const } : p
+            ))
+            setIsDetailsModalOpen(false)
+            setSelectedPagamento(null)
+          }}
+          onReject={(pagamento) => {
+            // Atualizar o status do pagamento na lista
+            setPagamentos(prev => prev.map(p => 
+              p.id === pagamento.id ? { ...p, status: 'rejeitado' as const } : p
+            ))
+            setIsDetailsModalOpen(false)
+            setSelectedPagamento(null)
+          }}
+          onPay={(pagamento) => {
+            // Atualizar o status do pagamento na lista
+            setPagamentos(prev => prev.map(p => 
+              p.id === pagamento.id ? { ...p, status: 'pago' as const } : p
+            ))
+            setIsDetailsModalOpen(false)
+            setSelectedPagamento(null)
+          }}
         />
         </div>
       )}

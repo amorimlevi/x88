@@ -1,5 +1,6 @@
 import { X, User, Euro, Calendar, FileText, CreditCard, MapPin } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
+import { historicoService } from '../../services/historicoService'
 
 interface Pagamento {
   id: string
@@ -21,10 +22,43 @@ interface PagamentoDetailsModalProps {
   isOpen: boolean
   onClose: () => void
   pagamento: Pagamento | null
+  onApprove?: (pagamento: Pagamento) => void
+  onReject?: (pagamento: Pagamento) => void
+  onPay?: (pagamento: Pagamento) => void
 }
 
-const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsModalProps) => {
+const PagamentoDetailsModal = ({ isOpen, onClose, pagamento, onApprove, onReject, onPay }: PagamentoDetailsModalProps) => {
   if (!isOpen || !pagamento) return null
+
+  const handleApprove = () => {
+    historicoService.registrarAprovacao({
+      nome: pagamento.funcionarioNome,
+      iniciais: pagamento.funcionarioNome.split(' ').map(n => n[0]).join(''),
+      valor: pagamento.valor,
+      viagem: pagamento.descricao
+    })
+    if (onApprove) onApprove(pagamento)
+  }
+
+  const handleReject = () => {
+    historicoService.registrarNegacao({
+      nome: pagamento.funcionarioNome,
+      iniciais: pagamento.funcionarioNome.split(' ').map(n => n[0]).join(''),
+      valor: pagamento.valor,
+      viagem: pagamento.descricao
+    }, 'Pagamento rejeitado pelo administrador')
+    if (onReject) onReject(pagamento)
+  }
+
+  const handlePay = () => {
+    historicoService.registrarPagamento({
+      nome: pagamento.funcionarioNome,
+      iniciais: pagamento.funcionarioNome.split(' ').map(n => n[0]).join(''),
+      valor: pagamento.valor,
+      viagem: pagamento.descricao
+    })
+    if (onPay) onPay(pagamento)
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -250,17 +284,26 @@ const PagamentoDetailsModal = ({ isOpen, onClose, pagamento }: PagamentoDetailsM
           
           {pagamento.status === 'pendente' && (
             <>
-              <button className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors">
+              <button 
+                onClick={handleReject}
+                className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+              >
                 Rejeitar
               </button>
-              <button className="btn-primary">
+              <button 
+                onClick={handleApprove}
+                className="btn-primary"
+              >
                 Aprovar
               </button>
             </>
           )}
 
           {pagamento.status === 'aprovado' && (
-            <button className="btn-primary">
+            <button 
+              onClick={handlePay}
+              className="btn-primary"
+            >
               Efectuar Pagamento
             </button>
           )}
