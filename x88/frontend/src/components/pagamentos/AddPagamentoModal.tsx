@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Euro, User, Calendar } from 'lucide-react'
+import { X, Euro, User, Calendar, Check } from 'lucide-react'
 
 interface AddPagamentoModalProps {
   isOpen: boolean
@@ -245,15 +245,17 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-white hover:text-gray-300 transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
             >
-              Cancelar
+              <X className="w-4 h-4" />
+              Negar
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
             >
-              Criar Pagamento
+              <Check className="w-4 h-4" />
+              Aprovar
             </button>
           </div>
         </form>
