@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Filter, Euro, Clock, CheckCircle, XCircle, User, Eye, FileText, AlertCircle, X } from 'lucide-react'
+import { Filter, Euro, Clock, CheckCircle, XCircle, Eye, FileText, X, AlertCircle } from 'lucide-react'
 import { formatEuro, formatDateTime, formatDate } from '../../utils/formatters'
 import AdiantamentoDetailsModal from './AdiantamentoDetailsModal'
 import DatePicker from '../ui/DatePicker'
@@ -36,7 +36,7 @@ const AdiantamentosList = () => {
   const [endDate, setEndDate] = useState<string>('')
 
   // Dados mock - em produção viriam da API
-  const [adiantamentos] = useState<Adiantamento[]>([
+  const [adiantamentos, setAdiantamentos] = useState<Adiantamento[]>([
     {
       id: '1',
       funcionarioId: '1',
@@ -513,6 +513,22 @@ const AdiantamentosList = () => {
           setSelectedAdiantamento(null)
         }}
         adiantamento={selectedAdiantamento}
+        onApprove={(adiantamento) => {
+          // Atualizar o status do adiantamento na lista
+          setAdiantamentos(prev => prev.map(a => 
+            a.id === adiantamento.id ? { ...a, status: 'aprovado' as const } : a
+          ))
+          setIsDetailsModalOpen(false)
+          setSelectedAdiantamento(null)
+        }}
+        onReject={(adiantamento) => {
+          // Atualizar o status do adiantamento na lista
+          setAdiantamentos(prev => prev.map(a => 
+            a.id === adiantamento.id ? { ...a, status: 'rejeitado' as const } : a
+          ))
+          setIsDetailsModalOpen(false)
+          setSelectedAdiantamento(null)
+        }}
       />
     </div>
   )
