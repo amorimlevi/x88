@@ -1,8 +1,15 @@
 import { useState } from 'react'
-import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Eye } from 'lucide-react'
+import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Eye, Euro } from 'lucide-react'
 import AddColaboradorModal from './AddColaboradorModal'
 import ColaboradorDetailsModal from './ColaboradorDetailsModal'
 import EditColaboradorModal from './EditColaboradorModal'
+
+const formatEuro = (value: number) => {
+  return new Intl.NumberFormat('pt-PT', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(value)
+}
 
 
 interface Colaborador {
