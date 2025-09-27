@@ -283,7 +283,7 @@ class SolicitacoesService {
   calcularTempoDecorrido(datasolicitacao: string): string {
     const agora = new Date()
     const dataSolicitacao = new Date(datasolicitacao)
-    const diffMs = agora.getTime() - dataSolicitacao.getTime()
+    const diffMs = Math.abs(agora.getTime() - dataSolicitacao.getTime()) // Usar valor absoluto para evitar negativos
     
     const diffMinutos = Math.floor(diffMs / (1000 * 60))
     const diffHoras = Math.floor(diffMs / (1000 * 60 * 60))

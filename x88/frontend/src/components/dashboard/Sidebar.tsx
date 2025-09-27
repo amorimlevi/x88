@@ -5,6 +5,7 @@ import {
   ReportsIcon,
   UsersIcon, 
   SettingsIcon,
+  ContasAReceberIcon,
   XIcon
 } from '../ui/Icons'
 
@@ -19,6 +20,7 @@ const Sidebar = ({ isOpen, onClose, activeSection, onSectionChange }: SidebarPro
   const menuItems = [
     { id: 'dashboard', icon: DashboardIcon, label: 'Dashboard' },
     { id: 'solicitacoes', icon: RequestsIcon, label: 'Solicitações' },
+    { id: 'contas-a-receber', icon: ContasAReceberIcon, label: 'Contas a Receber' },
     { id: 'historico', icon: HistoryIcon, label: 'Relatórios' },
 
     { id: 'funcionarios', icon: UsersIcon, label: 'Colaboradores' },

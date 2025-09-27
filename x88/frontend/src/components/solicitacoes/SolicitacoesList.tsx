@@ -61,6 +61,68 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
     }
   }, [propSelectedSolicitacao, solicitacoes])
 
+  // DEBUG: Efeito super simples para testar
+  useEffect(() => {
+    console.log('🚀 useEffect executado:', {
+      selectedAdiantamentoId,
+      solicitacoesLength: solicitacoes.length,
+      statusFilter,
+      activeSection: window.location.pathname // Para ver se está na página certa
+    })
+    
+    if (selectedAdiantamentoId) {
+      console.log('🎯 ID recebido das notificações:', selectedAdiantamentoId)
+      
+      // Definir filtro como "todos" para garantir que a solicitação apareça
+      console.log('🔄 Definindo filtro como "todos"')
+      setStatusFilter('todos')
+      
+      // Aguardar um tempo bem longo para debug
+      setTimeout(() => {
+        console.log('⏰ Timeout executado, tentando encontrar elemento...')
+        
+        // Listar TODOS os elementos da página para debug
+        const todosIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id)
+        console.log('🔍 TODOS os IDs na página:', todosIds)
+        
+        // Listar especificamente elementos de solicitação
+        const solicitacaoElements = Array.from(document.querySelectorAll('[id^="solicitacao"]'))
+        console.log('📋 Elementos de solicitação:', solicitacaoElements.map(el => ({
+          id: el.id,
+          tag: el.tagName,
+          visible: el.offsetHeight > 0
+        })))
+        
+        // Tentar encontrar elemento
+        const elemento = document.getElementById(`solicitacao-${selectedAdiantamentoId}`) ||
+                         document.getElementById(`solicitacao-mobile-${selectedAdiantamentoId}`)
+        
+        console.log('🎯 Elemento encontrado:', elemento)
+        
+        if (elemento) {
+          console.log('✅ ELEMENTO ENCONTRADO! Fazendo scroll...')
+          elemento.style.border = '3px solid red' // Debug visual
+          elemento.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          
+          // Aplicar highlight
+          elemento.classList.add('highlight-row')
+          setTimeout(() => elemento.classList.remove('highlight-row'), 5000)
+        } else {
+          console.log('❌ ELEMENTO NÃO ENCONTRADO')
+          
+          // Testar se pelo menos existe algum elemento de solicitação
+          const qualquerSolicitacao = document.querySelector('[id^="solicitacao"]')
+          if (qualquerSolicitacao) {
+            console.log('⚠️ Existe pelo menos um elemento de solicitação, fazendo scroll para o primeiro como teste')
+            qualquerSolicitacao.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          } else {
+            console.log('💥 NENHUM elemento de solicitação encontrado!')
+          }
+        }
+      }, 3000) // 3 segundos bem longos para debug
+    }
+  }, [selectedAdiantamentoId, solicitacoes, statusFilter])
+
   const getFilteredSolicitacoes = () => {
     if (statusFilter === 'todos') {
       return solicitacoes
@@ -244,6 +306,27 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
 
   return (
     <div className="space-y-6 pb-96">
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .highlight-row {
+            background: rgba(59, 130, 246, 0.4) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.3);
+            transform: scale(1.02);
+            transition: all 0.5s ease;
+            border-radius: 8px;
+            animation: pulse-highlight 2s infinite;
+          }
+          
+          @keyframes pulse-highlight {
+            0%, 100% {
+              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.9), 0 0 30px rgba(59, 130, 246, 0.5);
+            }
+          }
+        `
+      }} />
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
@@ -385,8 +468,15 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
               </tr>
             </thead>
             <tbody>
-              {filteredSolicitacoes.map((solicitacao) => (
-                <tr key={solicitacao.id} className="border-b border-dark-300 hover:bg-dark-200/50">
+              {filteredSolicitacoes.map((solicitacao) => {
+                // Debug temporário
+                console.log('🆔 Gerando ID para elemento:', `solicitacao-${solicitacao.id}`)
+                return (
+                <tr 
+                  key={solicitacao.id} 
+                  id={`solicitacao-${solicitacao.id}`}
+                  className="border-b border-dark-300 hover:bg-dark-200/50 transition-colors"
+                >
                   <td className="py-4 px-4">
                   <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -456,7 +546,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
                     </div>
                   </td>
                 </tr>
-              ))}
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -470,8 +561,15 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
 
       {/* Solicitações Cards - Mobile */}
       <div className="block md:hidden space-y-3">
-        {filteredSolicitacoes.map((solicitacao) => (
-          <div key={solicitacao.id} className="card">
+        {filteredSolicitacoes.map((solicitacao) => {
+          // Debug temporário
+          console.log('📱 Gerando ID mobile:', `solicitacao-mobile-${solicitacao.id}`)
+          return (
+          <div 
+            key={solicitacao.id} 
+            id={`solicitacao-mobile-${solicitacao.id}`}
+            className="card transition-colors"
+          >
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-black dark:text-white text-sm font-medium">
@@ -535,7 +633,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
               )}
             </div>
           </div>
-        ))}
+          )
+        })}
 
         {filteredSolicitacoes.length === 0 && (
           <div className="text-center py-12">

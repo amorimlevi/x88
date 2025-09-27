@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { SearchIcon } from '../ui/Icons'
 import { ThemeToggle } from '../ui/ThemeToggle'
 import { formatDateTime } from '../../utils/formatters'
+import { solicitacoesService } from '../../services/solicitacoesService'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -16,45 +17,41 @@ const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantam
   const [searchTerm, setSearchTerm] = useState('')
   const notificationRef = useRef<HTMLDivElement>(null)
 
-  // Mock data de notificações de adiantamentos
-  const [notificationsList, setNotificationsList] = useState([
-    {
-      id: 1,
-      funcionario: 'Ricardo Mendes',
-      adiantamentoId: 'adv_001',
-      tipo: 'Novo pedido de adiantamento',
-      valor: 500,
-      tempo: '2024-01-25T10:30:00',
-      lida: false
-    },
-    {
-      id: 2,
-      funcionario: 'Beatriz Almeida',
-      adiantamentoId: 'adv_002', 
-      tipo: 'Novo pedido de adiantamento',
-      valor: 300,
-      tempo: '2024-01-25T08:15:00',
-      lida: false
-    },
-    {
-      id: 3,
-      funcionario: 'Gabriel Rodrigues',
-      adiantamentoId: 'adv_003',
-      tipo: 'Novo pedido de adiantamento', 
-      valor: 750,
-      tempo: '2024-01-24T16:45:00',
-      lida: true
-    },
-    {
-      id: 4,
-      funcionario: 'Larissa Pereira',
-      adiantamentoId: 'adv_004',
-      tipo: 'Novo pedido de adiantamento',
-      valor: 200,
-      tempo: '2024-01-24T14:20:00', 
-      lida: true
+  // Notificações baseadas em solicitações reais
+  const [notificationsList, setNotificationsList] = useState<any[]>([])
+
+  // Carregar notificações das solicitações
+  useEffect(() => {
+    const carregarNotificacoes = () => {
+      const solicitacoes = solicitacoesService.obterSolicitacoes()
+      
+      // Converter solicitações em notificações, priorizando pendentes
+      const notificacoes = solicitacoes
+        .filter(s => s.status === 'pendente') // Apenas solicitações pendentes geram notificações
+        .map(solicitacao => ({
+          id: solicitacao.id,
+          funcionario: solicitacao.funcionarioNome,
+          adiantamentoId: solicitacao.id,
+          tipo: `Novo pedido de ${solicitacao.tipo}`,
+          valor: solicitacao.valor || 0,
+          tempo: solicitacao.datasolicitacao,
+          lida: false
+        }))
+        .sort((a, b) => new Date(b.tempo).getTime() - new Date(a.tempo).getTime()) // Mais recentes primeiro
+        .slice(0, 10) // Limitar a 10 notificações
+
+      setNotificationsList(notificacoes)
     }
-  ])
+
+    carregarNotificacoes()
+
+    // Configurar listener para atualizações
+    const unsubscribe = solicitacoesService.addListener(() => {
+      carregarNotificacoes()
+    })
+
+    return unsubscribe
+  }, [])
 
   const handleNotificationClick = (notification: any) => {
     // Marcar notificação como lida
@@ -185,7 +182,7 @@ const Header = ({ onMenuClick, onNewPagamento, onSectionChange, onSelectAdiantam
                             {notification.tipo}
                           </p>
                           <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 mb-2">
-                            €{notification.valor},00
+                            €{notification.valor.toFixed(2).replace('.', ',')}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-500">
                             {formatDateTime(notification.tempo)}

@@ -13,6 +13,7 @@ import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
 
 import AddPagamentoModal from '../pagamentos/AddPagamentoModal'
+import ContasAReceber from '../pagamentos/ContasAReceber'
 import { ultimosPagamentosData } from '../../data/pagamentosData'
 
 import Notification from '../ui/Notification'
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
+  const [selectedAdiantamentoId, setSelectedAdiantamentoId] = useState<string | null>(null)
   const [ultimosPagamentos, setUltimosPagamentos] = useState<any[]>([])
   const [solicitacoesPendentes, setSolicitacoesPendentes] = useState<any[]>([])
 
@@ -42,26 +44,45 @@ const Dashboard = () => {
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section)
+    // Limpar seleções quando mudar de seção (exceto quando vamos para solicitações vindos de notificação)
+    if (section !== 'solicitacoes') {
+      setSelectedAdiantamentoId(null)
+      setSelectedSolicitacao(null)
+    } else if (section === 'solicitacoes' && !selectedAdiantamentoId) {
+      // Apenas limpar se não há ID de adiantamento selecionado
+      setSelectedSolicitacao(null)
+    }
+  }
+
+  // Função para calcular tempo decorrido em minutos (para ordenação)
+  const calcularTempoEmMinutos = (data: string, hora: string) => {
+    const agora = new Date()
+    const dataPagamento = new Date(`${data}T${hora}:00`)
+    const diffMs = Math.abs(agora.getTime() - dataPagamento.getTime())
+    return Math.floor(diffMs / (1000 * 60)) // Retorna minutos totais
+  }
+
   // Função para atualizar últimos pagamentos baseado no histórico
   const atualizarUltimosPagamentos = () => {
     const historico = historicoService.obterHistorico()
     const pagamentos = historico
       .filter(item => item.tipo === 'pagamento' && item.status === 'pago')
-      .sort((a, b) => {
-        // Ordenar por data e hora mais recente primeiro
-        const dataA = new Date(`${a.data}T${a.hora}:00`)
-        const dataB = new Date(`${b.data}T${b.hora}:00`)
-        return dataB.getTime() - dataA.getTime()
-      })
-      .slice(0, 10) // Limitar aos 10 mais recentes
       .map(item => ({
         id: item.id,
         nome: item.funcionario,
         iniciais: item.funcionarioIniciais,
         valor: item.valor,
         viagem: item.descricao,
-        tempo: calcularTempoDecorrido(item.data, item.hora)
+        tempo: calcularTempoDecorrido(item.data, item.hora),
+        minutosDecorridos: calcularTempoEmMinutos(item.data, item.hora) // Para ordenação
       }))
+      .sort((a, b) => {
+        // Ordenar por minutos decorridos (ordem crescente - menos minutos primeiro)
+        return a.minutosDecorridos - b.minutosDecorridos
+      })
+      .slice(0, 10) // Limitar aos 10 mais recentes
     
     // Se temos pagamentos do histórico, usar apenas eles; senão combinar com dados mock
     const pagamentosFinal = pagamentos.length > 0 
@@ -75,7 +96,7 @@ const Dashboard = () => {
   const calcularTempoDecorrido = (data: string, hora: string) => {
     const agora = new Date()
     const dataPagamento = new Date(`${data}T${hora}:00`)
-    const diffMs = agora.getTime() - dataPagamento.getTime()
+    const diffMs = Math.abs(agora.getTime() - dataPagamento.getTime()) // Usar valor absoluto para evitar negativos
     
     const diffMinutos = Math.floor(diffMs / (1000 * 60))
     const diffHoras = Math.floor(diffMs / (1000 * 60 * 60))
@@ -145,21 +166,49 @@ const Dashboard = () => {
 
   const handleVerTodasSolicitacoes = () => {
     setSelectedSolicitacao(null) // Limpar solicitação selecionada
-    setActiveSection('solicitacoes')
+    setSelectedAdiantamentoId(null) // Limpar ID de adiantamento
+    handleSectionChange('solicitacoes')
   }
 
   const handleViewSolicitacao = (solicitacao: any) => {
-    setSelectedSolicitacao(solicitacao) // Manter solicitação selecionada
-    setActiveSection('solicitacoes') // Navegar para página de solicitações
+    console.log('🔍 Dashboard - handleViewSolicitacao chamado:', solicitacao)
+    setSelectedAdiantamentoId(solicitacao.id) // Usar o ID para scroll
+    setSelectedSolicitacao(null) // Limpar solicitação selecionada do modal
+    handleSectionChange('solicitacoes') // Navegar para página de solicitações
   }
 
   const handleSearch = (term: string) => {
     setSearchTerm(term)
   }
 
+  const handleSelectAdiantamento = (adiantamentoId: string) => {
+    console.log('🔔 Dashboard - handleSelectAdiantamento chamado com ID:', adiantamentoId)
+    console.log('🔔 Dashboard - Seção ativa atual:', activeSection)
+    
+    setSelectedAdiantamentoId(adiantamentoId)
+    // Limpar qualquer solicitação previamente selecionada do dashboard
+    setSelectedSolicitacao(null)
+    
+    console.log('🔔 Dashboard - selectedAdiantamentoId definido, aguardando 1 segundo para verificar...')
+    
+    // Debug: verificar se o estado foi realmente setado
+    setTimeout(() => {
+      console.log('🔔 Dashboard - Estado após 1 segundo:', {
+        selectedAdiantamentoId: adiantamentoId, // Usar o valor direto pois o state pode não ter atualizado ainda
+        activeSection
+      })
+    }, 1000)
+    
+    // Limpar o ID após o tempo suficiente para o highlight
+    setTimeout(() => {
+      console.log('🔔 Dashboard - Limpando selectedAdiantamentoId após timeout')
+      setSelectedAdiantamentoId(null)
+    }, 10000) // Aumentei para 10 segundos para debug
+  }
+
   const handlePagamentoClick = () => {
     // Redirecionar para o histórico com foco no pagamento específico
-    setActiveSection('historico')
+    handleSectionChange('historico')
     // Poderiam adicionar um estado para filtrar o histórico por esse pagamento específico
   }
 
@@ -169,6 +218,9 @@ const Dashboard = () => {
     
     // Mostrar notificação
     showNotification('success', 'Solicitação Aprovada', `A solicitação de ${solicitacao.funcionarioNome || solicitacao.nome} foi aprovada e adicionada aos últimos pagamentos.`)
+    
+    // Limpar seleção de adiantamento
+    setSelectedAdiantamentoId(null)
   }
 
   const handleSolicitacaoNegada = (solicitacao: any) => {
@@ -177,6 +229,9 @@ const Dashboard = () => {
 
     // Mostrar notificação
     showNotification('info', 'Solicitação Negada', `A solicitação de ${solicitacao.funcionarioNome || solicitacao.nome} foi negada.`)
+    
+    // Limpar seleção de adiantamento
+    setSelectedAdiantamentoId(null)
   }
 
 
@@ -197,7 +252,7 @@ const Dashboard = () => {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         activeSection={activeSection}
-        onSectionChange={setActiveSection}
+        onSectionChange={handleSectionChange}
       />
 
       {/* Main Content */}
@@ -207,8 +262,8 @@ const Dashboard = () => {
         <Header 
           onMenuClick={toggleSidebar} 
           onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
-          onSectionChange={setActiveSection}
-          onSelectAdiantamento={() => {}}
+          onSectionChange={handleSectionChange}
+          onSelectAdiantamento={handleSelectAdiantamento}
           onSearch={handleSearch}
         />
 
@@ -228,7 +283,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <StatsCards onSectionChange={setActiveSection} />
+                <StatsCards onSectionChange={handleSectionChange} />
 
                 {/* Recent Activity */}
                 <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -306,7 +361,7 @@ const Dashboard = () => {
                     Últimos Pagamentos
                   </h3>
                   <button 
-                    onClick={() => setActiveSection('historico')}
+                    onClick={() => handleSectionChange('historico')}
                     className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                   >
                     Ver todos
@@ -376,9 +431,16 @@ const Dashboard = () => {
             {activeSection === 'solicitacoes' && (
               <SolicitacoesList 
                 selectedSolicitacao={selectedSolicitacao}
+                selectedAdiantamentoId={selectedAdiantamentoId}
                 onApproved={handleSolicitacaoAprovada}
                 onDenied={handleSolicitacaoNegada}
               />
+            )}
+
+
+
+            {activeSection === 'contas-a-receber' && (
+              <ContasAReceber />
             )}
           </div>
         </main>

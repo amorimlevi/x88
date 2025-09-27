@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { Filter, X, Search, Download, RefreshCw } from 'lucide-react'
+import { Filter, X, Calendar, Download, RefreshCw } from 'lucide-react'
 import DatePicker from '../../ui/DatePicker'
-import Select from '../../ui/Select'
-import { FiltroTempo, TipoRelatorio, StatusFiltro, TipoPagamentoFiltro } from '../../../types/reports'
+import { FiltroTempo, TipoRelatorio } from '../../../types/reports'
 
 interface AdvancedFiltersProps {
   filtroTempo: FiltroTempo
@@ -35,25 +34,13 @@ const AdvancedFilters = ({
   isLoading = false,
   totalRecords = 0
 }: AdvancedFiltersProps) => {
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const [statusFilter, setStatusFilter] = useState<StatusFiltro>('todos')
-  const [tipoFilter, setTipoFilter] = useState<TipoPagamentoFiltro>('todos')
-  const [funcionarioSearch, setFuncionarioSearch] = useState('')
-  const [valorMinimo, setValorMinimo] = useState('')
-  const [valorMaximo, setValorMaximo] = useState('')
-
   const hasCustomDates = startDate || endDate
-  const hasActiveFilters = statusFilter !== 'todos' || tipoFilter !== 'todos' || funcionarioSearch || valorMinimo || valorMaximo || hasCustomDates
+  const hasActiveFilters = hasCustomDates
 
   const handleClearAll = () => {
     setStartDate('')
     setEndDate('')
     setFiltroTempo('mensal')
-    setStatusFilter('todos')
-    setTipoFilter('todos')
-    setFuncionarioSearch('')
-    setValorMinimo('')
-    setValorMaximo('')
     onClearFilters()
   }
 
@@ -75,7 +62,7 @@ const AdvancedFilters = ({
             </div>
             <div>
               <h3 className="text-lg font-semibold text-black dark:text-white">
-                Filtros Avançados
+                Filtros por Período
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {totalRecords} registros encontrados
@@ -101,13 +88,6 @@ const AdvancedFilters = ({
               title="Atualizar dados"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </button>
-
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="px-3 py-2 text-sm bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
-            >
-              {showAdvanced ? 'Ocultar' : 'Avançado'}
             </button>
 
             <button
@@ -137,176 +117,100 @@ const AdvancedFilters = ({
           ))}
         </div>
 
-        {/* Filtros Principais */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <DatePicker
-            label="📅 Data Inicial"
-            value={startDate}
-            onChange={(date) => {
-              setStartDate(date)
-              setFiltroTempo('customizado')
-            }}
-            placeholder="Selecionar data inicial"
-          />
-          
-          <DatePicker
-            label="📅 Data Final"
-            value={endDate}
-            onChange={(date) => {
-              setEndDate(date)
-              setFiltroTempo('customizado')
-            }}
-            placeholder="Selecionar data final"
-          />
-
-          <Select
-            label="📊 Tipo de Relatório"
-            value={tipoRelatorio}
-            onChange={(value) => setTipoRelatorio(value as TipoRelatorio)}
-            options={[
-              { value: 'geral', label: 'Relatório Geral' },
-              { value: 'pagamentos', label: 'Pagamentos Realizados' },
-              { value: 'adiantamentos', label: 'Adiantamentos' },
-              { value: 'funcionarios', label: 'Por Funcionário' },
-              { value: 'faturamento', label: 'Faturamento' },
-              { value: 'poupanca', label: 'Análise de Poupança' }
-            ]}
-          />
-
-          {!hasCustomDates && (
-            <Select
-              label="⏰ Período"
-              value={filtroTempo}
-              onChange={(value) => setFiltroTempo(value as FiltroTempo)}
-              options={[
-                { value: 'hoje', label: 'Hoje' },
-                { value: 'semanal', label: 'Última semana' },
-                { value: 'mensal', label: 'Último mês' },
-                { value: 'anual', label: 'Último ano' }
-              ]}
+        {/* Calendários */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="card bg-white dark:bg-gray-800">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-black dark:text-white">Data Inicial</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Início do período</p>
+              </div>
+            </div>
+            <DatePicker
+              label=""
+              value={startDate}
+              onChange={(date) => {
+                setStartDate(date)
+                setFiltroTempo('customizado')
+              }}
+              placeholder="Selecionar data inicial"
             />
-          )}
-        </div>
-
-        {/* Filtros Avançados */}
-        {showAdvanced && (
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <h4 className="text-md font-medium text-black dark:text-white mb-4 flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              Filtros Detalhados
-            </h4>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Select
-                label="Status do Pagamento"
-                value={statusFilter}
-                onChange={(value) => setStatusFilter(value as StatusFiltro)}
-                options={[
-                  { value: 'todos', label: 'Todos os status' },
-                  { value: 'pago', label: 'Pagos' },
-                  { value: 'pendente', label: 'Pendentes' },
-                  { value: 'agendado', label: 'Agendados' },
-                  { value: 'cancelado', label: 'Cancelados' }
-                ]}
-              />
-
-              <Select
-                label="Tipo de Pagamento"
-                value={tipoFilter}
-                onChange={(value) => setTipoFilter(value as TipoPagamentoFiltro)}
-                options={[
-                  { value: 'todos', label: 'Todos os tipos' },
-                  { value: 'salario', label: 'Salários' },
-                  { value: 'adiantamento', label: 'Adiantamentos' },
-                  { value: 'viagem', label: 'Despesas de Viagem' },
-                  { value: 'bonus', label: 'Bónus' }
-                ]}
-              />
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Buscar Funcionário
-                </label>
-                <input
-                  type="text"
-                  value={funcionarioSearch}
-                  onChange={(e) => setFuncionarioSearch(e.target.value)}
-                  placeholder="Nome do funcionário..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-black dark:text-white"
-                />
+          </div>
+          
+          <div className="card bg-white dark:bg-gray-800">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-black dark:text-white">Data Final</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Fim do período</p>
               </div>
             </div>
+            <DatePicker
+              label=""
+              value={endDate}
+              onChange={(date) => {
+                setEndDate(date)
+                setFiltroTempo('customizado')
+              }}
+              placeholder="Selecionar data final"
+            />
+          </div>
 
-            {/* Filtros de Valor */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Valor Mínimo (€)
-                </label>
-                <input
-                  type="number"
-                  value={valorMinimo}
-                  onChange={(e) => setValorMinimo(e.target.value)}
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-black dark:text-white"
-                />
+          <div className="card bg-white dark:bg-gray-800">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+                <Filter className="w-5 h-5 text-white" />
               </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Valor Máximo (€)
-                </label>
-                <input
-                  type="number"
-                  value={valorMaximo}
-                  onChange={(e) => setValorMaximo(e.target.value)}
-                  placeholder="999999.99"
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-black dark:text-white"
-                />
+              <div>
+                <h4 className="text-lg font-semibold text-black dark:text-white">Período Selecionado</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {startDate && endDate ? (
+                    <>
+                      {new Date(startDate).toLocaleDateString('pt-PT')} - {new Date(endDate).toLocaleDateString('pt-PT')}
+                    </>
+                  ) : startDate ? (
+                    <>A partir de {new Date(startDate).toLocaleDateString('pt-PT')}</>
+                  ) : endDate ? (
+                    <>Até {new Date(endDate).toLocaleDateString('pt-PT')}</>
+                  ) : (
+                    'Nenhum período personalizado'
+                  )}
+                </p>
               </div>
             </div>
-
-            {/* Resumo dos Filtros Ativos */}
-            {hasActiveFilters && (
-              <div className="mt-4 p-3 bg-brand-50 dark:bg-brand-900/20 rounded-lg border border-brand-200 dark:border-brand-800">
-                <h5 className="text-sm font-medium text-brand-800 dark:text-brand-200 mb-2">
-                  Filtros Ativos:
-                </h5>
-                <div className="flex flex-wrap gap-2">
-                  {hasCustomDates && (
-                    <span className="px-2 py-1 bg-brand-500 text-white rounded text-xs">
-                      {startDate} - {endDate}
-                    </span>
-                  )}
-                  {statusFilter !== 'todos' && (
-                    <span className="px-2 py-1 bg-brand-500 text-white rounded text-xs">
-                      Status: {statusFilter}
-                    </span>
-                  )}
-                  {tipoFilter !== 'todos' && (
-                    <span className="px-2 py-1 bg-brand-500 text-white rounded text-xs">
-                      Tipo: {tipoFilter}
-                    </span>
-                  )}
-                  {funcionarioSearch && (
-                    <span className="px-2 py-1 bg-brand-500 text-white rounded text-xs">
-                      Funcionário: {funcionarioSearch}
-                    </span>
-                  )}
-                  {(valorMinimo || valorMaximo) && (
-                    <span className="px-2 py-1 bg-brand-500 text-white rounded text-xs">
-                      Valor: €{valorMinimo || '0'} - €{valorMaximo || '∞'}
-                    </span>
-                  )}
+            {hasCustomDates && (
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 p-4 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-purple-800 dark:text-purple-200">
+                      Período Ativo
+                    </p>
+                    <p className="text-xs text-purple-600 dark:text-purple-300">
+                      {startDate && endDate && (
+                        <>
+                          {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))} dias
+                        </>
+                      )}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleClearAll}
+                    className="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             )}
           </div>
-        )}
+        </div>
+
+
       </div>
     </div>
   )

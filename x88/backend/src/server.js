@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 import authRoutes from './routes/auth.js'
 import userRoutes from './routes/users.js'
 import paymentRoutes from './routes/payments.js'
+import contasAReceberRoutes from './routes/contasAReceber.js'
 
 // Load environment variables
 dotenv.config()
@@ -41,6 +42,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/x88_gesta
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/payments', paymentRoutes)
+app.use('/api/contas-a-receber', contasAReceberRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

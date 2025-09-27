@@ -21,9 +21,8 @@ interface HistoricoItem {
 
 export default function HistoricoList() {
   const [historico, setHistorico] = useState<HistoricoItem[]>([]);
-  const [filtroTipo, setFiltroTipo] = useState<string>('todos');
-  const [filtroStatus, setFiltroStatus] = useState<string>('todos');
   const [filtroData, setFiltroData] = useState<string>('');
+  const [filtroDataFinal, setFiltroDataFinal] = useState<string>('');
   const [pesquisa, setPesquisa] = useState<string>('');
   const [showPagamentosModal, setShowPagamentosModal] = useState(false);
   const [showModalType, setShowModalType] = useState<string>('');
@@ -47,14 +46,18 @@ export default function HistoricoList() {
   }, []);
 
   const historicoFiltrado = historico.filter(item => {
-    const matchTipo = filtroTipo === 'todos' || item.tipo === filtroTipo;
-    const matchStatus = filtroStatus === 'todos' || item.status === filtroStatus;
-    const matchData = !filtroData || item.data.includes(filtroData);
+    // Filtro por data inicial
+    const matchDataInicial = !filtroData || item.data >= filtroData;
+    
+    // Filtro por data final
+    const matchDataFinal = !filtroDataFinal || item.data <= filtroDataFinal;
+    
+    // Filtro por pesquisa
     const matchPesquisa = !pesquisa || 
       item.descricao.toLowerCase().includes(pesquisa.toLowerCase()) ||
       item.funcionario.toLowerCase().includes(pesquisa.toLowerCase());
 
-    return matchTipo && matchStatus && matchData && matchPesquisa;
+    return matchDataInicial && matchDataFinal && matchPesquisa;
   });
 
   const getStatusIcon = (status: string) => {
@@ -166,30 +169,19 @@ export default function HistoricoList() {
             />
           </div>
 
-          <select
-            value={filtroTipo}
-            onChange={(e) => setFiltroTipo(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="todos">Todos os tipos</option>
-            <option value="pagamento">Pagamentos</option>
-            <option value="negacao">Negações</option>
-          </select>
-
-          <select
-            value={filtroStatus}
-            onChange={(e) => setFiltroStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="todos">Todos os status</option>
-            <option value="pago">Pago</option>
-            <option value="negado">Negado</option>
-          </select>
-
           <input
             type="date"
             value={filtroData}
             onChange={(e) => setFiltroData(e.target.value)}
+            placeholder="Data inicial"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          
+          <input
+            type="date"
+            value={filtroDataFinal || ''}
+            onChange={(e) => setFiltroDataFinal(e.target.value)}
+            placeholder="Data final"
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
