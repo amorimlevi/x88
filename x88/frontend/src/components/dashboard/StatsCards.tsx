@@ -1,4 +1,4 @@
-import { UsersIcon, PaymentsIcon, AdvanceIcon, ReportsIcon } from '../ui/Icons'
+import { PaymentsIcon, AdvanceIcon, ReportsIcon } from '../ui/Icons'
 import { FileText } from 'lucide-react'
 import AlarmClockIcon from '../ui/icons/AlarmClockIcon'
 import ReceiptIcon from '../ui/icons/ReceiptIcon'

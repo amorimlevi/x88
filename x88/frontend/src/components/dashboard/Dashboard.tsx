@@ -4,7 +4,7 @@ import Header from './Header'
 import StatsCards from './StatsCards'
 import ColaboradoresList from '../colaboradores/ColaboradoresList'
 
-import { historicoService } from '../../services/historicoService'
+
 import { solicitacoesService } from '../../services/solicitacoesService'
 
 import HistoricoList from '../historico/HistoricoList'

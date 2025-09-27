@@ -183,24 +183,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
     }
   }
 
-  const getPrioridadeColor = (prioridade: string) => {
-    switch (prioridade) {
-      case 'urgente': return 'bg-red-500/20 text-red-400'
-      case 'alta': return 'bg-orange-500/20 text-orange-400'
-      case 'media': return 'bg-blue-500/20 text-blue-400'
-      case 'baixa': return 'bg-green-500/20 text-green-400'
-      default: return 'bg-gray-500/20 text-gray-400'
-    }
-  }
 
-  const getTipoIcon = (tipo: string) => {
-    switch (tipo) {
-      case 'adiantamento': return <Euro className="w-4 h-4" />
-      case 'ferias': return <Calendar className="w-4 h-4" />
-      case 'reembolso': return <FileText className="w-4 h-4" />
-      default: return <Clock className="w-4 h-4" />
-    }
-  }
 
 
 

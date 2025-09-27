@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Euro, Clock, CheckCircle, XCircle, User, Eye, Calendar, DollarSign, AlertTriangle } from 'lucide-react'
+import { Euro, Clock, CheckCircle, XCircle, Eye, Calendar, DollarSign, AlertTriangle } from 'lucide-react'
 import { formatEuro, formatDate } from '../../utils/formatters'
 
 interface ContaAReceber {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { CheckCircle, X, AlertCircle, Info } from 'lucide-react'
 
 interface NotificationProps {
