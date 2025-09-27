@@ -223,10 +223,10 @@ class HistoricoService {
     )
   }
 
-  // Calcular valor total dos pagamentos do dia
+  // Calcular valor total dos pagamentos do dia (valor líquido - 10% de desconto)
   obterValorPagamentosDoDia(): number {
     const pagamentosDoDia = this.obterPagamentosDoDia()
-    return pagamentosDoDia.reduce((total, pagamento) => total + pagamento.valor, 0)
+    return pagamentosDoDia.reduce((total, pagamento) => total + (pagamento.valor * 0.9), 0)
   }
 
   // Filtrar histórico por data
