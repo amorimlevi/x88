@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, User, Mail, Phone, Briefcase, CreditCard, Building2, Hash, Smartphone } from 'lucide-react'
+import { X, User, Mail, Phone, Briefcase, CreditCard, Building2, Smartphone } from 'lucide-react'
 
 interface Colaborador {
   id: string

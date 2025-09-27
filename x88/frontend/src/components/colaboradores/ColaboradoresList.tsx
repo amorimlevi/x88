@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Calendar, Euro, Eye } from 'lucide-react'
+import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Eye } from 'lucide-react'
 import AddColaboradorModal from './AddColaboradorModal'
 import ColaboradorDetailsModal from './ColaboradorDetailsModal'
 import EditColaboradorModal from './EditColaboradorModal'
-import { formatEuro, formatDate } from '../../utils/formatters'
+
 
 interface Colaborador {
   id: string
@@ -256,11 +256,7 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
     }
   }
 
-  const getOrigemBadge = (origem: string) => {
-    return origem === 'manual' 
-      ? 'bg-blue-500/20 text-blue-400' 
-      : 'bg-purple-500/20 text-purple-400'
-  }
+
 
   const handleViewDetails = (colaborador: Colaborador) => {
     setSelectedColaborador(colaborador)

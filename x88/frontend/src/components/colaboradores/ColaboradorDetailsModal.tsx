@@ -1,5 +1,4 @@
-import { X, User, Mail, Phone, Briefcase, Euro, Calendar, MapPin, CreditCard, Building2, Hash, CheckCircle, AlertCircle, Smartphone } from 'lucide-react'
-import { formatEuro, formatDateTime } from '../../utils/formatters'
+import { X, User, Mail, Phone, Briefcase, MapPin, CreditCard, Building2, Hash, CheckCircle, AlertCircle, Smartphone } from 'lucide-react'
 
 interface Colaborador {
   id: string
