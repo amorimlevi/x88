@@ -98,3 +98,5 @@ export const generateToken = (userId) => {
     { expiresIn: process.env.JWT_EXPIRE || '7d' }
   )
 }
+
+export default { authenticate, requireGestor, requireFuncionario, checkAccess, generateToken }

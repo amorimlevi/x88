@@ -10,12 +10,12 @@ import {
   atualizarConta,
   excluirConta
 } from '../controllers/contasAReceberController.js'
-import auth from '../middleware/auth.js'
+import { authenticate } from '../middleware/auth.js'
 
 const router = express.Router()
 
 // Aplicar middleware de autenticação em todas as rotas
-router.use(auth)
+router.use(authenticate)
 
 // Validações
 const validarCriacaoConta = [
