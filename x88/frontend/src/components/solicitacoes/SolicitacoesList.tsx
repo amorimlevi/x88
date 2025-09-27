@@ -61,67 +61,61 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
     }
   }, [propSelectedSolicitacao, solicitacoes])
 
-  // DEBUG: Efeito super simples para testar
+  // Efeito para scroll automático - Versão otimizada
   useEffect(() => {
-    console.log('🚀 useEffect executado:', {
-      selectedAdiantamentoId,
-      solicitacoesLength: solicitacoes.length,
-      statusFilter,
-      activeSection: window.location.pathname // Para ver se está na página certa
-    })
+    if (!selectedAdiantamentoId || solicitacoes.length === 0) return
     
-    if (selectedAdiantamentoId) {
-      console.log('🎯 ID recebido das notificações:', selectedAdiantamentoId)
+    // Definir filtro como "todos" para garantir que a solicitação apareça
+    setStatusFilter('todos')
+    
+    // Função de scroll otimizada
+    const scrollToElement = () => {
+      // Detectar se é mobile ou desktop
+      const isMobile = window.innerWidth < 768
+      const elementId = isMobile 
+        ? `solicitacao-mobile-${selectedAdiantamentoId}` 
+        : `solicitacao-${selectedAdiantamentoId}`
       
-      // Definir filtro como "todos" para garantir que a solicitação apareça
-      console.log('🔄 Definindo filtro como "todos"')
-      setStatusFilter('todos')
+      const elemento = document.getElementById(elementId)
       
-      // Aguardar um tempo bem longo para debug
-      setTimeout(() => {
-        console.log('⏰ Timeout executado, tentando encontrar elemento...')
+      if (elemento && elemento.offsetHeight > 0) {
+        // Scroll suave e centralizado
+        elemento.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        })
         
-        // Listar TODOS os elementos da página para debug
-        const todosIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id)
-        console.log('🔍 TODOS os IDs na página:', todosIds)
+        // Aplicar highlight visual
+        elemento.classList.add('highlight-row')
+        setTimeout(() => elemento.classList.remove('highlight-row'), 3000)
         
-        // Listar especificamente elementos de solicitação
-        const solicitacaoElements = Array.from(document.querySelectorAll('[id^="solicitacao"]'))
-        console.log('📋 Elementos de solicitação:', solicitacaoElements.map(el => ({
-          id: el.id,
-          tag: el.tagName,
-          visible: el.offsetHeight > 0
-        })))
-        
-        // Tentar encontrar elemento
-        const elemento = document.getElementById(`solicitacao-${selectedAdiantamentoId}`) ||
-                         document.getElementById(`solicitacao-mobile-${selectedAdiantamentoId}`)
-        
-        console.log('🎯 Elemento encontrado:', elemento)
-        
-        if (elemento) {
-          console.log('✅ ELEMENTO ENCONTRADO! Fazendo scroll...')
-          elemento.style.border = '3px solid red' // Debug visual
-          elemento.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          
-          // Aplicar highlight
-          elemento.classList.add('highlight-row')
-          setTimeout(() => elemento.classList.remove('highlight-row'), 5000)
-        } else {
-          console.log('❌ ELEMENTO NÃO ENCONTRADO')
-          
-          // Testar se pelo menos existe algum elemento de solicitação
-          const qualquerSolicitacao = document.querySelector('[id^="solicitacao"]')
-          if (qualquerSolicitacao) {
-            console.log('⚠️ Existe pelo menos um elemento de solicitação, fazendo scroll para o primeiro como teste')
-            qualquerSolicitacao.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          } else {
-            console.log('💥 NENHUM elemento de solicitação encontrado!')
-          }
-        }
-      }, 3000) // 3 segundos bem longos para debug
+        return true // Sucesso
+      }
+      return false // Falhou
     }
-  }, [selectedAdiantamentoId, solicitacoes, statusFilter])
+    
+    // Sistema de retry com delays progressivos
+    let tentativas = 0
+    const maxTentativas = 8
+    
+    const tentar = () => {
+      if (scrollToElement()) {
+        return // Sucesso - parar tentativas
+      }
+      
+      tentativas++
+      if (tentativas < maxTentativas) {
+        // Delay progressivo: 100ms, 200ms, 400ms, 800ms...
+        const delay = Math.min(100 * Math.pow(2, tentativas - 1), 1000)
+        setTimeout(tentar, delay)
+      }
+    }
+    
+    // Iniciar após pequeno delay para garantir renderização
+    setTimeout(tentar, 100)
+    
+  }, [selectedAdiantamentoId, solicitacoes])
 
   const getFilteredSolicitacoes = () => {
     if (statusFilter === 'todos') {
@@ -469,8 +463,6 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
             </thead>
             <tbody>
               {filteredSolicitacoes.map((solicitacao) => {
-                // Debug temporário
-                console.log('🆔 Gerando ID para elemento:', `solicitacao-${solicitacao.id}`)
                 return (
                 <tr 
                   key={solicitacao.id} 
@@ -562,8 +554,6 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
       {/* Solicitações Cards - Mobile */}
       <div className="block md:hidden space-y-3">
         {filteredSolicitacoes.map((solicitacao) => {
-          // Debug temporário
-          console.log('📱 Gerando ID mobile:', `solicitacao-mobile-${solicitacao.id}`)
           return (
           <div 
             key={solicitacao.id} 

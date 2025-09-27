@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus, Search, Filter, Edit, Trash2, Phone, Mail, Calendar, Euro, Eye } from 'lucide-react'
 import AddColaboradorModal from './AddColaboradorModal'
 import ColaboradorDetailsModal from './ColaboradorDetailsModal'
+import EditColaboradorModal from './EditColaboradorModal'
 import { formatEuro, formatDate } from '../../utils/formatters'
 
 interface Colaborador {
@@ -52,12 +53,15 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedColaborador, setSelectedColaborador] = useState<Colaborador | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [colaboradorToDelete, setColaboradorToDelete] = useState<Colaborador | null>(null)
 
   // Dados mock - em produção viriam da API
-  const [colaboradores] = useState<Colaborador[]>([
+  const [colaboradores, setColaboradores] = useState<Colaborador[]>([
     {
       id: '1',
-      nome: 'João Silva',
+      nome: 'João da Silva',
       email: 'joao.silva@empresa.pt',
       telefone: '(21) 99999-0001',
       cargo: 'Condutor',
@@ -77,7 +81,7 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
         agencia: '0123',
         conta: '12345678-9',
         tipoConta: 'corrente',
-        titular: 'João Silva',
+        titular: 'João da Silva',
         iban: 'PT50 0123 4567 8901 2345 6789 0',
         mbway: '+351 21 999-0001'
       },
@@ -92,8 +96,8 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
     },
     {
       id: '2',
-      nome: 'Maria Santos',
-      email: 'maria.santos@empresa.pt',
+      nome: 'Ana Ferreira',
+      email: 'ana.ferreira@empresa.pt',
       telefone: '(21) 99999-0002',
       cargo: 'Coordenadora',
       salario: 1800,
@@ -112,7 +116,7 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
         agencia: '0456',
         conta: '98765432-1',
         tipoConta: 'corrente',
-        titular: 'Maria Santos',
+        titular: 'Ana Ferreira',
         iban: 'PT50 0456 7890 1234 5678 9012 3',
         mbway: '+351 21 999-0002'
       },
@@ -127,8 +131,8 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
     },
     {
       id: '3',
-      nome: 'Pedro Costa',
-      email: 'pedro.costa@empresa.pt',
+      nome: 'Carlos Oliveira',
+      email: 'carlos.oliveira@empresa.pt',
       telefone: '(21) 99999-0003',
       cargo: 'Condutor',
       salario: 1150,
@@ -147,7 +151,7 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
         agencia: '0789',
         conta: '11111111-1',
         tipoConta: 'poupanca',
-        titular: 'Pedro Costa',
+        titular: 'Carlos Oliveira',
         iban: 'PT50 0789 0123 4567 8901 2345 6',
         mbway: '+351 21 999-0003'
       },
@@ -159,6 +163,76 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
       },
       observacoes: 'Suspenso temporariamente por questões disciplinares. Aguardando revisão do caso.',
       dataUltimaAtualizacao: '2024-01-10T08:20:00'
+    },
+    {
+      id: '4',
+      nome: 'Lucia Miranda',
+      email: 'lucia.miranda@empresa.pt',
+      telefone: '(21) 99999-0004',
+      cargo: 'Condutora',
+      salario: 1180,
+      dataContratacao: '2022-11-05',
+      status: 'ativo',
+      origem: 'manual',
+      endereco: {
+        rua: 'Rua Augusta',
+        numero: '321',
+        bairro: 'Chiado',
+        cidade: 'Lisboa',
+        codigoPostal: '1100-048'
+      },
+      dadosBancarios: {
+        banco: 'Banco BPI',
+        agencia: '0321',
+        conta: '55555555-5',
+        tipoConta: 'corrente',
+        titular: 'Lucia Miranda',
+        iban: 'PT50 0321 5555 5555 5555 5555 5',
+        mbway: '+351 21 999-0004'
+      },
+      documentos: {
+        rg: '55.555.555-5',
+        cpf: '555.555.555-55',
+        cnh: 'LM555555555',
+        dataValidadeCnh: '2025-08-20'
+      },
+      observacoes: 'Condutora experiente com foco em atendimento ao cliente.',
+      dataUltimaAtualizacao: '2024-01-15T09:15:00'
+    },
+    {
+      id: '5',
+      nome: 'Rafael Sousa',
+      email: 'rafael.sousa@empresa.pt',
+      telefone: '(21) 99999-0005',
+      cargo: 'Condutor',
+      salario: 1220,
+      dataContratacao: '2023-07-12',
+      status: 'ativo',
+      origem: 'app_terceiro',
+      endereco: {
+        rua: 'Rua da Betesga',
+        numero: '654',
+        bairro: 'Rossio',
+        cidade: 'Lisboa',
+        codigoPostal: '1100-090'
+      },
+      dadosBancarios: {
+        banco: 'Montepio',
+        agencia: '0654',
+        conta: '77777777-7',
+        tipoConta: 'corrente',
+        titular: 'Rafael Sousa',
+        iban: 'PT50 0654 7777 7777 7777 7777 7',
+        mbway: '+351 21 999-0005'
+      },
+      documentos: {
+        rg: '77.777.777-7',
+        cpf: '777.777.777-77',
+        cnh: 'RS777777777',
+        dataValidadeCnh: '2026-01-30'
+      },
+      observacoes: 'Condutor dedicado com boa performance nas entregas.',
+      dataUltimaAtualizacao: '2024-01-12T14:30:00'
     }
   ])
 
@@ -191,6 +265,32 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
   const handleViewDetails = (colaborador: Colaborador) => {
     setSelectedColaborador(colaborador)
     setIsDetailsModalOpen(true)
+  }
+
+  const handleEditColaborador = (colaborador: Colaborador) => {
+    setSelectedColaborador(colaborador)
+    setIsEditModalOpen(true)
+  }
+
+  const handleDeleteColaborador = (colaborador: Colaborador) => {
+    setColaboradorToDelete(colaborador)
+    setIsDeleteModalOpen(true)
+  }
+
+  const confirmDelete = () => {
+    if (colaboradorToDelete) {
+      setColaboradores(prev => prev.filter(c => c.id !== colaboradorToDelete.id))
+      setIsDeleteModalOpen(false)
+      setColaboradorToDelete(null)
+    }
+  }
+
+  const handleSaveEdit = (updatedColaborador: Colaborador) => {
+    setColaboradores(prev => 
+      prev.map(c => c.id === updatedColaborador.id ? updatedColaborador : c)
+    )
+    setIsEditModalOpen(false)
+    setSelectedColaborador(null)
   }
 
   return (
@@ -314,9 +414,7 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Colaborador</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Cargo</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Contacto</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Salário</th>
                 <th className="text-left py-3 px-4 text-dark-600 font-medium">Estado</th>
-                <th className="text-left py-3 px-4 text-dark-600 font-medium">Origem</th>
                 <th className="text-right py-3 px-4 text-dark-600 font-medium">Acções</th>
               </tr>
             </thead>
@@ -325,17 +423,13 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
                 <tr key={colaborador.id} className="border-b border-dark-300 hover:bg-dark-200/50">
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">
+                      <div className="w-10 h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-black dark:text-white text-sm font-medium">
                       {colaborador.nome.split(' ').map(name => name.charAt(0)).join('').slice(0, 2).toUpperCase()}
                       </span>
                       </div>
                       <div>
                         <p className="text-black dark:text-white font-medium">{colaborador.nome}</p>
-                        <p className="text-black dark:text-white text-sm flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(colaborador.dataContratacao)}
-                        </p>
                       </div>
                     </div>
                   </td>
@@ -355,19 +449,9 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="text-primary-500 font-medium">
-                      {formatEuro(colaborador.salario)}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(colaborador.status)}`}>
-                      {colaborador.status.charAt(0).toUpperCase() + colaborador.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getOrigemBadge(colaborador.origem)}`}>
-                      {colaborador.origem === 'manual' ? 'Manual' : 'App Terceiro'}
-                    </span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(colaborador.status)}`}>
+                  {colaborador.status.charAt(0).toUpperCase() + colaborador.status.slice(1)}
+                  </span>
                   </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2 justify-end">
@@ -378,12 +462,20 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
                       >
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-dark-600 hover:text-primary-500 hover:bg-dark-200 rounded-lg transition-colors">
+                      <button 
+                      onClick={() => handleEditColaborador(colaborador)}
+                        className="p-2 text-dark-600 hover:text-primary-500 hover:bg-dark-200 rounded-lg transition-colors"
+                        title="Editar colaborador"
+                      >
                         <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 text-dark-600 hover:text-red-500 hover:bg-dark-200 rounded-lg transition-colors">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                       </button>
+                       <button 
+                         onClick={() => handleDeleteColaborador(colaborador)}
+                         className="p-2 text-dark-600 hover:text-red-500 hover:bg-dark-200 rounded-lg transition-colors"
+                         title="Excluir colaborador"
+                       >
+                         <Trash2 className="w-4 h-4" />
+                       </button>
                     </div>
                   </td>
                 </tr>
@@ -409,6 +501,17 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
         }}
       />
 
+      {/* Edit Colaborador Modal */}
+      <EditColaboradorModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setSelectedColaborador(null)
+        }}
+        onSave={handleSaveEdit}
+        colaborador={selectedColaborador}
+      />
+
       {/* Colaborador Details Modal */}
       <ColaboradorDetailsModal
         isOpen={isDetailsModalOpen}
@@ -418,6 +521,38 @@ const ColaboradoresList = ({ externalSearchTerm = '' }: ColaboradoresListProps) 
         }}
         colaborador={selectedColaborador}
       />
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-dark-200 p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-4">
+              Confirmar exclusão
+            </h3>
+            <p className="text-black dark:text-dark-600 mb-6">
+              Tem certeza que deseja excluir o colaborador <strong>{colaboradorToDelete?.nome}</strong>? 
+              Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setIsDeleteModalOpen(false)
+                  setColaboradorToDelete(null)
+                }}
+                className="px-4 py-2 text-black dark:text-dark-600 hover:text-gray-800 dark:hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

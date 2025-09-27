@@ -171,7 +171,6 @@ const Dashboard = () => {
   }
 
   const handleViewSolicitacao = (solicitacao: any) => {
-    console.log('🔍 Dashboard - handleViewSolicitacao chamado:', solicitacao)
     setSelectedAdiantamentoId(solicitacao.id) // Usar o ID para scroll
     setSelectedSolicitacao(null) // Limpar solicitação selecionada do modal
     handleSectionChange('solicitacoes') // Navegar para página de solicitações
