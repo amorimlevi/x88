@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import StatsCards from './StatsCards'
 import ColaboradoresList from '../colaboradores/ColaboradoresList'
-import { Check, X } from 'lucide-react'
-import { historicoService } from '../../services/historicoService'
 
-import AdiantamentosList from '../adiantamentos/AdiantamentosList'
+import { historicoService } from '../../services/historicoService'
+import { solicitacoesService } from '../../services/solicitacoesService'
+
+import HistoricoList from '../historico/HistoricoList'
 import RelatoriosList from '../relatorios/RelatoriosList'
 import ConfiguracoesList from '../configuracoes/ConfiguracoesList'
 import SolicitacoesList from '../solicitacoes/SolicitacoesList'
@@ -20,8 +21,9 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('dashboard')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<any>(null)
+  const [ultimosPagamentos, setUltimosPagamentos] = useState<any[]>([])
+  const [solicitacoesPendentes, setSolicitacoesPendentes] = useState<any[]>([])
 
-  const [selectedAdiantamento, setSelectedAdiantamento] = useState<string | null>(null)
   const [isAddPagamentoModalOpen, setIsAddPagamentoModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -39,6 +41,83 @@ const Dashboard = () => {
   })
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+
+  // Função para atualizar últimos pagamentos baseado no histórico
+  const atualizarUltimosPagamentos = () => {
+    const historico = historicoService.obterHistorico()
+    const pagamentos = historico
+      .filter(item => item.tipo === 'pagamento' && item.status === 'pago')
+      .sort((a, b) => {
+        // Ordenar por data e hora mais recente primeiro
+        const dataA = new Date(`${a.data}T${a.hora}:00`)
+        const dataB = new Date(`${b.data}T${b.hora}:00`)
+        return dataB.getTime() - dataA.getTime()
+      })
+      .slice(0, 10) // Limitar aos 10 mais recentes
+      .map(item => ({
+        id: item.id,
+        nome: item.funcionario,
+        iniciais: item.funcionarioIniciais,
+        valor: item.valor,
+        viagem: item.descricao,
+        tempo: calcularTempoDecorrido(item.data, item.hora)
+      }))
+    
+    // Se temos pagamentos do histórico, usar apenas eles; senão combinar com dados mock
+    const pagamentosFinal = pagamentos.length > 0 
+      ? pagamentos 
+      : [...pagamentos, ...ultimosPagamentosData].slice(0, 10)
+    
+    setUltimosPagamentos(pagamentosFinal)
+  }
+
+  // Função para calcular tempo decorrido
+  const calcularTempoDecorrido = (data: string, hora: string) => {
+    const agora = new Date()
+    const dataPagamento = new Date(`${data}T${hora}:00`)
+    const diffMs = agora.getTime() - dataPagamento.getTime()
+    
+    const diffMinutos = Math.floor(diffMs / (1000 * 60))
+    const diffHoras = Math.floor(diffMs / (1000 * 60 * 60))
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+    const diffSemanas = Math.floor(diffDias / 7)
+    const diffMeses = Math.floor(diffDias / 30)
+    
+    if (diffMinutos < 60) return `${diffMinutos}m`
+    if (diffHoras < 24) return `${diffHoras}h`
+    if (diffDias < 7) return `${diffDias}d`
+    if (diffSemanas < 4) return `${diffSemanas}w`
+    return `${diffMeses}m`
+  }
+
+  // Função para atualizar solicitações pendentes
+  const atualizarSolicitacoesPendentes = () => {
+    const pendentes = solicitacoesService.obterSolicitacoesPendentes()
+    const solicitacoesFormatadas = pendentes.map(solicitacao => 
+      solicitacoesService.converterParaDashboard(solicitacao)
+    )
+    setSolicitacoesPendentes(solicitacoesFormatadas)
+  }
+
+  // Effect para carregar dados iniciais e configurar listeners
+  useEffect(() => {
+    atualizarUltimosPagamentos()
+    atualizarSolicitacoesPendentes()
+    
+    // Configurar listeners para atualizações em tempo real
+    const unsubscribeHistorico = historicoService.addListener(() => {
+      atualizarUltimosPagamentos()
+    })
+    
+    const unsubscribeSolicitacoes = solicitacoesService.addListener(() => {
+      atualizarSolicitacoesPendentes()
+    })
+    
+    return () => {
+      unsubscribeHistorico()
+      unsubscribeSolicitacoes()
+    }
+  }, [])
   
   
   const showNotification = (type: 'success' | 'error' | 'info' | 'warning', title: string, message?: string) => {
@@ -52,20 +131,16 @@ const Dashboard = () => {
   
 
 
-  // Mock data para solicitações
-  const solicitacoesMock = [
-    { id: 1, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
-    { id: 2, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
-    { id: 3, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' },
-    { id: 4, nome: 'João da Silva', viagem: 'Viagem SP', valor: 500, tempo: '2h', iniciais: 'JD' }
-  ]
+  // Usar dados dinâmicos das solicitações
+  const solicitacoesMock = solicitacoesPendentes
 
-  // Dados compartilhados para pagamentos
-  const pagamentosMock = ultimosPagamentosData
+  // Usar dados dinâmicos dos últimos pagamentos
+  
 
   const handleSolicitacaoClick = (solicitacao: any) => {
+    console.log('Clicando em solicitação:', solicitacao)
     setSelectedSolicitacao(solicitacao)
-    setActiveSection('solicitacoes')
+    // Não muda a seção ativa - apenas abre o modal
   }
 
   const handleVerTodasSolicitacoes = () => {
@@ -82,38 +157,37 @@ const Dashboard = () => {
     setSearchTerm(term)
   }
 
-  const handlePagamentoClick = (pagamento: any) => {
-    setActiveSection('pagamentos')
+  const handlePagamentoClick = () => {
+    // Redirecionar para o histórico com foco no pagamento específico
+    setActiveSection('historico')
+    // Poderiam adicionar um estado para filtrar o histórico por esse pagamento específico
   }
 
-  const handleApprovarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
-    event.stopPropagation() // Evita que o click no item seja disparado
+  const handleSolicitacaoAprovada = (solicitacao: any) => {
+    // Nota: O registro no histórico e atualização do status já foram feitos no SolicitacoesList
+    // Aqui só precisamos mostrar a notificação
     
-    // Registrar aprovação no histórico
-    historicoService.registrarAprovacao({
-      nome: solicitacao.nome,
-      iniciais: solicitacao.iniciais,
-      valor: solicitacao.valor,
-      viagem: solicitacao.viagem || 'Solicitação'
-    })
-
     // Mostrar notificação
-    showNotification('success', 'Solicitação Aprovada', `A solicitação de ${solicitacao.nome} foi aprovada com sucesso.`)
+    showNotification('success', 'Solicitação Aprovada', `A solicitação de ${solicitacao.funcionarioNome || solicitacao.nome} foi aprovada e adicionada aos últimos pagamentos.`)
   }
 
-  const handleNegarSolicitacao = (solicitacao: any, event: React.MouseEvent) => {
-    event.stopPropagation() // Evita que o click no item seja disparado
-    
-    // Registrar negação no histórico
-    historicoService.registrarNegacao({
-      nome: solicitacao.nome,
-      iniciais: solicitacao.iniciais,
-      valor: solicitacao.valor,
-      viagem: solicitacao.viagem || 'Solicitação'
-    }, 'Solicitação negada diretamente da dashboard')
+  const handleSolicitacaoNegada = (solicitacao: any) => {
+    // Nota: O registro no histórico e atualização do status já foram feitos no SolicitacoesList
+    // Aqui só precisamos mostrar a notificação
 
     // Mostrar notificação
-    showNotification('error', 'Solicitação Negada', `A solicitação de ${solicitacao.nome} foi negada.`)
+    showNotification('info', 'Solicitação Negada', `A solicitação de ${solicitacao.funcionarioNome || solicitacao.nome} foi negada.`)
+  }
+
+
+
+  const handleSavePagamento = (pagamento: any) => {
+    console.log('Novo pagamento criado:', pagamento)
+    
+    // Registrar pagamento no histórico
+    historicoService.registrarNovoPagamento(pagamento)
+    
+    showNotification('success', 'Pagamento Criado', `Pagamento de ${pagamento.valor} criado com sucesso.`)
   }
 
   return (
@@ -134,7 +208,7 @@ const Dashboard = () => {
           onMenuClick={toggleSidebar} 
           onNewPagamento={() => setIsAddPagamentoModalOpen(true)}
           onSectionChange={setActiveSection}
-          onSelectAdiantamento={setSelectedAdiantamento}
+          onSelectAdiantamento={() => {}}
           onSearch={handleSearch}
         />
 
@@ -177,12 +251,19 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-1">
+                <div 
+                  className="space-y-1 overflow-y-auto pr-2" 
+                  style={{ maxHeight: '300px' }}
+                >
                 {solicitacoesMock.map((solicitacao) => (
                 <div 
                   key={solicitacao.id} 
-                  onClick={() => handleSolicitacaoClick(solicitacao)}
-                  className="py-2 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  onClick={() => {
+                    console.log('Clique detectado na solicitação:', solicitacao);
+                    handleSolicitacaoClick(solicitacao);
+                  }}
+                  className="py-2 px-4 list-item relative cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  style={{ zIndex: 1 }}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start">
@@ -190,8 +271,8 @@ const Dashboard = () => {
                         <span className="text-black dark:text-white text-sm font-medium">{solicitacao.iniciais}</span>
                       </div>
                       <div>
-                        <p className="text-black dark:text-white font-medium text-base leading-none">{solicitacao.nome}</p>
-                        <p className="text-neutral-600 dark:text-gray-300 text-sm leading-none mt-1">Adiantamento - {solicitacao.viagem}</p>
+                        <p className="text-black dark:text-white font-medium text-base leading-none hover:text-brand-600 dark:hover:text-brand-400 transition-colors cursor-pointer">{solicitacao.nome}</p>
+                        <p className="text-neutral-600 dark:text-gray-300 text-sm leading-none mt-1">Adiantamento</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -199,7 +280,19 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex justify-end -mt-2">
-                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-none">há {solicitacao.tempo === '2h' ? '2 horas' : solicitacao.tempo}</p>
+                    <p className="text-neutral-500 dark:text-gray-400 text-xs leading-none">há {
+                      solicitacao.tempo === '1h' ? '1 hora' :
+                      solicitacao.tempo === '2h' ? '2 horas' :
+                      solicitacao.tempo === '3h' ? '3 horas' :
+                      solicitacao.tempo === '4h' ? '4 horas' :
+                      solicitacao.tempo === '5h' ? '5 horas' :
+                      solicitacao.tempo === '6h' ? '6 horas' :
+                      solicitacao.tempo === '8h' ? '8 horas' :
+                      solicitacao.tempo === '12h' ? '12 horas' :
+                      solicitacao.tempo === '1d' ? '1 dia' :
+                      solicitacao.tempo === '2d' ? '2 dias' :
+                      solicitacao.tempo
+                    }</p>
                   </div>
                 </div>
                 ))}
@@ -213,18 +306,21 @@ const Dashboard = () => {
                     Últimos Pagamentos
                   </h3>
                   <button 
-                    onClick={() => setActiveSection('adiantamentos')}
+                    onClick={() => setActiveSection('historico')}
                     className="text-brand-600 dark:text-brand-500 text-sm font-medium hover:text-brand-700 dark:hover:text-brand-400 transition-colors"
                   >
                     Ver todos
                   </button>
                 </div>
                 
-                <div className="space-y-1">
-                {pagamentosMock.map((pagamento) => (
+                <div 
+                  className="space-y-1 overflow-y-auto pr-2" 
+                  style={{ maxHeight: '300px' }}
+                >
+                {ultimosPagamentos.map((pagamento) => (
                 <div 
                 key={pagamento.id} 
-                onClick={() => handlePagamentoClick(pagamento)}
+                onClick={handlePagamentoClick}
                 className="py-2 px-4 list-item relative overflow-hidden cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 >
                 <div className="flex items-start justify-between">
@@ -238,7 +334,17 @@ const Dashboard = () => {
                 </div>
                 <div className="flex justify-between -mt-4">
                 <p className="text-neutral-600 dark:text-gray-300 text-sm ml-[52px] leading-none">Pagamento - {pagamento.viagem}</p>
-                  <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">há {pagamento.tempo === '1d' ? '1 dia' : pagamento.tempo}</p>
+                  <p className="text-neutral-500 dark:text-gray-400 text-sm leading-none">há {
+                    pagamento.tempo === '1d' ? '1 dia' :
+                    pagamento.tempo === '2d' ? '2 dias' :
+                    pagamento.tempo === '3d' ? '3 dias' :
+                    pagamento.tempo === '5d' ? '5 dias' :
+                    pagamento.tempo === '1w' ? '1 semana' :
+                    pagamento.tempo === '2w' ? '2 semanas' :
+                    pagamento.tempo === '3w' ? '3 semanas' :
+                    pagamento.tempo === '1m' ? '1 mês' :
+                    pagamento.tempo
+                  }</p>
                   </div>
                 </div>
                   ))}
@@ -255,8 +361,8 @@ const Dashboard = () => {
 
 
 
-            {activeSection === 'adiantamentos' && (
-              <AdiantamentosList />
+            {activeSection === 'historico' && (
+              <HistoricoList />
             )}
 
             {activeSection === 'relatorios' && (
@@ -268,7 +374,11 @@ const Dashboard = () => {
             )}
 
             {activeSection === 'solicitacoes' && (
-              <SolicitacoesList selectedSolicitacao={selectedSolicitacao} />
+              <SolicitacoesList 
+                selectedSolicitacao={selectedSolicitacao}
+                onApproved={handleSolicitacaoAprovada}
+                onDenied={handleSolicitacaoNegada}
+              />
             )}
           </div>
         </main>
@@ -282,7 +392,7 @@ const Dashboard = () => {
           modalOnly={true} 
           onClose={() => setSelectedSolicitacao(null)}
           onApproved={handleSolicitacaoAprovada}
-          onDenied={handleSolicitacaoAprovada}
+          onDenied={handleSolicitacaoNegada}
           onViewSolicitacao={handleViewSolicitacao}
         />
       )}

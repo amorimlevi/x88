@@ -5,68 +5,103 @@ import ReceiptIcon from '../ui/icons/ReceiptIcon'
 import ThreeDotsIcon from '../ui/icons/ThreeDotsIcon'
 import RetentionIcon from '../ui/icons/RetentionIcon'
 import { formatEuro } from '../../utils/formatters'
+import { solicitacoesService } from '../../services/solicitacoesService'
+import { historicoService } from '../../services/historicoService'
+import { useEffect, useState } from 'react'
 
 interface StatsCardsProps {
   onSectionChange: (section: string) => void
 }
 
 const StatsCards = ({ onSectionChange }: StatsCardsProps) => {
-  // Dados mock para adiantamentos (para calcular valor retido)
-  const adiantamentos = [
-    { valor: 500, status: 'pago' },
-    { valor: 300, status: 'pago' },
-    { valor: 750, status: 'aprovado' },
-    { valor: 200, status: 'aprovado' },
-    { valor: 400, status: 'pago' },
-    { valor: 600, status: 'aprovado' }
-  ]
+  const [solicitacoesDoDia, setSolicitacoesDoDia] = useState(0)
+  const [pagamentosDoDia, setPagamentosDoDia] = useState(0)
+  const [adiantamentosPendentesDoDia, setAdiantamentosPendentesDoDia] = useState(0)
+  const [valorRetidoDoDia, setValorRetidoDoDia] = useState(0)
 
-  const TAXA_RETENCAO = 0.10 // 10%
-  
-  const calcularValorRetido = (valorBruto: number) => {
-    return valorBruto * TAXA_RETENCAO
-  }
+  useEffect(() => {
+    const atualizarDadosDiarios = () => {
+      // Atualizar solicitações do dia
+      const solicitacoes = solicitacoesService.obterSolicitacoesDoDia()
+      setSolicitacoesDoDia(solicitacoes.length)
 
-  const getTotalRetidoPorStatus = (status: string) => {
-    return adiantamentos
-      .filter(a => a.status === status)
-      .reduce((total, a) => total + calcularValorRetido(a.valor), 0)
-  }
+      // Atualizar pagamentos do dia
+      const valorPagamentos = historicoService.obterValorPagamentosDoDia()
+      setPagamentosDoDia(valorPagamentos)
 
-  const totalRetido = getTotalRetidoPorStatus('pago') + getTotalRetidoPorStatus('aprovado')
+      // Atualizar adiantamentos pendentes do dia
+      const valorAdiantamentosPendentes = solicitacoesService.obterValorAdiantamentosPendentesDoDia()
+      setAdiantamentosPendentesDoDia(valorAdiantamentosPendentes)
+
+      // Atualizar valor retido do dia
+      const valorRetido = solicitacoesService.obterValorRetidoDoDia()
+      setValorRetidoDoDia(valorRetido)
+    }
+
+    // Atualizar inicialmente
+    atualizarDadosDiarios()
+
+    // Adicionar listeners para atualizações
+    const unsubscribeSolicitacoes = solicitacoesService.addListener(atualizarDadosDiarios)
+    const unsubscribeHistorico = historicoService.addListener(atualizarDadosDiarios)
+
+    // Atualizar a meia-noite
+    const agora = new Date()
+    const proximaMeiaNoite = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1)
+    const tempoAteMeiaNoite = proximaMeiaNoite.getTime() - agora.getTime()
+
+    const timeout = setTimeout(() => {
+      atualizarDadosDiarios()
+      // Configurar intervalo diário após a primeira atualização
+      const interval = setInterval(atualizarDadosDiarios, 24 * 60 * 60 * 1000)
+      
+      return () => clearInterval(interval)
+    }, tempoAteMeiaNoite)
+
+    return () => {
+      unsubscribeSolicitacoes()
+      unsubscribeHistorico()
+      clearTimeout(timeout)
+    }
+  }, [])
+
+  const solicitacoesPendentes = solicitacoesService.obterSolicitacoesPendentes().length
+
+  const pagamentosHoje = historicoService.obterPagamentosDoDia()
+  const adiantamentosPendentesHoje = solicitacoesService.obterAdiantamentosPendentesDoDia()
 
   const stats = [
     {
-      title: 'Solicitações',
-      value: '18',
-      change: '6 pendentes',
+      title: 'Solicitações Hoje',
+      value: solicitacoesDoDia.toString(),
+      change: `${solicitacoesPendentes} pendentes total`,
       changeType: 'positive' as const,
       icon: AlarmClockIcon,
       color: 'bg-blue-300',
       section: 'solicitacoes'
     },
     {
-      title: 'Pagamentos Realizados',
-      value: '€ 48.300',
-      change: '+12% vs mês anterior',
+      title: 'Pagamentos Hoje',
+      value: formatEuro(pagamentosDoDia),
+      change: `${pagamentosHoje.length} pagamentos realizados`,
       changeType: 'positive' as const,
       icon: ReceiptIcon,
       color: 'bg-green-300',
-      section: 'pagamentos'
+      section: 'historico'
     },
     {
-      title: 'Adiantamentos Pendentes',
-      value: '€ 2.400',
-      change: '5 solicitações',
+      title: 'Adiantamentos Pendentes Hoje',
+      value: formatEuro(adiantamentosPendentesDoDia),
+      change: `${adiantamentosPendentesHoje.length} solicitações`,
       changeType: 'positive' as const,
       icon: ThreeDotsIcon,
       color: 'bg-yellow-300',
       section: 'historico'
     },
     {
-      title: 'Retido (Casa)',
-      value: formatEuro(totalRetido),
-      change: '10% de retenção',
+      title: 'Retido Hoje (Casa)',
+      value: formatEuro(valorRetidoDoDia),
+      change: '10% de retenção do dia',
       changeType: 'neutral' as const,
       icon: RetentionIcon,
       color: 'bg-purple-200',

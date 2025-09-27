@@ -2,30 +2,12 @@ import { useState, useEffect } from 'react'
 import { Clock, Check, X, Eye, Calendar, Euro, FileText } from 'lucide-react'
 import { formatEuro, formatDateTime } from '../../utils/formatters'
 import { historicoService } from '../../services/historicoService'
+import { solicitacoesService, Solicitacao } from '../../services/solicitacoesService'
 
-interface Solicitacao {
-  id: string
-  funcionarioId: string
-  funcionarioNome: string
-  tipo: 'adiantamento' | 'ferias' | 'folga' | 'reembolso' | 'ajuste_salario'
-  valor?: number
-  descricao: string
-  justificativa: string
-  datasolicitacao: string
-  dataVencimento?: string
-  status: 'pendente' | 'aprovada' | 'negada' | 'em_analise'
-  prioridade: 'baixa' | 'media' | 'alta' | 'urgente'
-  documentos?: string[]
-  observacoes?: string
-}
+// Interface local removida - usando a do serviço
 
 interface Props {
   selectedSolicitacao?: any
-
-}
-
-const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao }: Props) => {
-
   selectedAdiantamentoId?: string | null
   modalOnly?: boolean
   onClose?: () => void
@@ -39,92 +21,45 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
   const [statusFilter, setStatusFilter] = useState<'todos' | 'pendente' | 'aprovada' | 'negada' | 'em_analise'>('pendente')
   const [selectedSolicitacao, setSelectedSolicitacao] = useState<Solicitacao | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  
-  // Dados mock - em produção viriam da API
-  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([
-    {
-      id: '1',
-      funcionarioId: '1',
-      funcionarioNome: 'João da Silva',
-      tipo: 'adiantamento',
-      valor: 500,
-      descricao: 'Adiantamento para emergência médica',
-      justificativa: 'Preciso realizar uma consulta médica urgente para minha esposa. O plano de saúde não cobre todos os custos e preciso do adiantamento para cobrir as despesas.',
-      datasolicitacao: '2024-01-25T10:30:00',
-      dataVencimento: '2024-02-15T00:00:00',
-      status: 'pendente',
-      prioridade: 'alta',
-      documentos: ['recibo_medico.pdf', 'comprovante_consulta.jpg']
-    },
-    {
-      id: '2',
-      funcionarioId: '2',
-      funcionarioNome: 'Maria Santos',
-      tipo: 'ferias',
-      descricao: 'Solicitação de férias - Dezembro',
-      justificativa: 'Gostaria de tirar férias entre 15 e 30 de dezembro para passar as festas de fim de ano com a família.',
-      datasolicitacao: '2024-01-20T14:15:00',
-      status: 'pendente',
-      prioridade: 'media'
-    },
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([])
 
-    {
-      id: '4',
-      funcionarioId: '4',
-      funcionarioNome: 'Ana Oliveira',
-      tipo: 'adiantamento',
-      valor: 800,
-      descricao: 'Adiantamento reparação carro pessoal',
-      justificativa: 'Meu carro pessoal que uso para o trabalho quebrou e precisa de reparo urgente. Solicito adiantamento para cobrir os custos.',
-      datasolicitacao: '2024-01-24T09:20:00',
-      dataVencimento: '2024-02-20T00:00:00',
-      status: 'pendente',
-      prioridade: 'urgente',
-      documentos: ['orcamento_oficina.pdf']
-    },
-    {
-      id: '5',
-      funcionarioId: '5',
-      funcionarioNome: 'Carlos Ferreira',
-      tipo: 'ajuste_salario',
-      valor: 200,
-      descricao: 'Solicitação aumento salarial',
-      justificativa: 'Trabalho na empresa há 2 anos e gostaria de solicitar revisão salarial baseada na minha performance e dedicação.',
-      datasolicitacao: '2024-01-21T11:30:00',
-      status: 'aprovada',
-      prioridade: 'baixa'
-    },
-    {
-      id: '6',
-      funcionarioId: '6',
-      funcionarioNome: 'Sofia Lima',
-      tipo: 'folga',
-      descricao: 'Folga para casamento',
-      justificativa: 'Vou me casar dia 28 de janeiro e gostaria de solicitar folga para os preparativos e cerimônia.',
-      datasolicitacao: '2024-01-15T13:45:00',
-      status: 'negada',
-      prioridade: 'media',
-      observacoes: 'Período muito próximo, não é possível reorganizar a escala.'
+  // Carregar solicitações do serviço
+  useEffect(() => {
+    const carregarSolicitacoes = () => {
+      const todasSolicitacoes = solicitacoesService.obterSolicitacoes()
+      setSolicitacoes(todasSolicitacoes)
     }
-  ])
+
+    carregarSolicitacoes()
+
+    // Configurar listener para atualizações em tempo real
+    const unsubscribe = solicitacoesService.addListener(() => {
+      carregarSolicitacoes()
+    })
+
+    return unsubscribe
+  }, [])
 
   // Efeito para mostrar detalhes quando uma solicitação é selecionada no dashboard
   useEffect(() => {
     if (propSelectedSolicitacao) {
-      // Encontrar a solicitação correspondente pelos dados
+      // Encontrar a solicitação correspondente pelos dados (ID primeiro, depois nome)
       const solicitacaoEncontrada = solicitacoes.find(s => 
-        s.funcionarioNome === propSelectedSolicitacao.nome
+        s.id === propSelectedSolicitacao.id || s.funcionarioNome === propSelectedSolicitacao.nome
       )
       if (solicitacaoEncontrada) {
         setSelectedSolicitacao(solicitacaoEncontrada)
         setIsModalOpen(true)
+      } else {
+        console.log('Solicitação não encontrada:', propSelectedSolicitacao)
+        console.log('Solicitações disponíveis:', solicitacoes.map(s => ({ id: s.id, nome: s.funcionarioNome })))
       }
     } else {
       // Se não há solicitação selecionada, fechar modal
       setSelectedSolicitacao(null)
       setIsModalOpen(false)
     }
-  }, [propSelectedSolicitacao])
+  }, [propSelectedSolicitacao, solicitacoes])
 
   const getFilteredSolicitacoes = () => {
     if (statusFilter === 'todos') {
@@ -138,10 +73,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
   const handleAprovar = (id: string) => {
     const solicitacao = solicitacoes.find(s => s.id === id)
     if (solicitacao) {
-      // Atualizar estado local
-      setSolicitacoes(prev => prev.map(s => 
-        s.id === id ? { ...s, status: 'aprovada' as const } : s
-      ))
+      // Atualizar status no serviço (isso automaticamente atualiza o estado via listener)
+      solicitacoesService.atualizarStatus(id, 'aprovada')
       
       // Registrar no histórico
       historicoService.registrarAprovacao({
@@ -150,16 +83,19 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
         valor: solicitacao.valor || 0,
         viagem: solicitacao.descricao
       })
+
+      // Chamar callback se fornecido (para atualizar dashboard)
+      if (onApproved) {
+        onApproved(solicitacao)
+      }
     }
   }
 
   const handleNegar = (id: string) => {
     const solicitacao = solicitacoes.find(s => s.id === id)
     if (solicitacao) {
-      // Atualizar estado local
-      setSolicitacoes(prev => prev.map(s => 
-        s.id === id ? { ...s, status: 'negada' as const } : s
-      ))
+      // Atualizar status no serviço (isso automaticamente atualiza o estado via listener)
+      solicitacoesService.atualizarStatus(id, 'negada')
       
       // Registrar no histórico
       historicoService.registrarNegacao({
@@ -168,6 +104,11 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
         valor: solicitacao.valor || 0,
         viagem: solicitacao.descricao
       }, 'Solicitação negada pelo administrador')
+
+      // Chamar callback se fornecido (para notificação no dashboard)
+      if (onDenied) {
+        onDenied(solicitacao)
+      }
     }
   }
 
@@ -476,8 +417,8 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
                   </td>
                   <td className="py-4 px-4">
                     <div>
-                      <p className="text-black dark:text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
-                      <p className="text-black dark:text-white text-xs">{formatDateTime(solicitacao.datasolicitacao).split(' ')[1]}</p>
+                      <p className="text-white text-sm">{formatDateTime(solicitacao.datasolicitacao).split(' ')[0]}</p>
+                      <p className="text-white text-xs">{formatDateTime(solicitacao.datasolicitacao).split(' ')[1]}</p>
                     </div>
                   </td>
                   <td className="py-4 px-4">
@@ -538,7 +479,7 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
                 </span>
               </div>
               <div className="flex-1 min-w-0 pt-2">
-                <h3 className="text-white font-medium truncate">{solicitacao.funcionarioNome}</h3>
+                <h3 className="text-black dark:text-white font-medium truncate">{solicitacao.funcionarioNome}</h3>
               </div>
               <span className={`px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(solicitacao.status)}`}>
                 {solicitacao.status.charAt(0).toUpperCase() + solicitacao.status.slice(1)}
@@ -623,19 +564,19 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
               <div className="space-y-6">
                 {/* Colaborador */}
                 <div>
-                  <label className="text-dark-600 text-sm block mb-1">Colaborador</label>
-                  <p className="text-black dark:text-white font-bold text-xl">{selectedSolicitacao.funcionarioNome}</p>
+                  <label className="text-white text-sm block mb-1">Colaborador</label>
+                  <p className="text-white font-bold text-xl">{selectedSolicitacao.funcionarioNome}</p>
                 </div>
 
                 {/* Tipo */}
                 <div>
-                  <label className="text-dark-600 text-sm block mb-1">Tipo</label>
-                  <p className="text-black dark:text-white font-bold text-xl capitalize">{selectedSolicitacao.tipo}</p>
+                  <label className="text-white text-sm block mb-1">Tipo</label>
+                  <p className="text-white font-bold text-xl capitalize">{selectedSolicitacao.tipo}</p>
                 </div>
 
                 {/* Status */}
                 <div>
-                  <label className="text-dark-600 text-sm block mb-2">Status</label>
+                  <label className="text-white text-sm block mb-2">Status</label>
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedSolicitacao.status)}`}>
                     {selectedSolicitacao.status.charAt(0).toUpperCase() + selectedSolicitacao.status.slice(1)}
                   </span>
@@ -644,24 +585,24 @@ const SolicitacoesList = ({ selectedSolicitacao: propSelectedSolicitacao, select
                 {/* Valor Solicitado */}
                 {selectedSolicitacao.valor && (
                   <div>
-                    <label className="text-dark-600 text-sm block mb-1">Valor Solicitado</label>
-                    <p className="text-black dark:text-white font-bold text-2xl">{formatEuro(selectedSolicitacao.valor)}</p>
+                    <label className="text-white text-sm block mb-1">Valor Solicitado</label>
+                    <p className="text-white font-bold text-2xl">{formatEuro(selectedSolicitacao.valor)}</p>
                   </div>
                 )}
 
                 {/* Valor Líquido */}
                 {selectedSolicitacao.valor && (
                   <div>
-                    <label className="text-dark-600 text-sm block mb-1">Valor Líquido (após dedução de 10%)</label>
+                    <label className="text-white text-sm block mb-1">Valor Líquido (após dedução de 10%)</label>
                     <p className="text-green-500 font-bold text-2xl">{formatEuro(selectedSolicitacao.valor * 0.9)}</p>
-                    <p className="text-dark-600 text-sm mt-1">Taxa de serviço: {formatEuro(selectedSolicitacao.valor * 0.1)}</p>
+                    <p className="text-white text-sm mt-1">Taxa de serviço: {formatEuro(selectedSolicitacao.valor * 0.1)}</p>
                   </div>
                 )}
 
                 {/* Data da Solicitação */}
                 <div>
-                  <label className="text-dark-600 text-sm block mb-1">Data da Solicitação</label>
-                  <p className="text-black dark:text-white font-bold text-xl">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
+                  <label className="text-white text-sm block mb-1">Data da Solicitação</label>
+                  <p className="text-white font-bold text-xl">{formatDateTime(selectedSolicitacao.datasolicitacao)}</p>
                 </div>
 
                 {/* Linha separadora */}

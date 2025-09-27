@@ -1,9 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 
-
-
-// Middleware para verificar token JWT testanto
+// Middleware para verificar token JWT testando
 
 export const authenticate = async (req, res, next) => {
   try {

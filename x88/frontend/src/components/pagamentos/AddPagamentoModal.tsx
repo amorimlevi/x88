@@ -13,7 +13,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
     funcionarioNome: '',
     funcionarioId: '',
     valor: '',
-    metodoPagamento: 'mbway',
+    metodoPagamento: '',
     observacoes: '',
     dataPagamento: new Date().toISOString().split('T')[0] // Data atual
   })
@@ -31,9 +31,22 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
       newErrors.valor = 'Valor deve ser maior que zero'
     }
 
+    if (!formData.metodoPagamento) {
+      newErrors.metodoPagamento = 'Método de pagamento é obrigatório'
+    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
+  }
+
+  // Verificar se todos os campos obrigatórios estão preenchidos
+  const isFormValid = () => {
+    return (
+      formData.funcionarioNome.trim() !== '' &&
+      formData.valor !== '' &&
+      parseFloat(formData.valor) > 0 &&
+      formData.metodoPagamento !== ''
+    )
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +75,7 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
         funcionarioNome: '',
         funcionarioId: '',
         valor: '',
-        metodoPagamento: 'mbway',
+        metodoPagamento: '',
         observacoes: '',
         dataPagamento: new Date().toISOString().split('T')[0] // Resetar com data atual
       })
@@ -235,20 +248,24 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-white font-medium mb-2">
-                  Método
+                  Método *
                 </label>
                 <select
                   value={formData.metodoPagamento}
                   onChange={(e) => handleChange('metodoPagamento', e.target.value)}
-
-                  className="w-full px-4 py-3 bg-dark-200 border border-dark-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black"
+                  className={`w-full px-4 py-3 bg-dark-200 border rounded-lg focus:ring-2 focus:ring-primary-500 text-black dark:text-black ${
+                    errors.metodoPagamento ? 'border-red-500' : 'border-dark-300'
+                  }`}
                 >
+                  <option value="">Selecione um método</option>
                   <option value="mbway">MB WAY</option>
                   <option value="transferencia">Transferência Bancária</option>
                   <option value="dinheiro">Dinheiro</option>
                   <option value="cartao">Cartão de Crédito</option>
-
                 </select>
+                {errors.metodoPagamento && (
+                  <p className="text-red-500 text-sm mt-1">{errors.metodoPagamento}</p>
+                )}
               </div>
 
               <div>
@@ -280,7 +297,12 @@ const AddPagamentoModal = ({ isOpen, onClose, onSave }: AddPagamentoModalProps) 
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
+              disabled={!isFormValid()}
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${
+                isFormValid() 
+                  ? 'bg-green-500 hover:bg-green-600 text-white' 
+                  : 'bg-gray-500 text-gray-300 cursor-not-allowed'
+              }`}
             >
               <Check className="w-4 h-4" />
               Aprovar

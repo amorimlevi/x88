@@ -14,7 +14,46 @@ export interface HistoricoItem {
 }
 
 class HistoricoService {
-  private historico: HistoricoItem[] = []
+  private historico: HistoricoItem[] = [
+    // Pagamentos de hoje
+    {
+      id: '1',
+      data: new Date().toISOString().split('T')[0],
+      hora: '09:30',
+      tipo: 'pagamento',
+      status: 'pago',
+      funcionario: 'João Silva',
+      funcionarioIniciais: 'JS',
+      valor: 750,
+      descricao: 'Pagamento realizado',
+      detalhes: 'Adiantamento para emergência médica'
+    },
+    {
+      id: '2',
+      data: new Date().toISOString().split('T')[0],
+      hora: '14:20',
+      tipo: 'pagamento',
+      status: 'pago',
+      funcionario: 'Maria Santos',
+      funcionarioIniciais: 'MS',
+      valor: 320,
+      descricao: 'Pagamento realizado',
+      detalhes: 'Adiantamento para despesas pessoais'
+    },
+    // Pagamentos de ontem
+    {
+      id: '3',
+      data: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      hora: '10:15',
+      tipo: 'pagamento',
+      status: 'pago',
+      funcionario: 'Pedro Costa',
+      funcionarioIniciais: 'PC',
+      valor: 480,
+      descricao: 'Pagamento realizado',
+      detalhes: 'Adiantamento para despesas familiares'
+    }
+  ]
   private listeners: Array<() => void> = []
 
   // Método para limpar todos os dados (útil para testes)
@@ -77,6 +116,19 @@ class HistoricoService {
     })
   }
 
+  // Registrar novo pagamento criado via dashboard
+  registrarNovoPagamento(pagamento: any): HistoricoItem {
+    return this.adicionarEntrada({
+      tipo: 'pagamento',
+      status: 'pago',
+      funcionario: pagamento.funcionarioNome,
+      funcionarioIniciais: pagamento.funcionarioNome.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase(),
+      valor: pagamento.valor,
+      descricao: 'Pagamento criado',
+      detalhes: `Pagamento via ${pagamento.metodoPagamento || 'dashboard'}`
+    })
+  }
+
   // Registrar nova solicitação
   registrarSolicitacao(solicitacao: any): HistoricoItem {
     return this.adicionarEntrada({
@@ -93,6 +145,22 @@ class HistoricoService {
   // Obter todo o histórico
   obterHistorico(): HistoricoItem[] {
     return [...this.historico]
+  }
+
+  // Obter pagamentos do dia atual
+  obterPagamentosDoDia(): HistoricoItem[] {
+    const hoje = new Date().toISOString().split('T')[0]
+    return this.historico.filter(item => 
+      item.tipo === 'pagamento' && 
+      item.status === 'pago' && 
+      item.data === hoje
+    )
+  }
+
+  // Calcular valor total dos pagamentos do dia
+  obterValorPagamentosDoDia(): number {
+    const pagamentosDoDia = this.obterPagamentosDoDia()
+    return pagamentosDoDia.reduce((total, pagamento) => total + pagamento.valor, 0)
   }
 
   // Filtrar histórico por data
