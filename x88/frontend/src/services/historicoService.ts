@@ -14,51 +14,117 @@ export interface HistoricoItem {
 }
 
 class HistoricoService {
-  private historico: HistoricoItem[] = [
-    // Pagamentos de hoje
-    {
-      id: '1',
-      data: new Date().toISOString().split('T')[0],
-      hora: '09:30',
-      tipo: 'pagamento',
-      status: 'pago',
-      funcionario: 'João Silva',
-      funcionarioIniciais: 'JS',
-      valor: 750,
-      descricao: 'Pagamento realizado',
-      detalhes: 'Adiantamento para emergência médica'
-    },
-    {
-      id: '2',
-      data: new Date().toISOString().split('T')[0],
-      hora: '14:20',
-      tipo: 'pagamento',
-      status: 'pago',
-      funcionario: 'Maria Santos',
-      funcionarioIniciais: 'MS',
-      valor: 320,
-      descricao: 'Pagamento realizado',
-      detalhes: 'Adiantamento para despesas pessoais'
-    },
-    // Pagamentos de ontem
-    {
-      id: '3',
-      data: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      hora: '10:15',
-      tipo: 'pagamento',
-      status: 'pago',
-      funcionario: 'Pedro Costa',
-      funcionarioIniciais: 'PC',
-      valor: 480,
-      descricao: 'Pagamento realizado',
-      detalhes: 'Adiantamento para despesas familiares'
+  private generateMockData(): HistoricoItem[] {
+    const funcionarios = [
+      { nome: 'João Silva', iniciais: 'JS' },
+      { nome: 'Maria Santos', iniciais: 'MS' },
+      { nome: 'Pedro Costa', iniciais: 'PC' },
+      { nome: 'Ana Ferreira', iniciais: 'AF' },
+      { nome: 'Carlos Oliveira', iniciais: 'CO' },
+      { nome: 'Sofia Rodrigues', iniciais: 'SR' },
+      { nome: 'Miguel Almeida', iniciais: 'MA' },
+      { nome: 'Rita Pereira', iniciais: 'RP' },
+      { nome: 'Bruno Mendes', iniciais: 'BM' },
+      { nome: 'Catarina Lima', iniciais: 'CL' },
+      { nome: 'Eduardo Sousa', iniciais: 'ES' },
+      { nome: 'Patricia Martins', iniciais: 'PM' },
+      { nome: 'Rui Tavares', iniciais: 'RT' },
+      { nome: 'Helena Carvalho', iniciais: 'HC' },
+      { nome: 'André Gomes', iniciais: 'AG' }
+    ];
+
+    const detalhesMotivos = [
+      'Adiantamento para emergência médica',
+      'Despesas de viagem de trabalho',
+      'Adiantamento para despesas familiares',
+      'Pagamento de conta urgente',
+      'Reparação de veículo próprio',
+      'Despesas educacionais',
+      'Emergência doméstica',
+      'Adiantamento de salário',
+      'Compra de material de trabalho',
+      'Despesas médicas',
+      'Pagamento de renda',
+      'Manutenção de equipamento',
+      'Formação profissional',
+      'Despesas de transporte',
+      'Situação financeira temporária'
+    ];
+
+    const mockData: HistoricoItem[] = [];
+    
+    // Gerar dados dos últimos 3 meses
+    for (let i = 0; i < 90; i++) {
+      const dataAtual = new Date();
+      dataAtual.setDate(dataAtual.getDate() - i);
+      
+      // Mais transações em dias úteis
+      const isDiaUtil = dataAtual.getDay() >= 1 && dataAtual.getDay() <= 5;
+      const numTransacoesDia = isDiaUtil ? Math.floor(Math.random() * 8) + 2 : Math.floor(Math.random() * 3);
+      
+      for (let j = 0; j < numTransacoesDia; j++) {
+        const funcionario = funcionarios[Math.floor(Math.random() * funcionarios.length)];
+        const isAprovado = Math.random() > 0.15; // 85% aprovação
+        const valor = Math.floor(Math.random() * 1200) + 100; // Entre 100 e 1300 euros
+        const hora = `${String(Math.floor(Math.random() * 10) + 8).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
+        const motivo = detalhesMotivos[Math.floor(Math.random() * detalhesMotivos.length)];
+        
+        mockData.push({
+          id: `mock_${dataAtual.getTime()}_${j}_${Math.random().toString(36).substr(2, 9)}`,
+          data: dataAtual.toISOString().split('T')[0],
+          hora,
+          tipo: isAprovado ? 'pagamento' : (Math.random() > 0.5 ? 'cancelamento' : 'negacao'),
+          status: isAprovado ? 'pago' : (Math.random() > 0.5 ? 'cancelado' : 'negado'),
+          funcionario: funcionario.nome,
+          funcionarioIniciais: funcionario.iniciais,
+          valor,
+          descricao: isAprovado ? 'Pagamento realizado' : (Math.random() > 0.5 ? 'Pagamento cancelado' : 'Solicitação negada'),
+          detalhes: motivo
+        });
+      }
     }
-  ]
+
+    // Adicionar algumas solicitações pendentes
+    for (let i = 0; i < 5; i++) {
+      const funcionario = funcionarios[Math.floor(Math.random() * funcionarios.length)];
+      const valor = Math.floor(Math.random() * 800) + 200;
+      const hoje = new Date();
+      const hora = `${String(Math.floor(Math.random() * 10) + 8).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
+      
+      mockData.push({
+        id: `pending_${Date.now()}_${i}_${Math.random().toString(36).substr(2, 9)}`,
+        data: hoje.toISOString().split('T')[0],
+        hora,
+        tipo: 'solicitacao',
+        status: 'pendente',
+        funcionario: funcionario.nome,
+        funcionarioIniciais: funcionario.iniciais,
+        valor,
+        descricao: 'Solicitação pendente',
+        detalhes: detalhesMotivos[Math.floor(Math.random() * detalhesMotivos.length)]
+      });
+    }
+
+    // Ordenar por data e hora (mais recentes primeiro)
+    return mockData.sort((a, b) => {
+      const dateCompare = b.data.localeCompare(a.data);
+      if (dateCompare !== 0) return dateCompare;
+      return b.hora.localeCompare(a.hora);
+    });
+  }
+
+  private historico: HistoricoItem[] = this.generateMockData()
   private listeners: Array<() => void> = []
 
   // Método para limpar todos os dados (útil para testes)
   limparHistorico() {
     this.historico = []
+    this.notifyListeners()
+  }
+
+  // Método para regenerar dados mock
+  regenerarDadosMock() {
+    this.historico = this.generateMockData()
     this.notifyListeners()
   }
 
